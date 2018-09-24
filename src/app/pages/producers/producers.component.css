@@ -23,3 +23,51 @@ small {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.voting-container > .progress-bar-usage .vote-progression {
+	height: 100px !important;
+}
+
+.progress-bar-text {
+	position:relative;
+	top: -20px;
+	text-align: center;
+}
+
+.no-gutter{
+	padding: 0;
+}
+
+.vote-progress-container {
+	padding-top: 17px;
+    height: 40px;
+}
+
+.vote-progress-container .span {
+	color: #9f9fa1;
+}
+
+.producers-title{
+	margin-bottom: 10px;
+}
+
+.producers-title > span{
+	font-size: 1.5em;
+	padding: 20px 0 0 0;
+}
+
+.producers-title > div{
+	font-size: 15px;
+	padding: 20px 0 0 0;
+	text-align: right;
+}
+
+.producers-title > div > span{
+	margin-right: 10px;
+	color: #9f9fa1;
+}
+
+.node-map{
+	background-color: #D9632C;
+	color: white;
+}

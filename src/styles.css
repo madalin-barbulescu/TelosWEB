@@ -49,7 +49,18 @@ a{
 	background: linear-gradient(to right,#D9632C,#EEA15F);
 	background: -webkit-gradient(linear,left top,right top,from(#D9632C),to(#EEA15F));
 }
-.mat-fab.mat-warn, .mat-mini-fab.mat-warn, .mat-raised-button.mat-warn { 
+.mat-fab.mat-warn, .mat-mini-fab.mat-warn, .mat-raised-button.mat-warn {
+	color: black;
+	background: linear-gradient(to right,#F6F1E1,#F6F1F1);
+	background: -webkit-gradient(linear,left top,right top,from(#F6F1E1),to(#F6F1F1)); 
+}
+.mat-fab.mat-producing, .mat-mini-fab.mat-producing, .mat-raised-button.mat-producing {
+	color: white; 
+	background: linear-gradient(to right,#7E1C1E,#BC1C1F);
+	background: -webkit-gradient(linear,left top,right top,from(#7E1C1E),to(#BC1C1F)); 
+}
+.mat-fab.mat-inactivea, .mat-mini-fab.mat-inactive, .mat-raised-button.mat-inactive {
+	color: white;
 	background: linear-gradient(to right,#A7A083,#BBB7A5);
 	background: -webkit-gradient(linear,left top,right top,from(#A7A083),to(#BBB7A5)); 
 }
@@ -65,6 +76,25 @@ a{
 }
 .nav-active{
 	color: #D9632C !important;
+}
+.progress-bar-usage.vote-progression{
+	margin-top: 0px;
+	height: 22px !important;
+}
+.vote-progression .mat-progress-bar-fill::after{
+	background: linear-gradient(to right,#D9632C,#EEA15F);
+	background: -webkit-gradient(linear,left top,right top,from(#D9632C),to(#EEA15F));
+	color: white;
+	text-align: center;
+	content: attr(value) '%';
+}
+.vote-progression .mat-progress-bar-fill::before{
+	color: white;
+	text-align: center;
+	content: attr(value) '%';
+}
+.vote-progression .mat-progress-bar-buffer{
+	background: #F6F1E1;
 }
 .account-cpu .mat-progress-bar-fill::after {
 	background-color: #D9632C;
