@@ -36,7 +36,12 @@ export class MainService {
         return;
       }
       let result = data.sort((a, b) => {
-          return b.total_votes - a.total_votes;
+          let aVotes = a.total_votes;
+          let bVotes = b.total_votes;
+          aVotes = (a.is_active * 2 - 1) * (a.total_votes + 1);
+          bVotes = (b.is_active * 2 - 1) * (b.total_votes + 1);
+
+        return bVotes - aVotes;
       }).map((elem, index) => {
           // let eos_votes = Math.floor(this.calculateEosFromVotes(elem.total_votes));
           elem.all_votes = elem.total_votes;
@@ -113,8 +118,8 @@ countRewards(producer, totalProducers, supply){
 
   getGlobalNetConfig(){
     if (!this.getCookie("netsConf")){
-      this.eosConfig.chainId = "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
-      this.eosConfig.httpEndpoint = "http://bp.cryptolions.io";
+      this.eosConfig.chainId = "ca03ab4a886a9b793da573a33cd21441ac6e8275d71c4a736f6989e5181168b0";
+      this.eosConfig.httpEndpoint = "http://node.telosmadrid.io";
       return this.WINDOW.Eos(this.eosConfig);
     }
       let cookie = JSON.parse(this.getCookie("netsConf"));

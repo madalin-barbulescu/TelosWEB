@@ -79,7 +79,7 @@ function getStatAggregation (){
 			   				});
 			   			}
 			   			stat.cursor_block = block.block_num;
-			   			log.info("Saved global stat block ==== ", stat.cursor_block);
+			   			// log.info("Saved global stat block ==== ", stat.cursor_block);
 			   			ret();
 			   		})
 			   		.catch(err => {

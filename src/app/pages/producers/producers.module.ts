@@ -8,10 +8,13 @@ import { MatAutocompleteModule,
          MatSelectModule,
          MatSortModule,
          MatTableModule,
-         MatFormFieldModule } from '@angular/material';
+         MatFormFieldModule, 
+         MatProgressBarModule} from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { appRoutes } from '../../main.router';
 import { MainService } from '../../services/mainapp.service';
+import { LastUpdatedModule } from '../../components/last-updated/last-updated.module';
+import { LeafletModule } from '../../../../node_modules/@asymmetrik/ngx-leaflet';
 
 
 let imports = [
@@ -21,15 +24,18 @@ let imports = [
     MatInputModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSelectModule,
     MatSortModule,
     MatTableModule,
     CommonModule,
+    LastUpdatedModule,
+    LeafletModule,
     appRoutes ];
 
 @NgModule({
   declarations: [
-    ProducersPageComponent
+    ProducersPageComponent,
   ],
   imports:  imports,
   providers: [MainService],
