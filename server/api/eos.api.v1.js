@@ -249,7 +249,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   	 	.catch(err => {
 	   	 		log.error(err);
 	   	 		res.status(501).end();
-	   	 	});
+				});
 	});
 
     /*
@@ -322,6 +322,10 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 			      limit: req.params.limit
 		};
 	   	request.post({url:`${config.customChain}/v1/chain/get_table_rows`, json: formData}).pipe(res);
+	});
+
+	router.get('/api/custom/get_producer_schedule', (req, res) => {
+		request.post({url:`${config.customChain}/v1/chain/get_producer_schedule`, json: {}}).pipe(res);
 	});
 
 	router.post('/api/producer', (req, res) => {

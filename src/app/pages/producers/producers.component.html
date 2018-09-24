@@ -5,9 +5,30 @@
 </div>
 
 <div class="col-md-12">
-<h1 class="market-header pull-left col-sm-8">Producers rate</h1>
 
-<div class="col-sm-4 filter-header">
+<div class="col-sm-12 no-gutter producers-title">
+    <span class=" pull-left col-xs-6 col-sm-6">Producers</span>
+    <div class="pull-right col-xs-6 col-sm-6">
+        <span>Last rotation:<strong *ngIf="rotations" style="color: black;"> <last-updated [timestamp]="rotations?.last_rotation_time" direction="up"></last-updated> </strong></span>
+        <span>Next rotation:<strong *ngIf="nextRotationMessage" style="color: black;"> {{ nextRotationMessage }} </strong></span>
+        <button mat-raised-button class="node-map" (click)="showMap()">Node Map</button>
+    </div>
+</div>
+
+<div class="col-sm-12" *ngIf="mapOpen">
+  <div style="height: 400px; margin-top: 20px; width: 100%;" leaflet [leafletOptions]="options" [leafletLayers]="layers"></div>
+</div>
+
+<div class="pull-left col-sm-8 no-gutter vote-progress-container">
+  <span class="col-xs-2 no-gutter">Vote progress: </span>
+  <div class="col-xs-10 no-gutter">
+      <mat-progress-bar mode="determinate" textTop="true" value="{{ voteProgression }}" class="progress-bar-usage vote-progression"></mat-progress-bar>
+      <div class="progress-bar-text">
+          {{ voteProgression?voteProgression:0 }} %
+      </div>
+  </div> 
+</div>
+<div class="col-sm-4">
   <mat-form-field>
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search by producer name or by url">
   </mat-form-field> 
@@ -40,8 +61,14 @@
     <ng-container matColumnDef="Status">
       <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
       <mat-cell *matCellDef="let element" class="marketcap-container">
-          <button mat-raised-button color="primary" class="status" *ngIf="element?.index <= 21">Active</button>
-          <button mat-raised-button color="warn" class="status" *ngIf="element?.index > 21">Standby</button>
+          <!-- <button mat-raised-button color="primary" class="status" *ngIf="element?.is_active && !element?.producing && (element?.index <= 21 || element?.owner === rotations?.sbp_currently_in)">Active</button>
+          <button mat-raised-button color="warn" class="status" *ngIf="element?.is_active && !element?.producing && (element?.index > 21 || element?.owner === rotations?.bp_currently_out)">Standby</button>
+          <button mat-raised-button color="inactive" class="status" *ngIf="!element?.is_active && !element?.producing">Inactive</button>
+          <button mat-raised-button color="producing" class="status" *ngIf="element?.producing">Producing</button> -->
+          <button mat-raised-button color="primary" class="status" *ngIf="element?.label === 'Active'">Active <span *ngIf="element?.index > 21" class="fa fa-sync-alt"></span></button>
+          <button mat-raised-button color="warn" class="status" *ngIf="element?.label === 'Standby'">Standby <span *ngIf="element?.index < 22" class="fa fa-sync-alt"></span></button>
+          <button mat-raised-button color="inactive" class="status" *ngIf="element?.label === 'Inactive'">Inactive</button>
+          <button mat-raised-button color="producing" class="status" *ngIf="element?.producing">Producing <span *ngIf="element?.index > 21" class="fa fa-sync-alt"></span></button>
        </mat-cell>
     </ng-container>
     
@@ -59,17 +86,32 @@
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="Votes">
-      <mat-header-cell *matHeaderCellDef> Votes </mat-header-cell>
+    <ng-container matColumnDef="Last block">
+      <mat-header-cell *matHeaderCellDef> Last block </mat-header-cell>
       <mat-cell *matCellDef="let element" class="change-container"> 
-          <strong> {{ element?.votes }} %</strong>
+          <strong class="color-orange"> {{ element?.last_block_produced }} <span *ngIf="blockChainInfo?.head_block_num - (element?.last_block_produced || firstBlockProduced) > 252" class="fa fa-exclamation-triangle"></span> </strong>
         </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="Rewards">
-      <mat-header-cell *matHeaderCellDef> Rewards Per Day</mat-header-cell>
+    <ng-container matColumnDef="Last time produced">
+      <mat-header-cell *matHeaderCellDef> Last time produced</mat-header-cell>
       <mat-cell *matCellDef="let element" class="change-container"> 
-        <strong> {{ element?.rewards }} TLS</strong>
+        <span *ngIf="element?.last_time_produced && element?.producing"> producing blocks...</span>
+        <span *ngIf="element?.last_time_produced && !element?.producing"> <last-updated [timestamp]="element?.last_time_produced" direction="up"></last-updated></span>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Next rotation">
+      <mat-header-cell *matHeaderCellDef> Next rotation</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="change-container">
+        <strong [ngClass]="{'color-orange': element.index-1 === rotations.bp_out_index || element.index-1 === rotations.sbp_in_index}"><last-updated [timestamp]="element.nextRotationTime" direction="down"></last-updated></strong>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Votes">
+      <mat-header-cell  style="text-align: right;" *matHeaderCellDef> Votes</mat-header-cell>
+      <mat-cell  style="text-align: right;" *matCellDef="let element" class="change-container"> 
+        <strong> {{ element?.votes }} %</strong>
       </mat-cell>
     </ng-container>
 
