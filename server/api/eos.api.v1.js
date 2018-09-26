@@ -542,6 +542,18 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	});
 	//============ END of Register
 
+	// P2P List
+	/*
+	* producer - account
+	*/
+	router.get('/api/v1/p2p', (req, res) => {
+    PRODUCER.find((err, itms) => {
+        if (err) console.log(err);
+        else  res.status(200).json(itms);
+    });
+	});
+	//============ END of P2P List
+
 // ============== end of exports 
 };
 
