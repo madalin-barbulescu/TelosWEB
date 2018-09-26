@@ -41,10 +41,7 @@ export class P2PageComponent implements OnInit {
           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
           this.dataSource.filterPredicate = (data, filter) => data.name.toLowerCase().indexOf(filter) > -1 ||
             data.url.toLowerCase().indexOf(filter) > -1 ||
-            data.organization.toLowerCase().indexOf(filter) > -1 ||
-            data.p2pServerAddress.toLowerCase().indexOf(filter) > -1 ||
-            data.httpServerAddress.toLowerCase().indexOf(filter) > -1 ||
-            data.httpsServerAddress.toLowerCase().indexOf(filter) > -1;
+            data.p2pServerAddress.toLowerCase().indexOf(filter) > -1;
         },
         error => console.log(error)
       )
