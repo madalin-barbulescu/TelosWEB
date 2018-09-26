@@ -27,6 +27,7 @@ import { ProducersPageModule } from './pages/producers/producers.module';
 import { ProducerModule } from './pages/producer_page/producer_page.module';
 import { AnalyticsPageModule } from './pages/analytics/analytics.module';
 import { RamPageModule } from './pages/ram/ram.module';
+import { RegistrationPageModule } from './pages/registration/registration.module';
 import { TransactionPageModule } from './pages/transactions/transactions.module';
 import { WalletPageModule } from './pages/wallet/wallet.module';
 import { VotePageModule } from './pages/vote/vote.module';
@@ -78,6 +79,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     ProducerModule,
     AnalyticsPageModule,
     RamPageModule,
+    RegistrationPageModule,
     SoonModule
   ],
   providers: [appRoutingProviders],

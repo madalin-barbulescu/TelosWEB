@@ -5,9 +5,11 @@
 const async = require('async');
 const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
+const axios = require('axios');
 
 module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) {
 
+	const PRODUCER 	= require('../models/producer.model')(mongoMain);
 	const STATS_AGGR 	= require('../models/api.stats.model')(mongoMain);
 	const STATS_ACCOUNT = require('../models/api.accounts.model')(mongoMain);
 	const RAM 			= require('../models/ram.price.model')(mongoMain);
@@ -15,7 +17,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	const TRX_ACTIONS = require('../models/trx.actions.history.model')(mongoMain);
 
     //============ HISTORY API
-    /*
+	/*
 	* router - search global aggregation
 	*/
 	router.post('/api/v1/search', (req, res) => {
@@ -336,7 +338,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - account_name, position, offset
 	*/
 	router.get('/api/v1/get_actions/:account_name/:position/:offset', (req, res) => {
-	   	 eos.getActions({ 
+	   	 eos.getActions({
 	   	 		account_name: req.params.account_name,
 	   	 		pos: req.params.position,
 	   	 		offset: req.params.offset
@@ -497,6 +499,48 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   	 	});
 	});
 	//============ END of Account API
+
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos', (req, res) => {
+		const data = req.body;
+		const ip = data.producer.p2pServerAddress.slice(0, data.producer.p2pServerAddress.lastIndexOf(':'));
+
+		axios.get(`http://ip-api.com/json/${ip}`)
+			.then(geoLocData => {
+				const producer = Object.assign({}, data.producer);
+				producer.ownerPublicKey = producer.producerPublicKey;
+				producer.activePublicKey = producer.producerPublicKey;
+				producer.latitude = geoLocData.data.lat;
+				producer.longitude = geoLocData.data.lon;
+				producer.country = geoLocData.data.country;
+				producer.region = geoLocData.data.region;
+				producer.city = geoLocData.data.city;
+				producer.isp = geoLocData.data.isp;
+
+				console.log(producer);
+				
+				return axios.post('http://testnet.telosfoundation.io:5500/api/v1/teclos', {producer: producer})
+					.then(response => {
+						let data = response.data;
+						return { 
+							result: "Account added successfully", 
+							createAccount: data.createAccountResult, 
+							transferTLOS: data.transferResult 
+						};
+					})
+					.then(data => {
+						const pModel = new PRODUCER(producer);
+
+						return pModel.save()
+							.then(acc => res.status(200).json(data))
+					});
+			})
+			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));;
+	});
+	//============ END of Register
 
 // ============== end of exports 
 };

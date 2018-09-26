@@ -13,6 +13,7 @@ import { RamPageComponent } from './pages/ram/ram.component';
 import { SoonComponent } from './pages/soon/soon.component';
 import { WalletPageComponent } from './pages/wallet/wallet.component';
 import { VotePageComponent } from './pages/vote/vote.component';
+import { RegistrationPageComponent } from './pages/registration/registration.component';
 //import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
@@ -56,6 +57,10 @@ export const routes: Routes = [
   {
     path: 'ram', 
     component: RamPageComponent 
+  },
+  {
+    path: 'registration', 
+    component: RegistrationPageComponent 
   },
   { 
     path: 'transaction/:id', 
