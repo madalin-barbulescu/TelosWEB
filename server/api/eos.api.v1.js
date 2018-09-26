@@ -511,8 +511,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 		axios.get(`http://ip-api.com/json/${ip}`)
 			.then(geoLocData => {
 				const producer = Object.assign({}, data.producer);
-				producer.ownerPublicKey = producer.producerPublicKey;
-				producer.activePublicKey = producer.producerPublicKey;
 				producer.latitude = geoLocData.data.lat;
 				producer.longitude = geoLocData.data.lon;
 				producer.country = geoLocData.data.country;
@@ -520,25 +518,40 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 				producer.city = geoLocData.data.city;
 				producer.isp = geoLocData.data.isp;
 
-				console.log(producer);
-				
-				return axios.post('http://testnet.telosfoundation.io:5500/api/v1/teclos', {producer: producer})
-					.then(response => {
-						let data = response.data;
-						return { 
-							result: "Account added successfully", 
-							createAccount: data.createAccountResult, 
-							transferTLOS: data.transferResult 
-						};
-					})
-					.then(data => {
-						const pModel = new PRODUCER(producer);
-
-						return pModel.save()
-							.then(acc => res.status(200).json(data))
+				eos.transaction(tr => {
+					tr.newaccount({
+						creator: 'testaccoooo1',
+						name: producer.name,
+						owner: producer.producerPublicKey,
+						active: producer.producerPublicKey
 					});
+				
+					tr.buyrambytes({
+						payer: 'testaccoooo1',
+						receiver: producer.name,
+						bytes: 5120
+					});
+				
+					tr.delegatebw({
+						from: 'testaccoooo1',
+						receiver: producer.name,
+						stake_net_quantity: '250.0000 TLOS',
+						stake_cpu_quantity: '250.0000 TLOS',
+						transfer: 1
+					});
+				})
+				.catch(err => {
+					const error = JSON.parse(err);
+					res.status(400).send({result: 'error', message: error.message, data: error});
+				})
+				.then(data => {
+					const pModel = new PRODUCER(producer);
+
+					return pModel.save()
+						.then(acc => res.status(200).json(data));
+				});
 			})
-			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));;
+			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));
 	});
 	//============ END of Register
 
