@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import {MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,18 @@ export class AppComponent {
   };
   search;
 
-  constructor(private http: HttpClient, private router: Router){}
+  constructor(private http: HttpClient, private router: Router, private notifications:MatSnackBar){
+      http.get("/admin/v1/news").subscribe(
+        (response:any) => {
+            if(response && response.message ){
+                notifications.open(response.message, "Got it!", {
+                    duration: 0
+                });
+            }
+        },
+        (error) =>{console.error(error);}
+      );
+  }
 
   searchGlobal(text){
     if (!text) {

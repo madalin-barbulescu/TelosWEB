@@ -5,17 +5,22 @@
 const async = require('async');
 const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
+const axios = require('axios');
 
-module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) {
+module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
 
+	const PRODUCER 	= require('../models/producer.model')(mongoMain);
 	const STATS_AGGR 	= require('../models/api.stats.model')(mongoMain);
 	const STATS_ACCOUNT = require('../models/api.accounts.model')(mongoMain);
 	const RAM 			= require('../models/ram.price.model')(mongoMain);
 	const RAM_ORDERS 	= require('../models/ram.orders.model')(mongoMain);
 	const TRX_ACTIONS = require('../models/trx.actions.history.model')(mongoMain);
+	const CACHE_ACCOUNT = require('../models/nodeos.accounts.model')(mongoCache);
+	const CACHE_TRANSACTIONS = require('../models/nodeos.transactions.model')(mongoCache);
+	const CACHE_TRANSACTION_TRACES = require('../models/nodeos.transaction_traces.model')(mongoCache);
 
     //============ HISTORY API
-    /*
+	/*
 	* router - search global aggregation
 	*/
 	router.post('/api/v1/search', (req, res) => {
@@ -36,15 +41,27 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   			 	});
 			},
 			transaction: (cb) =>{
-				eos.getTransaction({ id: text })
-	   			 	.then(result => {
-	   			 		cb(null, result);
-	   			 	})
-	   			 	.catch(err => {
-	   			 		cb(null, null);
-	   			 	});
+				// db.transactions.find({ trx_id: text }).pretty()
+				CACHE_TRANSACTIONS.find({trx_id:text},(err, result) => {
+					console.log(err,result);
+					if(err || !result || result.length === 0){
+						eos.getTransaction({ id: text })
+								.then(result => {
+									cb(null, result);
+								})
+								.catch(err => {
+									cb(null, null);
+								});
+					}else{
+						cb(null,{id: result[0].trx_id});
+					}
+				});
 			},
 			account: (cb) =>{
+				// console.log(CACHE_ACCOUNT.find({ name: text}, function(err,res){
+				// 	console.log("result 1>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", err,res);
+				// }));
+
 				eos.getAccount({ account_name: text })
 	   			 	.then(result => {
 	   			 		cb(null, result);
@@ -54,6 +71,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   			 	});
 			},
 			key: (cb) => {
+				// db.pub_keys.find({ public_key: text }).pretty()
+
 				eos.getKeyAccounts({ public_key: text })
 	   	 			.then(result => {
 	   	 				cb(null, result);
@@ -325,7 +344,26 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	});
 
 	router.get('/api/custom/get_producer_schedule', (req, res) => {
-		request.post({url:`${config.customChain}/v1/chain/get_producer_schedule`, json: {}}).pipe(res);
+		request.post({url:`${config.customChain}/v1/chain/get_producer_schedule`, json: {}}, (e, r, body) => {
+			var x = body.active.producers;
+			async.each( x, 
+				(prod, cb)=>{
+					PRODUCER.where({"name":prod.producer_name}).findOne((err, p)=>{
+						if(err){return cb(err);}
+						if(p){
+							prod.location = [p.latitude, p.longitude];
+						}
+						cb();
+					});
+				}, 
+				(err)=>{
+					if(err){
+						log.error(err);
+					}
+					res.json(body);	
+				}
+			);
+		});
 	});
 
 	router.post('/api/producer', (req, res) => {
@@ -340,7 +378,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - account_name, position, offset
 	*/
 	router.get('/api/v1/get_actions/:account_name/:position/:offset', (req, res) => {
-	   	 eos.getActions({ 
+	   	 eos.getActions({
 	   	 		account_name: req.params.account_name,
 	   	 		pos: req.params.position,
 	   	 		offset: req.params.offset
@@ -359,14 +397,25 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - transaction_id_type
 	*/
 	router.get('/api/v1/get_transaction/:transaction_id_type', (req, res) => {
-	   	 eos.getTransaction({ id: req.params.transaction_id_type })
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-	   	 	});
+		CACHE_TRANSACTIONS.find({trx_id: req.params.transaction_id_type},(err, result) => {
+			if(err || !result || result.length === 0){
+				log.error(err);
+				res.status(501).end();
+			}else{
+				CACHE_TRANSACTION_TRACES.find({id: req.params.transaction_id_type}, (err,result2) => {
+					const obj = {
+						transactions: result
+					};
+					if(err || !result || result.length === 0){
+						obj.traces = -1;
+					}else{
+						obj.traces = result2;
+					}
+					
+					res.json(obj);
+				});
+			}
+		});
 	});
 
 	/*
@@ -374,6 +423,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - transaction_id_type
 	*/
 	router.get('/api/v1/get_transactions', (req, res) => {
+
 	   	 eos.getTransaction({})
 	   	 	.then(result => {
 	   	 		res.json(result);
@@ -435,16 +485,16 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - name
 	*/
 	router.get('/api/v1/get_account/:name', (req, res) => {
-	   	 eos.getAccount({
-	   	 		account_name: req.params.name
-	   	 	})
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-	   	 	});
+		eos.getAccount({
+			account_name: req.params.name
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			log.error(err);
+			res.status(501).end();
+		});
 	});
 
 	/*
@@ -501,6 +551,128 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   	 	});
 	});
 	//============ END of Account API
+
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos', (req, res) => {
+		const data = req.body;
+		const ip = data.producer.p2pServerAddress.slice(0, data.producer.p2pServerAddress.lastIndexOf(':'));
+
+		axios.get(`http://ip-api.com/json/${ip}`)
+			.catch(err => {
+				const error = JSON.parse(err);
+				console.log(error);
+				res.status(400).send({result: 'error', message: error.message, data: error});
+			})
+			.then(geoLocData => {
+				const producer = Object.assign({}, data.producer);
+				producer.latitude = geoLocData.data.lat;
+				producer.longitude = geoLocData.data.lon;
+				producer.country = geoLocData.data.country;
+				producer.region = geoLocData.data.region;
+				producer.city = geoLocData.data.city;
+				producer.isp = geoLocData.data.isp;
+
+				eos.transaction(tr => {
+					tr.newaccount({
+						creator: 'testaccoooo1',
+						name: producer.name,
+						owner: producer.producerPublicKey,
+						active: producer.producerPublicKey
+					});
+				
+					tr.buyrambytes({
+						payer: 'testaccoooo1',
+						receiver: producer.name,
+						bytes: 1024*1024*100
+					});
+				
+					tr.delegatebw({
+						from: 'testaccoooo1',
+						receiver: producer.name,
+						stake_net_quantity: '1000.0000 TLOS',
+						stake_cpu_quantity: '1000.0000 TLOS',
+						transfer: 1
+					});
+				})
+				.catch(err => {
+					const error = JSON.parse(err);
+					console.log(error);
+					res.status(error.code).send({result: 'error', message: error.message, data: error});
+				})
+				.then(data => {
+					const pModel = new PRODUCER(producer);
+
+					return pModel.save()
+						.then(acc => res.status(200).json(data))
+						.catch(error => {
+							console.log(error);
+							res.status(error.code).send({result: 'error', message: error.message, data: error})
+						});
+				});
+			})
+			.then(result =>{
+				res.status(200).send(result);
+			})
+			.catch(err => res.status(400).send({result: 'error', message: err.message ? err.message : err, data: {}}));
+	});
+	//============ END of Register
+
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos/newaccount', (req, res) => {
+		const data = req.body;
+
+		eos.transaction(tr => {
+			tr.newaccount({
+				creator: 'testaccoooo1',
+				name: data.name,
+				owner: data.publicKey,
+				active: data.publicKey
+			});
+		
+			tr.buyrambytes({
+				payer: 'testaccoooo1',
+				receiver: data.name,
+				bytes: 5120
+			});
+		
+			tr.delegatebw({
+				from: 'testaccoooo1',
+				receiver: data.name,
+				stake_net_quantity: '100.0000 TLOS',
+				stake_cpu_quantity: '100.0000 TLOS',
+				transfer: 0
+			});
+		})
+		.then(result =>{
+			res.status(200).send(result);
+		})
+		.catch(err => {
+			let error = err;
+			try{
+				error = JSON.parse(err);
+			}catch(ignored){}
+			res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
+		})
+	});
+	//============ END of Register
+
+	// P2P List
+	/*
+	* producer - account
+	*/
+	router.get('/api/v1/p2p', (req, res) => {
+    PRODUCER.find((err, itms) => {
+        if (err) console.log(err);
+        else  res.status(200).json(itms);
+    });
+	});
+	//============ END of P2P List
 
 // ============== end of exports 
 };

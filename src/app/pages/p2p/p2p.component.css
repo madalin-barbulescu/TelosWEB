@@ -1,0 +1,16 @@
+:host .header-cell-medium {
+  flex: 2;
+}
+
+:host .filter-header {
+  display: flex;
+  align-items: center;
+}
+
+:host .filter-header > :nth-last-child(n+2) {
+  margin-right: 20px;
+}
+
+:host .filter-header > .filter-header-input {
+  flex: 1;
+}

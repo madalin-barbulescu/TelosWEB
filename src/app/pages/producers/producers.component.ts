@@ -41,6 +41,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
 
   options;
   layers = [];
+  lastMapUpdate = [];
 
   constructor(private socket: Socket, protected http: HttpClient, private MainService: MainService) { }
 
@@ -68,10 +69,24 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
       layers: [
          tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18, attribution: 'Telos' })
       ],
-      zoom: 1,
+      zoom: 1.2,
       center: latLng(0, 0)
     };
     this.mapOpen = !this.mapOpen;
+  }
+
+  putProducersOnMap(producers){
+    if(this.lastMapUpdate.length){
+      this.layers.splice(this.lastMapUpdate[0], this.lastMapUpdate[1]);
+    }
+    this.lastMapUpdate[0] = this.layers.length;
+    this.lastMapUpdate[1] = 0;
+    for(let i = 0; i < producers.length; i++){
+      if(!producers[i].location) continue;
+
+      this.layers.push(circle(producers[i].location, { radius: 1000 }));
+      this.lastMapUpdate[1]++;
+    }
   }
 
   getBlockData() {
@@ -110,7 +125,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           this.rotations.next_rotation_time = new Date(Date.parse(this.rotations.next_rotation_time + 'Z'));
           this.voteProgression = (results[1].rows[0].total_activated_stake / 10000 / this.supply * 100).toFixed(2);
 
-          // this.layers.push(circle([ 55, 55 ], { radius: 1000 }));
+          this.putProducersOnMap(results[4].active.producers);
 
           let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.MainService.sortArray(this.mainData), this.rotations), this.totalProducerVoteWeight, this.supply);
           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
@@ -158,14 +173,14 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
     for (var index = 0; index < data.length; index++) {
       let element = data[index];
 
-      // if (element.owner === rotation.bp_currently_out) {
-      if (index === rotation.bp_out_index) {
+      if (element.owner === rotation.bp_currently_out) {
+      // if (index === rotation.bp_out_index) {
         a = index;
         element.label = 'Standby';
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
         totalStandby += 1;
-      // } else if (element.owner === rotation.sbp_currently_in) {
-      } else if (index === rotation.sbp_in_index) {
+      } else if (element.owner === rotation.sbp_currently_in) {
+      // } else if (index === rotation.sbp_in_index) {
         b = index;
         element.label = 'Active';
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
@@ -186,16 +201,31 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
       }
     }
 
-    for (var pos = 0; pos < totalActive; pos++) {
-      if (pos === a)
+    /**
+     * x = next time from rotation table = new Date(this.rotations.next_rotation_time).getTime()
+     * y = this.ROTATION_INTERVAL = 6hrs
+     * z = number of intervals for current position = (pos - this.rotations.bp_out_index + (<any>(pos < this.rotations.bp_out_index) * (totalActive - 1))
+     * x + y * z = next rotation time for current position
+     * 
+     * pos = current position without the rotated member = if (i < a) then i else i-1   (a = current position for rotated member)
+     * this.rotations.bp_out_index = last position for rotated member
+     * (pos < this.rotations.bp_out_index) * (totalActive - 1) = if (pos < bp_out_index) then (totalActive - 1) else 0
+     */
+
+    let pos = 0;
+    for (var i = 0; i < totalActive; i++) {
+      if (i === a)
         continue;
-      data[pos].nextRotationTime = new Date(this.rotations.next_rotation_time).getTime() + this.ROTATION_INTERVAL * (pos - this.rotations.bp_out_index - 1 + (<any>(pos < this.rotations.bp_out_index) * totalActive));
+      data[i].nextRotationTime = new Date(this.rotations.next_rotation_time).getTime() + this.ROTATION_INTERVAL * (pos - this.rotations.bp_out_index + (<any>(pos < this.rotations.bp_out_index) * (totalActive - 1)));
+      pos++;
     }
 
-    for (var pos = totalActive; pos < totalStandby + totalActive; pos++) {
-      if (pos === b)
+    pos = totalActive;
+    for (var i = totalActive; i < totalStandby + totalActive; i++) {
+      if (i === b)
         continue;
-      data[pos].nextRotationTime = new Date(this.rotations.next_rotation_time).getTime() + this.ROTATION_INTERVAL * (pos - this.rotations.sbp_in_index - 1 + (<any>(pos < this.rotations.sbp_in_index) * totalStandby));
+      data[i].nextRotationTime = new Date(this.rotations.next_rotation_time).getTime() + this.ROTATION_INTERVAL * (pos - this.rotations.sbp_in_index + (<any>(pos < this.rotations.sbp_in_index) * (totalStandby - 1)));
+      pos++;
     }
 
     let swap = data[a];
