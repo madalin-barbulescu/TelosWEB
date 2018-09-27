@@ -46,7 +46,7 @@ export class VotePageComponent implements OnInit {
   vote = {
     voter: '',
     proxy: '',
-    producers: ['eoswebnetbp1']
+    producers: ['amplifiedtls']
   };
   contract;
   contractName = 'eosio';
@@ -202,7 +202,7 @@ export class VotePageComponent implements OnInit {
                   this.vote = {
                     voter: '',
                     proxy: '',
-                    producers: ['eoswebnetbp1']
+                    producers: ['amplifiedtls']
                   };
             }).catch(err => {
                  console.error(err);

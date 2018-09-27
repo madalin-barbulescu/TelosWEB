@@ -25,7 +25,7 @@ export class AppComponent {
   constructor(private http: HttpClient, private router: Router, private notifications:MatSnackBar){
       http.get("/admin/v1/news").subscribe(
         (response:any) => {
-            if(response && response.message){
+            if(response && response.message ){
                 notifications.open(response.message, "Got it!", {
                     duration: 0
                 });

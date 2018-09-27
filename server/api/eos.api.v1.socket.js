@@ -140,7 +140,7 @@ module.exports = function(io, eos, mongoMain){
               io.to(SOCKET_ROOM).emit('get_aggregation', result.stat);
               io.to(SOCKET_ROOM).emit('get_ram', result.ram);
               //io.to(SOCKET_ROOM).emit('users_online', userCountHandler);
-              console.log(`===== Users online: ${userCountHandler}`);
+              log.info(`===== Users online: ${userCountHandler}`);
           }
           setTimeout(getDataSocket, updateTimeBlocks);
       });

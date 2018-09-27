@@ -43,8 +43,24 @@ module.exports = function(router, config, request, log) {
 	router.get('/settings', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
+	
+	router.get('/p2p', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/info', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
 
 	router.get('/ram', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/account-creation', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/registration', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
 

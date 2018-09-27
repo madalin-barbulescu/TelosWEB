@@ -344,7 +344,26 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
 	router.get('/api/custom/get_producer_schedule', (req, res) => {
-		request.post({url:`${config.customChain}/v1/chain/get_producer_schedule`, json: {}}).pipe(res);
+		request.post({url:`${config.customChain}/v1/chain/get_producer_schedule`, json: {}}, (e, r, body) => {
+			var x = body.active.producers;
+			async.each( x, 
+				(prod, cb)=>{
+					PRODUCER.where({"name":prod.producer_name}).findOne((err, p)=>{
+						if(err){return cb(err);}
+						if(p){
+							prod.location = [p.latitude, p.longitude];
+						}
+						cb();
+					});
+				}, 
+				(err)=>{
+					if(err){
+						log.error(err);
+					}
+					res.json(body);	
+				}
+			);
+		});
 	});
 
 	router.post('/api/producer', (req, res) => {
@@ -567,14 +586,14 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 					tr.buyrambytes({
 						payer: 'testaccoooo1',
 						receiver: producer.name,
-						bytes: 5120
+						bytes: 1024*1024*100
 					});
 				
 					tr.delegatebw({
 						from: 'testaccoooo1',
 						receiver: producer.name,
-						stake_net_quantity: '250.0000 TLOS',
-						stake_cpu_quantity: '250.0000 TLOS',
+						stake_net_quantity: '1000.0000 TLOS',
+						stake_cpu_quantity: '1000.0000 TLOS',
 						transfer: 1
 					});
 				})
@@ -594,7 +613,10 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 						});
 				});
 			})
-			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));
+			.then(result =>{
+				res.status(200).send(result);
+			})
+			.catch(err => res.status(400).send({result: 'error', message: err.message ? err.message : err, data: {}}));
 	});
 	//============ END of Register
 
@@ -622,14 +644,20 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			tr.delegatebw({
 				from: 'testaccoooo1',
 				receiver: data.name,
-				stake_net_quantity: '250.0000 TLOS',
-				stake_cpu_quantity: '250.0000 TLOS',
+				stake_net_quantity: '100.0000 TLOS',
+				stake_cpu_quantity: '100.0000 TLOS',
 				transfer: 0
 			});
 		})
+		.then(result =>{
+			res.status(200).send(result);
+		})
 		.catch(err => {
-			const error = JSON.parse(err);
-			res.status(error.code).send({result: 'error', message: error.message, data: error.error});
+			let error = err;
+			try{
+				error = JSON.parse(err);
+			}catch(ignored){}
+			res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
 		})
 	});
 	//============ END of Register
