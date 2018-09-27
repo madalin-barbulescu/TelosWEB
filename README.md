@@ -1,4 +1,4 @@
-# EOSweb.net - vote for us [eoswebnetbp1](https://eosweb.net/vote)
+# amplified.telos - vote for us amplifiedtls
 
 [Angular CLI](https://github.com/angular/angular-cli) version 1.7.4.
 
