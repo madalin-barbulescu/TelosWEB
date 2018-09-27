@@ -13,7 +13,7 @@ import 'rxjs/add/operator/finally';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationPageComponent implements OnInit {
-  errors: any;
+  dataSent: any;
   registerFGroup: FormGroup;
   protocols: any[];
   isLoading: boolean = false;
@@ -24,6 +24,8 @@ export class RegistrationPageComponent implements OnInit {
   readonly URL_REGEX_WITH_PORT = new RegExp(/^(((?!-))(xn--|_{1,1})?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,}):[0-9]+$/);
   readonly URL_REGEX = new RegExp(/^(((?!-))(xn--|_{1,1})?[a-z0-9-]{0,61}[a-z0-9]{1,1}\.)*(xn--)?([a-z0-9\-]{1,61}|[a-z0-9-]{1,30}\.[a-z]{2,})$/);
   readonly IP_REGEX = new RegExp(/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]):[0-9]+$/g);
+
+  readonly INIT_FORM_VALUE: any;
 
   constructor(
     private route: ActivatedRoute, 
@@ -40,7 +42,17 @@ export class RegistrationPageComponent implements OnInit {
       field: 'httpServerAddress'
     }];
 
-    this.errors = {};
+    this.INIT_FORM_VALUE = {
+      name: '',
+      organization: '',
+      protocol: this.protocols[0].value,
+      serverIPAddress: '',
+      p2pServerAddress: '',
+      producerPublicKey: '',
+      telegramChannel: '',
+      email: '',
+      url: ''
+    }
   }
 
   send() {
@@ -65,7 +77,11 @@ export class RegistrationPageComponent implements OnInit {
     this.registerProducerNode(dataToSend)
       .finally(() => this.isLoading = false)
       .subscribe(
-        data => this.notifications.success('Producer Registered'),
+        data => {
+          this.dataSent = Object.assign({}, dataToSend.producer);
+          // this.registerFGroup.reset(this.INIT_FORM_VALUE);
+          this.notifications.success('Producer Registered');
+        },
         error => {
           const message = error.data.what ? error.data.what : error.message;
           this.notifications.error(message);
@@ -76,7 +92,7 @@ export class RegistrationPageComponent implements OnInit {
   
   ngOnInit() {
     this.registerFGroup = this.newRegisterForm();
-    this.registerFGroup.patchValue({protocol: this.protocols[0].value});
+    this.registerFGroup.patchValue(this.INIT_FORM_VALUE);
   }
 
   registerProducerNode(data) {
