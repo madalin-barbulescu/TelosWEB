@@ -3,6 +3,7 @@ import { MainPageComponent } from './pages/main_page/main_page.component';
 import { BlockPageComponent } from './pages/block/block.component';
 import { TransactionPageComponent } from './pages/transactions/transactions.component';
 import { AccountPageComponent } from './pages/account/account.component';
+import { AccountCreationPageComponent } from './pages/account-creation/account-creation.component';
 import { AddressPageComponent } from './pages/address/address.component';
 import { P2PageComponent } from './pages/p2p/p2p.component';
 import { ProducersPageComponent } from './pages/producers/producers.component';
@@ -29,6 +30,10 @@ export const routes: Routes = [
   { 
     path: 'account/:id', 
     component: AccountPageComponent 
+  },
+  {
+    path: 'account-creation', 
+    component: AccountCreationPageComponent 
   },
   { 
     path: 'address/:id', 

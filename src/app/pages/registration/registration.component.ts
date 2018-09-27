@@ -196,13 +196,13 @@ export class RegistrationPageComponent implements OnInit {
   private setServerAddress(dataToSend, formValue) {
     this.protocols.forEach((protocol) => {
       if (protocol.value === formValue.protocol) {
-        dataToSend[protocol.field] = this.separeProtocol(formValue.serverIPAddress);
+        dataToSend[protocol.field] = this.separateProtocol(formValue.serverIPAddress);
         return;
       }
     });
   }
 
-  private separeProtocol(value) {
+  private separateProtocol(value) {
     if (value.indexOf('http://') === 0)
       return value.slice(7);
     else if (value.indexOf('https://') === 0)

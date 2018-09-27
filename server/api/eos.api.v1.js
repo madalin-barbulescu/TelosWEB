@@ -555,6 +555,42 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	});
 	//============ END of Register
 
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos/newaccount', (req, res) => {
+		const data = req.body;
+
+		eos.transaction(tr => {
+			tr.newaccount({
+				creator: 'testaccoooo1',
+				name: data.name,
+				owner: data.publicKey,
+				active: data.publicKey
+			});
+		
+			tr.buyrambytes({
+				payer: 'testaccoooo1',
+				receiver: data.name,
+				bytes: 5120
+			});
+		
+			tr.delegatebw({
+				from: 'testaccoooo1',
+				receiver: data.name,
+				stake_net_quantity: '250.0000 TLOS',
+				stake_cpu_quantity: '250.0000 TLOS',
+				transfer: 0
+			});
+		})
+		.catch(err => {
+			const error = JSON.parse(err);
+			res.status(error.code).send({result: 'error', message: error.message, data: error.error});
+		})
+	});
+	//============ END of Register
+
 	// P2P List
 	/*
 	* producer - account
