@@ -4,11 +4,16 @@
 const path = require('path');
 let config = {};
 
+config.ADMIN_ENABLED = true;
+config.ADMIN_PKEY = "TLOS5WJtphnj2KfsPL3mxNqgsGcdGqwSBPpVjgPGYrJTiKsQGKrsQj";
+
 // production mod
 config.PROD = false;
 
 // mongo uri and options
 config.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/TLSweb';
+config.MONGO_NODE_URI = process.env.MONGO_NODE_URI || 'mongodb://localhost:27017/TELOS';
+
 config.MONGO_OPTIONS = {
     socketTimeoutMS: 30000,
     keepAlive: true,

@@ -6,13 +6,16 @@ const async = require('async');
 const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
 
-module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) {
+module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
 
 	const STATS_AGGR 	= require('../models/api.stats.model')(mongoMain);
 	const STATS_ACCOUNT = require('../models/api.accounts.model')(mongoMain);
 	const RAM 			= require('../models/ram.price.model')(mongoMain);
 	const RAM_ORDERS 	= require('../models/ram.orders.model')(mongoMain);
 	const TRX_ACTIONS = require('../models/trx.actions.history.model')(mongoMain);
+	const CACHE_ACCOUNT = require('../models/nodeos.accounts.model')(mongoCache);
+	const CACHE_TRANSACTIONS = require('../models/nodeos.transactions.model')(mongoCache);
+	const CACHE_TRANSACTION_TRACES = require('../models/nodeos.transaction_traces.model')(mongoCache);
 
     //============ HISTORY API
     /*
@@ -36,15 +39,27 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   			 	});
 			},
 			transaction: (cb) =>{
-				eos.getTransaction({ id: text })
-	   			 	.then(result => {
-	   			 		cb(null, result);
-	   			 	})
-	   			 	.catch(err => {
-	   			 		cb(null, null);
-	   			 	});
+				// db.transactions.find({ trx_id: text }).pretty()
+				CACHE_TRANSACTIONS.find({trx_id:text},(err, result) => {
+					console.log(err,result);
+					if(err || !result || result.length === 0){
+						eos.getTransaction({ id: text })
+								.then(result => {
+									cb(null, result);
+								})
+								.catch(err => {
+									cb(null, null);
+								});
+					}else{
+						cb(null,{id: result[0].trx_id});
+					}
+				});
 			},
 			account: (cb) =>{
+				// console.log(CACHE_ACCOUNT.find({ name: text}, function(err,res){
+				// 	console.log("result 1>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", err,res);
+				// }));
+
 				eos.getAccount({ account_name: text })
 	   			 	.then(result => {
 	   			 		cb(null, result);
@@ -54,6 +69,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	   			 	});
 			},
 			key: (cb) => {
+				// db.pub_keys.find({ public_key: text }).pretty()
+
 				eos.getKeyAccounts({ public_key: text })
 	   	 			.then(result => {
 	   	 				cb(null, result);
@@ -340,6 +357,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - account_name, position, offset
 	*/
 	router.get('/api/v1/get_actions/:account_name/:position/:offset', (req, res) => {
+
 	   	 eos.getActions({ 
 	   	 		account_name: req.params.account_name,
 	   	 		pos: req.params.position,
@@ -359,14 +377,25 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - transaction_id_type
 	*/
 	router.get('/api/v1/get_transaction/:transaction_id_type', (req, res) => {
-	   	 eos.getTransaction({ id: req.params.transaction_id_type })
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-	   	 	});
+		CACHE_TRANSACTIONS.find({trx_id: req.params.transaction_id_type},(err, result) => {
+			if(err || !result || result.length === 0){
+				log.error(err);
+				res.status(501).end();
+			}else{
+				CACHE_TRANSACTION_TRACES.find({id: req.params.transaction_id_type}, (err,result2) => {
+					const obj = {
+						transactions: result
+					};
+					if(err || !result || result.length === 0){
+						obj.traces = -1;
+					}else{
+						obj.traces = result2;
+					}
+					
+					res.json(obj);
+				});
+			}
+		});
 	});
 
 	/*
@@ -374,6 +403,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - transaction_id_type
 	*/
 	router.get('/api/v1/get_transactions', (req, res) => {
+
 	   	 eos.getTransaction({})
 	   	 	.then(result => {
 	   	 		res.json(result);
@@ -435,16 +465,16 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 	* params - name
 	*/
 	router.get('/api/v1/get_account/:name', (req, res) => {
-	   	 eos.getAccount({
-	   	 		account_name: req.params.name
-	   	 	})
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-	   	 	});
+		eos.getAccount({
+			account_name: req.params.name
+		})
+		.then(result => {
+			res.json(result);
+		})
+		.catch(err => {
+			log.error(err);
+			res.status(501).end();
+		});
 	});
 
 	/*

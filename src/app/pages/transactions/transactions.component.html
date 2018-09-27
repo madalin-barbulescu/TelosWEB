@@ -24,7 +24,7 @@
 					<strong class="block-info-header">Hash:</strong>
 				</div>
 				<div class="col-sm-9">
-					<small class="color-grey tx-mobile-hash">{{ mainData?.id}}</small>
+					<small class="color-grey tx-mobile-hash">{{ mainData?.trx_id}}</small>
 				</div>
 			</div>	
 
@@ -42,7 +42,7 @@
 					<strong class="block-info-header">Actions:</strong>
 				</div>
 				<div class="col-sm-9">
-					<small class="color-grey">{{ mainData?.trx?.trx?.actions?.length }}</small>
+					<small class="color-grey">{{ mainData?.actions?.length }}</small>
 				</div>
 			</div>
 
@@ -79,7 +79,7 @@
 				  					Quantity
 				  				</div>
 				  		</div>
-				        <div *ngFor="let action of mainData?.trx?.trx?.actions">
+				        <div *ngFor="let action of mainData?.actions">
 								  <div class="actions-main-container" *ngIf="action?.name === 'transfer'">
 									<div class="actions-list text-center">
 										<div *ngIf="action?.data?.to === mainData?.account_name" class="color-orange">
@@ -111,7 +111,7 @@
 						</div>
 				  </mat-tab>
 				  <mat-tab label="Actions info">
-				  	<div class="example-container mat-elevation-z8 main-table block-trx-table" *ngIf="mainData?.trx?.trx?.actions">
+				  	<div class="example-container mat-elevation-z8 main-table block-trx-table" *ngIf="mainData?.actions">
 					
 					  <mat-table #table [dataSource]="dataSource" matSort>	
 
@@ -120,7 +120,7 @@
 					      <mat-header-cell *matHeaderCellDef class="actions-list-container"> Actions Info</mat-header-cell>
 					      <mat-cell *matCellDef="let element"> 
 					          	<!--{{element?.actions}}-->
-								<div *ngFor="let action of element?.trx?.actions" class="actions-list-container">
+								<div *ngFor="let action of element?.actions" class="actions-list-container">
 
 								  <div class="actions-main-container">
 									<div class="actions-list">
@@ -146,7 +146,7 @@
 					</div>
 				  </mat-tab>
 				  <mat-tab label="Actions (Raw Data)">
-				  		<ngx-json-viewer [json]="mainData?.trx?.trx?.actions"></ngx-json-viewer>
+				  		<ngx-json-viewer [json]="mainData?.actions"></ngx-json-viewer>
 				  </mat-tab>
 				</mat-tab-group>
 			</div>

@@ -36,6 +36,8 @@ import { SoonModule } from './pages/soon/soon.module';
 import { MainTcustomizeModule } from './components/main_customize_charts/main_tcustomize.module';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { AdminModule } from './pages/admin/admin.module';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     autoConnect: true,
@@ -47,7 +49,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +80,9 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     ProducerModule,
     AnalyticsPageModule,
     RamPageModule,
-    SoonModule
+    SoonModule,
+    AdminModule,
+    MatSnackBarModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]
