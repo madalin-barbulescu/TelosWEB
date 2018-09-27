@@ -89,7 +89,7 @@
     <ng-container matColumnDef="Last block">
       <mat-header-cell *matHeaderCellDef> Last block </mat-header-cell>
       <mat-cell *matCellDef="let element" class="change-container"> 
-          <strong class="color-orange"> {{ element?.last_block_produced }} <span *ngIf="blockChainInfo?.head_block_num - (element?.last_block_produced || firstBlockProduced) > 252" class="fa fa-exclamation-triangle"></span> </strong>
+          <strong class="color-orange"><a class="color-orange" [routerLink]="['/block', element?.last_block_produced]">{{ element?.last_block_produced }}</a><span *ngIf="blockChainInfo?.head_block_num - (element?.last_block_produced || firstBlockProduced) > 252" class="fa fa-exclamation-triangle"></span></strong>
         </mat-cell>
     </ng-container>
 
@@ -104,7 +104,7 @@
     <ng-container matColumnDef="Next rotation">
       <mat-header-cell *matHeaderCellDef> Next rotation</mat-header-cell>
       <mat-cell *matCellDef="let element" class="change-container">
-        <strong [ngClass]="{'color-orange': element.index-1 === rotations.bp_out_index || element.index-1 === rotations.sbp_in_index}"><last-updated [timestamp]="element.nextRotationTime" direction="down"></last-updated></strong>
+        <strong [ngClass]="{'color-orange': element.owner === rotations.bp_currently_out || element.owner === rotations.sbp_currently_in}"><last-updated [timestamp]="element.nextRotationTime" direction="down"></last-updated></strong>
       </mat-cell>
     </ng-container>
 
