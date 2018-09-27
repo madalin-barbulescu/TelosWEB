@@ -27,9 +27,11 @@ import { ProducersPageModule } from './pages/producers/producers.module';
 import { ProducerModule } from './pages/producer_page/producer_page.module';
 import { AnalyticsPageModule } from './pages/analytics/analytics.module';
 import { RamPageModule } from './pages/ram/ram.module';
+import { RegistrationPageModule } from './pages/registration/registration.module';
 import { TransactionPageModule } from './pages/transactions/transactions.module';
 import { WalletPageModule } from './pages/wallet/wallet.module';
 import { VotePageModule } from './pages/vote/vote.module';
+import { AccountCreationPageModule } from './pages/account-creation/account-creation.module';
 import { AccountPageModule } from './pages/account/account.module';
 import { AddressPageModule } from './pages/address/address.module';
 import { SoonModule } from './pages/soon/soon.module';
@@ -70,6 +72,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     MainPageModule,
     BlockPageModule,
     TokensPageModule,
+    AccountCreationPageModule,
     AccountPageModule,
     AddressPageModule,
     TransactionPageModule,
@@ -82,7 +85,8 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     RamPageModule,
     SoonModule,
     AdminModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RegistrationPageModule
   ],
   providers: [appRoutingProviders],
   bootstrap: [AppComponent]

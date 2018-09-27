@@ -5,9 +5,11 @@
 const async = require('async');
 const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
+const axios = require('axios');
 
 module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
 
+	const PRODUCER 	= require('../models/producer.model')(mongoMain);
 	const STATS_AGGR 	= require('../models/api.stats.model')(mongoMain);
 	const STATS_ACCOUNT = require('../models/api.accounts.model')(mongoMain);
 	const RAM 			= require('../models/ram.price.model')(mongoMain);
@@ -18,7 +20,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	const CACHE_TRANSACTION_TRACES = require('../models/nodeos.transaction_traces.model')(mongoCache);
 
     //============ HISTORY API
-    /*
+	/*
 	* router - search global aggregation
 	*/
 	router.post('/api/v1/search', (req, res) => {
@@ -357,8 +359,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* params - account_name, position, offset
 	*/
 	router.get('/api/v1/get_actions/:account_name/:position/:offset', (req, res) => {
-
-	   	 eos.getActions({ 
+	   	 eos.getActions({
 	   	 		account_name: req.params.account_name,
 	   	 		pos: req.params.position,
 	   	 		offset: req.params.offset
@@ -531,6 +532,119 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	   	 	});
 	});
 	//============ END of Account API
+
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos', (req, res) => {
+		const data = req.body;
+		const ip = data.producer.p2pServerAddress.slice(0, data.producer.p2pServerAddress.lastIndexOf(':'));
+
+		axios.get(`http://ip-api.com/json/${ip}`)
+			.catch(err => {
+				const error = JSON.parse(err);
+				console.log(error);
+				res.status(400).send({result: 'error', message: error.message, data: error});
+			})
+			.then(geoLocData => {
+				const producer = Object.assign({}, data.producer);
+				producer.latitude = geoLocData.data.lat;
+				producer.longitude = geoLocData.data.lon;
+				producer.country = geoLocData.data.country;
+				producer.region = geoLocData.data.region;
+				producer.city = geoLocData.data.city;
+				producer.isp = geoLocData.data.isp;
+
+				eos.transaction(tr => {
+					tr.newaccount({
+						creator: 'testaccoooo1',
+						name: producer.name,
+						owner: producer.producerPublicKey,
+						active: producer.producerPublicKey
+					});
+				
+					tr.buyrambytes({
+						payer: 'testaccoooo1',
+						receiver: producer.name,
+						bytes: 5120
+					});
+				
+					tr.delegatebw({
+						from: 'testaccoooo1',
+						receiver: producer.name,
+						stake_net_quantity: '250.0000 TLOS',
+						stake_cpu_quantity: '250.0000 TLOS',
+						transfer: 1
+					});
+				})
+				.catch(err => {
+					const error = JSON.parse(err);
+					console.log(error);
+					res.status(error.code).send({result: 'error', message: error.message, data: error});
+				})
+				.then(data => {
+					const pModel = new PRODUCER(producer);
+
+					return pModel.save()
+						.then(acc => res.status(200).json(data))
+						.catch(error => {
+							console.log(error);
+							res.status(error.code).send({result: 'error', message: error.message, data: error})
+						});
+				});
+			})
+			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));
+	});
+	//============ END of Register
+
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	router.post('/api/v1/teclos/newaccount', (req, res) => {
+		const data = req.body;
+
+		eos.transaction(tr => {
+			tr.newaccount({
+				creator: 'testaccoooo1',
+				name: data.name,
+				owner: data.publicKey,
+				active: data.publicKey
+			});
+		
+			tr.buyrambytes({
+				payer: 'testaccoooo1',
+				receiver: data.name,
+				bytes: 5120
+			});
+		
+			tr.delegatebw({
+				from: 'testaccoooo1',
+				receiver: data.name,
+				stake_net_quantity: '250.0000 TLOS',
+				stake_cpu_quantity: '250.0000 TLOS',
+				transfer: 0
+			});
+		})
+		.catch(err => {
+			const error = JSON.parse(err);
+			res.status(error.code).send({result: 'error', message: error.message, data: error.error});
+		})
+	});
+	//============ END of Register
+
+	// P2P List
+	/*
+	* producer - account
+	*/
+	router.get('/api/v1/p2p', (req, res) => {
+    PRODUCER.find((err, itms) => {
+        if (err) console.log(err);
+        else  res.status(200).json(itms);
+    });
+	});
+	//============ END of P2P List
 
 // ============== end of exports 
 };

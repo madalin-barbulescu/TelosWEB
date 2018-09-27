@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { P2PageComponent } from './p2p.component';
+import { RegistrationPageComponent } from './registration.component';
 import { MatAutocompleteModule,
          MatButtonModule,
          MatInputModule,
@@ -16,8 +16,10 @@ import { MatAutocompleteModule,
 import { CommonModule } from '@angular/common';
 import { appRoutes } from '../../main.router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { FormsModule } from '@angular/forms';
-import { Clipboard } from './clipboard.service';
+import {
+  FormsModule,
+  ReactiveFormsModule
+} from '@angular/forms';
 
 
 let imports = [
@@ -37,16 +39,18 @@ let imports = [
     CommonModule,
     appRoutes,
     NgxChartsModule,
-    FormsModule ];
+    FormsModule,
+    ReactiveFormsModule
+  ];
 
 @NgModule({
   declarations: [
-    P2PageComponent
+    RegistrationPageComponent
   ],
   imports:  imports,
-  providers: [Clipboard],
-  bootstrap: [ P2PageComponent ]
+  providers: [],
+  bootstrap: [ RegistrationPageComponent ]
 })
-export class P2PageModule {}
+export class RegistrationPageModule {}
 
 
