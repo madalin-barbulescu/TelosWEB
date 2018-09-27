@@ -6,7 +6,7 @@ var TABLE_NAME = 'action_traces';
 var MODEL;
 
 var API = new mongoose.Schema({
-  name: { 
+  trx_id: { 
     type: String
   }
 });

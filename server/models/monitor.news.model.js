@@ -11,7 +11,7 @@ var MODEL;
 var API = new mongoose.Schema({
   message: { 
     type: String,
-    default: 0 
+    default: ""
   }
 });
 
