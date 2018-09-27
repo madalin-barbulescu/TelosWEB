@@ -1,0 +1,23 @@
+<div class="container">
+
+  <div class="col-sm-8 col-sm-offset-2" style="margin-top:50px;">
+    <div class="col-sm-10">
+      <mat-form-field>
+        <input matInput type="password" [(ngModel)]="privateKey" placeholder="private key here"/>
+      </mat-form-field>
+    </div>
+    <div class="col-sm-2">
+      <button mat-raised-button (click)="update()" color="primary">Sign and Update</button>
+    </div>
+    
+    <div class="col-sm-12">
+        <label>Message:</label>
+        <mat-form-field>
+          <textarea matInput name="message" id="message" rows="5" [(ngModel)]="message">
+          </textarea>
+        </mat-form-field>
+    </div>
+  
+  </div>
+
+</div>
