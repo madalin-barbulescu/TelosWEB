@@ -19,6 +19,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 //import { AuthService } from './services/auth.service';
 
+import { InfoPageModule } from './pages/info/info.module';
 import { MainPageModule } from './pages/main_page/main_page.module';
 import { BlockPageModule } from './pages/block/block.module';
 import { TokensPageModule } from './pages/tokens/tokens.module';
@@ -65,6 +66,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     SimpleNotificationsModule.forRoot(),
     SocketIoModule.forRoot(socketConfig),
     LeafletModule.forRoot(),
+    InfoPageModule,
     MainPageModule,
     BlockPageModule,
     TokensPageModule,

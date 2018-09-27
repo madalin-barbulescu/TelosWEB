@@ -1,0 +1,64 @@
+
+:host {
+  color: #333;
+}
+
+:host .container .pInfo:first-child {
+  margin-top: 40px;
+}
+
+:host .pInfo {
+	text-align: justify;
+	font-size: 18px;
+}
+
+:host .pInfo1 {
+	text-align: justify;
+	font-size: 16px;
+	margin-left: 1em;
+}
+
+:host .pInfo2 {
+	text-align: justify;
+	font-size: 16px;
+	margin-left: 2em;
+}
+
+:host .pInfo3 {
+	text-align: justify;
+	font-size: 16px;
+	margin-left: 3em;
+}
+
+:host pre {
+  display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+:host code {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+}
+
+:host hr {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+:host h3 {
+  color: #625a51;
+}
