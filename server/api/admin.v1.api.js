@@ -3,7 +3,6 @@ ecc.config.address_prefix = "TLOS";
 
 module.exports 	= function(router, config, mongoMain) {
 
-	console.log("IMPORTED ADMIN ");
 	const MONITOR_NEWS 	= require('../models/monitor.news.model')(mongoMain);
     
 	router.post('/admin/v1/news', (req, res) => {

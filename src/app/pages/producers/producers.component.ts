@@ -41,6 +41,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
 
   options;
   layers = [];
+  lastMapUpdate = [];
 
   constructor(private socket: Socket, protected http: HttpClient, private MainService: MainService) { }
 
@@ -68,10 +69,24 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
       layers: [
          tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18, attribution: 'Telos' })
       ],
-      zoom: 1,
+      zoom: 1.2,
       center: latLng(0, 0)
     };
     this.mapOpen = !this.mapOpen;
+  }
+
+  putProducersOnMap(producers){
+    if(this.lastMapUpdate.length){
+      this.layers.splice(this.lastMapUpdate[0], this.lastMapUpdate[1]);
+    }
+    this.lastMapUpdate[0] = this.layers.length;
+    this.lastMapUpdate[1] = 0;
+    for(let i = 0; i < producers.length; i++){
+      if(!producers[i].location) continue;
+
+      this.layers.push(circle(producers[i].location, { radius: 1000 }));
+      this.lastMapUpdate[1]++;
+    }
   }
 
   getBlockData() {
@@ -110,7 +125,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           this.rotations.next_rotation_time = new Date(Date.parse(this.rotations.next_rotation_time + 'Z'));
           this.voteProgression = (results[1].rows[0].total_activated_stake / 10000 / this.supply * 100).toFixed(2);
 
-          // this.layers.push(circle([ 55, 55 ], { radius: 1000 }));
+          this.putProducersOnMap(results[4].active.producers);
 
           let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.MainService.sortArray(this.mainData), this.rotations), this.totalProducerVoteWeight, this.supply);
           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
