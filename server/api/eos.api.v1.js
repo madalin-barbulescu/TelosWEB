@@ -511,6 +511,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 		axios.get(`http://ip-api.com/json/${ip}`)
 			.catch(err => {
 				const error = JSON.parse(err);
+				console.log(error);
 				res.status(400).send({result: 'error', message: error.message, data: error});
 			})
 			.then(geoLocData => {
@@ -542,18 +543,22 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, MARIA) 
 						stake_net_quantity: '250.0000 TLOS',
 						stake_cpu_quantity: '250.0000 TLOS',
 						transfer: 1
-					})
-					.catch(err => {
-						const error = JSON.parse(err);
-						res.status(error.code).send({result: 'error', message: error.message, data: error});
 					});
+				})
+				.catch(err => {
+					const error = JSON.parse(err);
+					console.log(error);
+					res.status(error.code).send({result: 'error', message: error.message, data: error});
 				})
 				.then(data => {
 					const pModel = new PRODUCER(producer);
 
 					return pModel.save()
 						.then(acc => res.status(200).json(data))
-						.catch(error => res.status(error.code).send({result: 'error', message: error.message, data: error}));
+						.catch(error => {
+							console.log(error);
+							res.status(error.code).send({result: 'error', message: error.message, data: error})
+						});
 				});
 			})
 			.catch(err => res.status(400).send({result: 'error', message: err.message, data: {}}));
