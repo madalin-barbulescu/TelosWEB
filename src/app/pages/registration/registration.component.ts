@@ -62,14 +62,14 @@ export class RegistrationPageComponent implements OnInit {
     };
     this.setServerAddress(dataToSend.producer, value);
 
-    // this.getAccount(dataToSend.producerPublicKey)
-      // .concatMap(response => 
-        this.registerProducerNode(dataToSend)
-        // )
+    this.registerProducerNode(dataToSend)
       .finally(() => this.isLoading = false)
       .subscribe(
         data => this.notifications.success('Producer Registered'),
-        error => this.notifications.error(`Registration failed: ${error.message}`)
+        error => {
+          const message = error.data.what ? error.data.what : error.message;
+          this.notifications.error(message);
+        }
       );
   }
 
@@ -81,19 +81,11 @@ export class RegistrationPageComponent implements OnInit {
 
   registerProducerNode(data) {
     return this.http.post(`/api/v1/teclos`, data)
-      .catch(error => {
-        console.log(error);
-        return Observable.throw(error);
+      .catch(err => {
+        console.log(err);
+        return Observable.throw(err.error);
       });
   }
-
-  // getAccount(publicKey: string) {
-  //   return this.http.get(``)
-  //     .catch(error => {
-  //       console.log(error);
-  //       return Observable.throw(error);
-  //     });
-  // }
 
   private newRegisterForm() {
     return new FormGroup({
