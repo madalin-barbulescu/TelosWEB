@@ -43,6 +43,15 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
   layers = [];
   lastMapUpdate = [];
 
+  _colors:any = {
+    'Active':"#00ff00",
+    'Standby':"#ffffff",
+    'Candidate':"#3333cc",
+    'Inactive':"#000000",
+    'Producing':"#ff0000"
+  };
+  _reverseMap:any = {};
+
   constructor(private socket: Socket, protected http: HttpClient, private MainService: MainService) { }
 
   ngOnInit() {
@@ -81,30 +90,35 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
     }
     this.lastMapUpdate[0] = this.layers.length;
     this.lastMapUpdate[1] = 0;
-    for(let i = 0; i < producers.length; i++){
-      if(!producers[i].location) continue;
+    for(let i = 0; i < producers.length && i < 51; i++){
+      if(!producers[i].geoLocation) continue;
 
-      this.layers.push(circle(producers[i].location, { radius: 1000 }));
+      producers[i].mapNode = circle(producers[i].geoLocation, { radius: 1000, color: this._colors[producers[i].label] || this._colors.Producing });
+      producers[i].mapNode.bindPopup(producers[i].owner);
+
+      this.layers.push(producers[i].mapNode);
       this.lastMapUpdate[1]++;
     }
   }
 
   getBlockData() {
     this.spinner = true;
-    let producers = this.http.get(`/api/custom/get_table_rows/eosio/eosio/producers/500`);
+    let producers = this.http.get(`/api/v1/get_producers/0/60`);
+    // let producers = this.http.get(`/api/custom/get_table_rows/eosio/eosio/producers/500`);
     let global = this.http.get(`/api/v1/get_table_rows/eosio/eosio/global/1`);
     let stat = this.http.get(`/api/v1/get_table_rows/eosio.token/TLOS/stat/1`);
-    let rotations = this.http.get('/api/v1/get_table_rows/eosio/eosio/rotations/500')
-    let schedule = this.http.get('/api/custom/get_producer_schedule');
+    let rotations = this.http.get('/api/v1/get_table_rows/eosio/eosio/rotations/1')
+    // let schedule = this.http.get('/api/custom/get_producer_schedule');
 
-    forkJoin([producers, global, stat, rotations, schedule])
+    forkJoin([producers, global, stat, rotations])
       .subscribe(
         (results: any) => {
-          this.mainData = results[0].rows;
+          const producers = results[0];
+          const global = results[1];
+          const stat = results[2];
+          const rotations = results[3];
 
-          results[4].active.producers.forEach(element => {
-            this.topProducers[element.producer_name] = element.block_signing_key;
-          });
+          this.mainData = producers.list;
 
           if (this.producersSavedInfo) {
             this.mainData.forEach((element, index) => {
@@ -117,18 +131,17 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
               }
             });
           }
-          this.blockChainInfo = results[1].rows;
-          this.totalProducerVoteWeight = results[1].rows[0].total_producer_vote_weight;
-          this.supply = Number(results[2].rows[0].supply.replace(/[^0-9.-]+/g, ""));
-          this.rotations = results[3].rows[0];
+          this.blockChainInfo = global.rows[0];
+          this.totalProducerVoteWeight = producers.total_producer_vote_weight;
+          this.supply = Number(stat.rows[0].supply.replace(/[^0-9.-]+/g, ""));
+          this.rotations = rotations.rows[0];
           this.rotations.last_rotation_time = new Date(Date.parse(this.rotations.last_rotation_time + 'Z'));
           this.rotations.next_rotation_time = new Date(Date.parse(this.rotations.next_rotation_time + 'Z'));
-          this.voteProgression = (results[1].rows[0].total_activated_stake / 10000 / this.supply * 100).toFixed(2);
+          this.voteProgression = (this.blockChainInfo.total_activated_stake / 10000 / this.supply * 100).toFixed(2);
 
-          this.putProducersOnMap(results[4].active.producers);
+          let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.mainData, this.rotations), this.totalProducerVoteWeight, this.supply);
+          this.putProducersOnMap(producers.list);this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
 
-          let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.MainService.sortArray(this.mainData), this.rotations), this.totalProducerVoteWeight, this.supply);
-          this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
           this.dataSource.filterPredicate = (data, filter) => data.owner.toLowerCase().indexOf(filter) > -1 || data.votes.toLowerCase().indexOf(filter) > -1;
           this.spinner = false;
 
@@ -150,20 +163,31 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
       if (!this.firstBlockProduced) {
         this.firstBlockProduced = this.blockChainInfo.head_block_num;
       }
-      this.dataSource.data.forEach((producer, index) => {
-        if (producer.owner === this.blockChainInfo.head_block_producer) {
-          if (this.lastProducerIndex !== -1) {
-            this.dataSource.data[this.lastProducerIndex].producing = false;
-            this.dataSource.data[this.lastProducerIndex].label = this.dataSource.data[this.lastProducerIndex].label.replace('+', '');
+      if(this._reverseMap[this.blockChainInfo.head_block_producer] !== this.lastProducerIndex){
+        const index = this._reverseMap[this.blockChainInfo.head_block_producer];
+        const producer = this.dataSource.data[index];
+
+        if (this.lastProducerIndex !== -1) {
+          const prod = this.dataSource.data[this.lastProducerIndex];
+          prod.producing = false;
+          prod.label = prod.label.replace('+', '');
+          if(prod.mapNode){
+            prod.mapNode.setStyle({"color": this._colors[prod.label] || this._colors.Producing});
+            prod.mapNode.closePopup();
           }
-          this.lastProducerIndex = index;
-          this.dataSource.data[index].producing = true;
-          this.dataSource.data[index].label = "+" + this.dataSource.data[index].label
-          this.dataSource.data[index].last_block_produced = this.blockChainInfo.head_block_num;
-          this.dataSource.data[index].last_time_produced = new Date().getTime();
-          this.producersSavedInfo[producer.owner] = { 'lastBlockProduced': this.dataSource.data[index].last_block_produced, 'lastTimeProduced': this.dataSource.data[index].last_time_produced };
         }
-      });
+        this.lastProducerIndex = index;
+          const prod = this.dataSource.data[index];
+          prod.producing = true;
+          prod.label = "+" + prod.label
+          if(prod.mapNode){
+            prod.mapNode.setStyle({"color": this._colors.Producing});
+            prod.mapNode.openPopup();
+          }
+          prod.last_block_produced = this.blockChainInfo.head_block_num;
+          prod.last_time_produced = new Date().getTime();
+          this.producersSavedInfo[producer.owner] = { 'lastBlockProduced': prod.last_block_produced, 'lastTimeProduced': prod.last_time_produced };
+      }
     }
   }
 
@@ -172,6 +196,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
     var totalActive = 0, totalStandby = 0;
     for (var index = 0; index < data.length; index++) {
       let element = data[index];
+      element.index = index + 1;
 
       if (element.owner === rotation.bp_currently_out) {
       // if (index === rotation.bp_out_index) {
@@ -179,23 +204,27 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
         element.label = 'Standby';
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
         totalStandby += 1;
+        this._reverseMap[element.owner] = index;
       } else if (element.owner === rotation.sbp_currently_in) {
       // } else if (index === rotation.sbp_in_index) {
         b = index;
         element.label = 'Active';
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
         totalActive += 1;
+        this._reverseMap[element.owner] = index;
       }
       if (!element.is_active) {
         element.label = 'Inactive';
-      } else {
-        if (index < 21 && !element.label) {
+      } else if(!element.label){
+        if (element.active) {
           element.label = 'Active';
+          this._reverseMap[element.owner] = index;
           totalActive += 1;
-        } else if (index > 20 && !element.label && index < 50) {
+        } else if (index <= 50) {
           element.label = 'Standby';
+          this._reverseMap[element.owner] = index;
           totalStandby += 1;
-        } else if (!element.label) {
+        } else {
           element.label = 'Candidate';
         }
       }
@@ -231,6 +260,11 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
     let swap = data[a];
     data[a] = data[b];
     data[b] = swap;
+    
+    swap = this._reverseMap[rotation.bp_currently_out];
+    this._reverseMap[rotation.bp_currently_out] = this._reverseMap[rotation.sbp_currently_in];
+    this._reverseMap[rotation.sbp_currently_in] = swap;
+
     return data;
   }
 

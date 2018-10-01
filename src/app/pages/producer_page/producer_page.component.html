@@ -95,7 +95,7 @@
           <strong class="block-info-header">Nodes:</strong>
         </div>
         <div class="col-sm-9">
-          <strong class="block-info-header">{{ bpData?.nodes.length }}</strong>
+          <strong class="block-info-header">{{ bpData?.nodes?.length || 'unknown' }}</strong>
         </div>
         <div class="col-sm-12">
           <div style="height: 400px; margin-top: 20px; width: 100%;" leaflet [leafletOptions]="options" [leafletLayers]="layers"></div>

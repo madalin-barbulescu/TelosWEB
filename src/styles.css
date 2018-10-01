@@ -54,15 +54,21 @@ a{
 	background: linear-gradient(to right,#F6F1E1,#F6F1F1);
 	background: -webkit-gradient(linear,left top,right top,from(#F6F1E1),to(#F6F1F1)); 
 }
+
 .mat-fab.mat-producing, .mat-mini-fab.mat-producing, .mat-raised-button.mat-producing {
 	color: white; 
 	background: linear-gradient(to right,#7E1C1E,#BC1C1F);
 	background: -webkit-gradient(linear,left top,right top,from(#7E1C1E),to(#BC1C1F)); 
 }
-.mat-fab.mat-inactivea, .mat-mini-fab.mat-inactive, .mat-raised-button.mat-inactive {
+.mat-fab.mat-inactive, .mat-mini-fab.mat-inactive, .mat-raised-button.mat-inactive {
 	color: white;
 	background: linear-gradient(to right,#A7A083,#BBB7A5);
 	background: -webkit-gradient(linear,left top,right top,from(#A7A083),to(#BBB7A5)); 
+}
+.mat-fab.mat-standby, .mat-mini-fab.mat-standby, .mat-raised-button.mat-standby {
+	color: black;
+	background: linear-gradient(to right,#f7dcc5,#F6F1F1);
+	background: -webkit-gradient(linear,left top,right top,from(#f7dcc5),to(#F6F1F1)); 
 }
 .text-right{
 	text-align: right;
