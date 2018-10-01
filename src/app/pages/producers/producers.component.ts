@@ -118,7 +118,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           const stat = results[2];
           const rotations = results[3];
 
-          this.mainData = producers.list;
+          this.mainData = producers.list.filter(p=>p.is_active);
 
           if (this.producersSavedInfo) {
             this.mainData.forEach((element, index) => {
