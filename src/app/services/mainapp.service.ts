@@ -61,10 +61,13 @@ export class MainService {
       if(producer.is_active){
         totalProducers++;
       }
+      if(!producer.index){
+          producer.index = totalProducers;
+      }
     });
 
     data.forEach((producer) => {
-      producer.votes    = (producer.all_votes * 100 / totalProducerVoteWeight).toLocaleString();
+      producer.votes    = (producer.total_votes * 100 / totalProducerVoteWeight).toLocaleString();
       producer.rewards = this.countRewards(producer, totalProducers, supply);
     });
     
