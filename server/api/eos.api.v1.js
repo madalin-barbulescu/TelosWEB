@@ -254,24 +254,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
     /*
-	* router - get blocks producers
-	*/
-	router.get('/api/v1/get_producers/:offset', (req, res) => {
-	   	 eos.getProducers({
-      			json: true,
-      			lower_bound: "string",
-      			limit: req.params.offset
-			})
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-				});
-	});
-
-    /*
 	* router - get code
 	* params - account name
 	*/
@@ -331,6 +313,100 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
     /*
+	* router - get_table_rows
+	*/
+	router.get('/api/v1/get_producers/:lower_bound/:limit', (req, res) => {
+		let producers = {};
+		eos.getProducers(true, req.params.lower_bound === "0" ? "" : req.params.lower_bound, req.params.limit)
+		.then(result => {
+			if(!result){
+				res.status(400).send("Could not get Producers!");
+				return;
+			}
+
+			producers = {
+				list: result.rows || [],
+				total_producer_vote_weight: result.total_producer_vote_weight || -1,
+				nextPage: result.more || ""
+			};
+
+			const producerNames = {list:[],reverseMap:{}};
+			for(let i = 0; i < producers.list.length; i++){
+				producerNames.list.push(producers.list[i].owner);
+				producerNames.reverseMap[producers.list[i].owner] = i;
+			}
+
+			PRODUCER.where({"name": {$in: producerNames.list}}).select("name latitude longitude").find((err, prods)=>{
+				if(err){log.error(err);}
+				if(prods){
+					for(let i = 0; i < prods.length; i++){
+						producers.list[producerNames.reverseMap[prods[i].name]].geoLocation = [prods[i].latitude, prods[i].longitude];
+					}
+				}
+				
+				if( req.params.lower_bound === "0" || req.params.limit === "1"){
+					eos.getProducerSchedule((err, schedule)=>{
+						producers.extras = [];
+
+						if(err){
+							log.error(err);
+						}else if(schedule.active && schedule.active.producers){
+							const tmp = schedule.active.producers;
+							for(let i = 0; i < tmp.length; i++){
+								if(producers.list[producerNames.reverseMap[tmp[i].producer_name]]){
+									producers.list[producerNames.reverseMap[tmp[i].producer_name]].active = true;
+								}else{
+									producers.extras.push(tmp[i].producer_name);
+								}
+							}
+						}
+
+						res.json(producers);		
+					});
+				}else{
+					res.json(producers);
+				}
+			});
+		})
+		.catch(err => {
+			log.error(err);
+			res.status(501).end();
+		});
+	});
+
+    /*
+	* router - get_table_rows
+	*/
+	router.get('/api/v1/get_producer/:name', (req, res) => {
+		let producers = {};
+		eos.getProducers(true, req.params.name, 1)
+		.then(result => {
+			if(!result){
+				res.status(400).send("Could not get the Producer!");
+				return;
+			}
+
+			producers = {
+				list: result.rows || [],
+				total_producer_vote_weight: result.total_producer_vote_weight || -1
+			};
+
+			PRODUCER.where({"name": req.params.name}).findOne((err, prods)=>{
+				if(err){log.error(err);}
+				if(prods && producers.list.length){
+					producers.list[0].details = prods;
+				}
+				
+				res.json(producers);
+			});
+		})
+		.catch(err => {
+			log.error(err);
+			res.status(501).end();
+		});
+	});
+
+    /*
 	* router - get_table_rows producers
 	*/
 	router.get('/api/custom/get_table_rows/:code/:scope/:table/:limit', (req, res) => {
@@ -367,9 +443,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
 	router.post('/api/producer', (req, res) => {
-		if (req.body.url && req.body.url.indexOf('eosweb.net') >= 0 ){
-			return res.sendFile(path.join(__dirname, '../../bp.json'));
-		}
+		// if (req.body.url && req.body.url.indexOf('eosweb.net') >= 0 ){
+		// 	return res.sendFile(path.join(__dirname, '../../bp.json'));
+		// }
 	   	request.get(`${req.body.url}`).pipe(res);
 	});
 

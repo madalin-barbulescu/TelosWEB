@@ -61,13 +61,10 @@
     <ng-container matColumnDef="Status">
       <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
       <mat-cell *matCellDef="let element" class="marketcap-container">
-          <!-- <button mat-raised-button color="primary" class="status" *ngIf="element?.is_active && !element?.producing && (element?.index <= 21 || element?.owner === rotations?.sbp_currently_in)">Active</button>
-          <button mat-raised-button color="warn" class="status" *ngIf="element?.is_active && !element?.producing && (element?.index > 21 || element?.owner === rotations?.bp_currently_out)">Standby</button>
-          <button mat-raised-button color="inactive" class="status" *ngIf="!element?.is_active && !element?.producing">Inactive</button>
-          <button mat-raised-button color="producing" class="status" *ngIf="element?.producing">Producing</button> -->
           <button mat-raised-button color="primary" class="status" *ngIf="element?.label === 'Active'">Active <span *ngIf="element?.index > 21" class="fa fa-sync-alt"></span></button>
-          <button mat-raised-button color="warn" class="status" *ngIf="element?.label === 'Standby'">Standby <span *ngIf="element?.index < 22" class="fa fa-sync-alt"></span></button>
+          <button mat-raised-button color="standby" class="status" *ngIf="element?.label === 'Standby'">Standby <span *ngIf="element?.index < 22" class="fa fa-sync-alt"></span></button>
           <button mat-raised-button color="inactive" class="status" *ngIf="element?.label === 'Inactive'">Inactive</button>
+          <button mat-raised-button color="candidate" class="status" *ngIf="element?.label === 'Candidate'">Candidate</button>
           <button mat-raised-button color="producing" class="status" *ngIf="element?.producing">Producing <span *ngIf="element?.index > 21" class="fa fa-sync-alt"></span></button>
        </mat-cell>
     </ng-container>

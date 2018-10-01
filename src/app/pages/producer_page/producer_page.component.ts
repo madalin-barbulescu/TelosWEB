@@ -39,16 +39,35 @@ export class ProducerComponent implements OnInit, OnDestroy{
 
   getData(){
       this.spinner = true;
-  		let producers = this.http.get(`/api/custom/get_table_rows/eosio/eosio/producers/500`)
-      let global     = this.http.get(`/api/v1/get_table_rows/eosio/eosio/global/1`);
-      let stat       = this.http.get(`/api/v1/get_table_rows/eosio.token/TLOS/stat/1`);
+  		let producerDetails = this.http.get(`/api/v1/get_producer/${this.producerId}`); 
+  		let producers       = this.http.get(`/api/v1/get_producers/0/51`); 
+      let stat            = this.http.get(`/api/v1/get_table_rows/eosio.token/TLOS/stat/1`);
 
-      forkJoin([producers, global, stat])
+      forkJoin([producerDetails, producers, stat])
   				 .subscribe(
                       (res: any) => {
-                          this.totalProducerVoteWeight = res[1].rows[0].total_producer_vote_weight;
-                          this.supply = Number(res[2].rows[0].supply.replace(/[^0-9.-]+/g,""));
-                          this.mainElement = this.findProducer(this.MainService.countRate(this.MainService.sortArray(res[0].rows), this.totalProducerVoteWeight, this.supply));
+                          const producers = res[1];
+                          const details = res[0];
+                          const stat = res[2].rows[0];
+
+                          this.totalProducerVoteWeight = producers.total_producer_vote_weight;
+                          this.supply = Number(stat.supply.replace(/[^0-9.-]+/g,""));
+                          this.mainElement = details.list[0];
+                          if(this.mainElement.details){
+                            this.mainElement.geoLocation = [this.mainElement.details.latitude, this.mainElement.details.longitude];
+                          }
+                          
+                          const prod = this.findProducer(this.MainService.countRate(producers.list, this.totalProducerVoteWeight, this.supply));
+                          if(prod){
+                            this.mainElement.rate = prod.votes;
+                            this.mainElement.rewards = prod.rewards;
+                            this.mainElement.index = prod.index;
+                          }else{
+                            this.mainElement.rate = (this.mainElement.total_votes * 100 / this.totalProducerVoteWeight).toFixed(4);
+                            this.mainElement.rewards = 0;
+                            this.mainElement.index = "52+ (Candidate)";
+                          }
+                          
                           this.getBP(this.mainElement);
                           this.spinner = false;
                       },
@@ -62,7 +81,7 @@ export class ProducerComponent implements OnInit, OnDestroy{
       if(!data){
         return;
       }
-      let result = {};
+      let result = null;
       data.forEach((elem, index) => {
           if (elem.owner === this.producerId){
               result = elem;
@@ -75,27 +94,41 @@ export class ProducerComponent implements OnInit, OnDestroy{
     if (!elem || !elem.url){
       return console.log(elem);
     }
-      this.http.post(`/api/producer`, { url: `${elem.url}/bp.json` })
-               .subscribe(
-                (res: any) => {
-                   this.bpData = res;
-                   if (res.nodes && res.nodes.length){
-                       res.nodes.forEach(elem => {
-                         if (elem.location && elem.location.latitude && elem.location.longitude){
-                            this.layers.push(circle([ elem.location.latitude, elem.location.longitude ], { radius: 1000 }));
-                         }
-                       });
-                   }
-                },
-                (err) => {
-                  console.error(err);
-                });
+    this.http.post(`/api/producer`, { url: `${elem.url}/bp.json` })
+              .subscribe(
+              (res: any) => {
+                  this.bpData = res;
+                  if (res.nodes && res.nodes.length){
+                      res.nodes.forEach(e => {
+                        if (e.location && e.location.latitude && e.location.longitude){
+                          this.layers.push(circle([ e.location.latitude, e.location.longitude ], { radius: 1000, color: "#4444FF" }));
+                        }
+                      });
+                  }
+              },
+              (err) => {
+                if(elem.geoLocation){
+                  this.layers.push(circle(elem.geoLocation, { radius: 1000, color: "#00FF00" }));
+                  this.bpData = {
+                    org:{
+                      location:{
+                        country: elem.details.country,
+                        latitude: elem.geoLocation[0],
+                        longitude: elem.geoLocation[1],
+                        name: elem.details.region
+                      }
+                    },
+                    nodes:[]
+                  }
+                }
+                
+                console.error(err);
+              });
   }
 
   ngOnInit() {
      this.producer = this.route.params.subscribe(params => {
        this.producerId = params['id'];
-       console.log(this.producerId);
        this.getData();
     });
   }
