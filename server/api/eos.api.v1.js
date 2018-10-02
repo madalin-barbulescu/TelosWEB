@@ -10,6 +10,7 @@ const axios = require('axios');
 module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
 
 	const PRODUCER 	= require('../models/producer.model')(mongoMain);
+	const FAUCET 	= require('../models/faucet.model')(mongoMain);
 	const STATS_AGGR 	= require('../models/api.stats.model')(mongoMain);
 	const STATS_ACCOUNT = require('../models/api.accounts.model')(mongoMain);
 	const RAM 			= require('../models/ram.price.model')(mongoMain);
@@ -673,6 +674,86 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
     });
 	});
 	//============ END of P2P List
+
+	// Faucet
+	const MAX_TX_PER_ACCOUNT = 400;
+	const MAX_TX_PER_HOUR = 400;
+	const SYMBOL = "TLOS";
+	const FAUCET_AMOUNT = 100;
+	const FAUCET_TX_PER_USER_PER_HOUR = 2;
+
+	/*
+	* GET TLOS FROM FAUCET
+	*/
+	router.post('/api/v1/gettlos', (req, res) => {
+		const name = req.body.name;
+
+		async.waterfall([
+			(cb) => {
+				FAUCET.countDocuments({created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+					if (error)
+						cb({result: 'error', code: 500, message: 'Database error', data: error})
+
+					if (count >= MAX_TX_PER_HOUR)
+						cb({result: 'error', code: 400, message: `Total number of faucet withdrawals per hour(${MAX_TX_PER_HOUR}) was reached! Try later!`, data: {}});
+
+					cb(null);
+				});
+			},
+			(cb) => {
+				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+					if (error)
+						cb({result: 'error', code: 500, message: 'Database error', data: error})
+
+					if (count >= FAUCET_TX_PER_USER_PER_HOUR)
+						cb({result: 'error', code: 400, message: `Account has reached ${FAUCET_TX_PER_USER_PER_HOUR} withdrawals per hour`, data: {}});
+
+					cb(null);
+				});
+			},
+			(cb) => {
+				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+					if (error)
+						cb({result: 'error', code: 500, message: 'Database error', data: error})
+
+					if (count > MAX_TX_PER_ACCOUNT)
+						cb({result: 'error', code: 400, message: `Account has exceeded withdrawals lifetime (${MAX_TX_PER_ACCOUNT * FAUCET_AMOUNT}.0000 TLOS)`, data: {}});
+
+					cb(null);
+				});
+			},
+			(cb) => {
+				eos.transfer('testaccoooo1', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
+					.then(() => new FAUCET({name, created: Date.now()}).save())
+					.then(data => cb(null, data))
+					.catch(err => {
+						let error = err;
+						try{
+							error = JSON.parse(err);
+						}catch(ignored){}
+						cb({result: 'error', message: error.message, data: error});
+					});
+			}
+		], function (err, result) {
+			// res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
+			if (err)
+				res.status(err.code).send(err);
+			res.status(200).json(result);
+		});
+	});
+
+	function txPerName(txs) {
+		var now = new Date();
+
+		return txs.slice(-1 * FAUCET_TX_PER_USER_PER_HOUR)
+			.reduce((val, tx) => {
+				const hrDiff1 = (now.valueOf() - new Data(tx.created)) / 3600000; // Convert milliseconds to hours
+
+				if (hrDiff1) return val++;
+				else return val;
+			}, 0);
+	}
+	//============ END of Faucet
 
 // ============== end of exports 
 };

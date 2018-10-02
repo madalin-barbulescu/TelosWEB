@@ -51,6 +51,10 @@ module.exports = function(router, config, request, log) {
 	router.get('/info', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
+	
+	router.get('/faucet', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
 
 	router.get('/ram', (req, res) => {
 	   	res.sendFile(indexPath);

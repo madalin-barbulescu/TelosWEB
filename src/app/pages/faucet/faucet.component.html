@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="spinner-container" *ngIf="isLoading">
+      <mat-spinner class="spinner-color"></mat-spinner>
+    </div>
+
+    <h1 class="market-header">Faucet</h1>
+    <form [formGroup]="faucetFGroup"
+      (submit)="send()"
+      spellcheck="false"
+      autocomplete="off"
+      novalidate
+      class="faucet-form">
+
+      <div class="item">
+        <mat-form-field [hideRequiredMarker]="false">
+          <input matInput type="text" placeholder="Producer Name" formControlName="name" [required]="true">
+          <mat-hint>length 12, lowercase a-z, 1-5</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <button type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="!faucetFGroup.valid"
+        class="footer">
+          Get
+      </button>
+    </form>
+</div>

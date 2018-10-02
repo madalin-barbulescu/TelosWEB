@@ -1,6 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 import { MainPageComponent } from './pages/main_page/main_page.component';
 import { BlockPageComponent } from './pages/block/block.component';
+import { FaucetPageComponent } from './pages/faucet/faucet.component';
 import { InfoPageComponent } from './pages/info/info.component';
 import { TransactionPageComponent } from './pages/transactions/transactions.component';
 import { AccountPageComponent } from './pages/account/account.component';
@@ -28,6 +29,10 @@ export const routes: Routes = [
    { 
   	path: 'block/:id', 
   	component: BlockPageComponent 
+  },
+  { 
+    path: 'faucet', 
+    component: FaucetPageComponent
   },
   { 
     path: 'info', 

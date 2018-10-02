@@ -7,16 +7,20 @@
     <input type="search" placeholder="Search by block, tx, account, address" [(ngModel)]="search" (keyup)="onKey($event)">
   </div>
   <ul class="pull-right main-nav-middle">
-    <!--<li><button mat-button color="basic" routerLink="tokens" [ngClass]="{'nav-active': activeMenu() === '/tokens'}">Tokens</button></li>-->
-    <li><button mat-button color="basic" routerLink="" [ngClass]="{'nav-active': activeMenu()  === '/'}">Home</button></li>
-    <li><button mat-button color="basic" routerLink="info" [ngClass]="{'nav-active': activeMenu()  === '/info'}">Info</button></li>
-    <li><button mat-button color="basic" routerLink="producers" [ngClass]="{'nav-active': activeMenu()  === '/producers'}">Producers</button></li>
-    <li><button mat-button color="basic" routerLink="p2p" [ngClass]="{'nav-active': activeMenu()  === '/p2p'}">P2P</button></li>
-    <!-- <li><button mat-button color="basic" routerLink="vote" [ngClass]="{'nav-active': activeMenu() === '/vote'}" class="mobile-no">Vote</button></li> -->
-    <!-- <li><button mat-button color="basic" routerLink="analytics" [ngClass]="{'nav-active': activeMenu() === '/analytics'}">Analytics</button></li> -->
-    <li><button mat-button color="basic" routerLink="ram" [ngClass]="{'nav-active': activeMenu()  === '/ram'}">Ram</button></li>
-    <li><button mat-button color="basic" routerLink="registration" [ngClass]="{'nav-active': activeMenu()  === '/registration'}">Register</button></li>
-    <li><button mat-button color="basic" routerLink="account-creation" [ngClass]="{'nav-active': activeMenu()  === '/account-creation'}">Create Account</button></li>
+    <!--<li><button mat-button color="basic" routerLink="tokens" routerLinkActive="nav-active">Tokens</button></li>-->
+    <li><button mat-button color="basic" routerLink=""  [ngClass]="{'nav-active': activeMenu()  === '/'}">Home</button></li>
+    <li><button mat-button color="basic" routerLink="info" routerLinkActive="nav-active">Info</button></li>
+    <li><button mat-button color="basic" routerLink="producers" routerLinkActive="nav-active">Producers</button></li>
+    <li><button mat-button color="basic" routerLink="p2p" routerLinkActive="nav-active">P2P</button></li>
+    <!-- <li><button mat-button color="basic" routerLink="vote" routerLinkActive="nav-active" class="mobile-no">Vote</button></li> -->
+    <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
+    <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
+    <button mat-button color="basic" class="pull-right" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/registration'}">More</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
+      <button mat-menu-item color="basic" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>
+      <button mat-menu-item color="basic" routerLink="registration" routerLinkActive="nav-active">Register</button>
+    </mat-menu>
         <!--<li class="mobile-no"><button mat-button color="basic" routerLink="soon">API</button></li>-->
     <!-- <li>
         <a _ngcontent-c0="" href="https://twitter.com/EoswebN" class="telegram-button" target="_blank">
