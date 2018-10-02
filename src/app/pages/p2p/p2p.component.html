@@ -20,15 +20,15 @@
       <mat-table #table [dataSource]="dataSource" class="big-table">
     
         <ng-container matColumnDef="#">
-          <mat-header-cell *matHeaderCellDef class="top-number-analytics"> # </mat-header-cell>
-          <mat-cell *matCellDef="let element; let i = index" class="top-number-analytics">
+          <mat-header-cell *matHeaderCellDef class="top-number-analytics cell-number"> # </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" class="top-number-analytics  cell-number">
               <strong>{{ i+1 }}</strong>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="Account">
-          <mat-header-cell *matHeaderCellDef> Account </mat-header-cell>
-          <mat-cell *matCellDef="let element" class="marketcap-container">
+          <mat-header-cell *matHeaderCellDef class="cell-account"> Account </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="marketcap-container" class="cell-account">
             <a [routerLink]="['/producer', element?.name ]" class="color-orange" id="{{element?.owner}}">
               <strong>{{ element?.name }}</strong>
             </a>

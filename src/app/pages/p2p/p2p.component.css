@@ -14,3 +14,22 @@
 :host .filter-header > .filter-header-input {
   flex: 1;
 }
+
+:host .cell-number {
+  flex: initial !important;
+  width: 32px;
+}
+
+:host .cell-account {
+  flex: initial !important;
+  width: 60px;
+}
+
+:host .main-table .mat-cell {
+  overflow: hidden !important;
+}
+
+:host .mat-header-row > .mat-header-cell:nth-last-child(n+2),
+:host .mat-row > .mat-cell:nth-last-child(n+2) {
+  margin-right: 10px;
+}
