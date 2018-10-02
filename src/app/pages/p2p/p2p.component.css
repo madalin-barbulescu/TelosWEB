@@ -22,7 +22,7 @@
 
 :host .cell-account {
   flex: initial !important;
-  width: 60px;
+  width: 120px;
 }
 
 :host .main-table .mat-cell {
