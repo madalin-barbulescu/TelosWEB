@@ -4,8 +4,8 @@
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-var MODEL_NAME = 'PRODUCER';
-var TABLE_NAME = 'PRODUCER';
+var MODEL_NAME = 'FAUCET';
+var TABLE_NAME = 'FAUCET';
 var MODEL;
 
 var API = new mongoose.Schema({
