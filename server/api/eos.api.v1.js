@@ -19,6 +19,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	const CACHE_ACCOUNT = require('../models/nodeos.accounts.model')(mongoCache);
 	const CACHE_TRANSACTIONS = require('../models/nodeos.transactions.model')(mongoCache);
 	const CACHE_TRANSACTION_TRACES = require('../models/nodeos.transaction_traces.model')(mongoCache);
+	const CACHE_ACTION_TRACES = require('../models/nodeos.action_traces.model')(mongoCache);
+	const CACHE_PUB_KEYS = require('../models/nodeos.pub_keys.model')(mongoCache);
 
     //============ HISTORY API
 	/*
@@ -44,7 +46,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			transaction: (cb) =>{
 				// db.transactions.find({ trx_id: text }).pretty()
 				CACHE_TRANSACTIONS.find({trx_id:text},(err, result) => {
-					console.log(err,result);
 					if(err || !result || result.length === 0){
 						eos.getTransaction({ id: text })
 								.then(result => {
@@ -73,24 +74,30 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			},
 			key: (cb) => {
 				// db.pub_keys.find({ public_key: text }).pretty()
-
-				eos.getKeyAccounts({ public_key: text })
-	   	 			.then(result => {
-	   	 				cb(null, result);
-	   	 			})
-	   	 			.catch(err => {
-	   	 				cb(null, null);
-	   	 			});
-			},
-			contract: (cb) =>{
-				eos.getCode({ json: true, account_name: text })
-	   	 			.then(result => {
-	   	 				cb(null, result)
-	   	 			})
-	   	 			.catch(err => {
-	   	 				cb(null, null);
-	   	 			});
+				CACHE_PUB_KEYS.find({public_key:text},(err, result) => {
+					if(err || !result || result.length === 0){
+						eos.getTransaction({ id: text })
+								.then(result => {
+									cb(null, result);
+								})
+								.catch(err => {
+									cb(null, null);
+								});
+					}else{
+						cb(null,{id: result[0].trx_id});
+					}
+				});
 			}
+			// ,
+			// contract: (cb) =>{
+			// 	eos.getAbi({ json: true, account_name: text })
+	   	 	// 		.then(result => {
+	   	 	// 			cb(null, result)
+	   	 	// 		})
+	   	 	// 		.catch(err => {
+	   	 	// 			cb(null, null);
+	   	 	// 		});
+			// }
 		}, (err, result) => {
 			if (err){
 				log.error(err);
@@ -259,7 +266,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* params - account name
 	*/
 	router.get('/api/v1/get_code/:account', (req, res) => {
-	   	 eos.getCode({
+	   	 eos.getAbi({
       			json: true,
       			account_name: req.params.account,
 			})
@@ -454,19 +461,54 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* router - get_actions
 	* params - account_name, position, offset
 	*/
-	router.get('/api/v1/get_actions/:account_name/:position/:offset', (req, res) => {
-	   	 eos.getActions({
-	   	 		account_name: req.params.account_name,
-	   	 		pos: req.params.position,
-	   	 		offset: req.params.offset
-	   	 	})
-	   	 	.then(result => {
-	   	 		res.json(result);
-	   	 	})
-	   	 	.catch(err => {
-	   	 		log.error(err);
-	   	 		res.status(501).end();
-	   	 	});
+	// router.get('/api/v1/get_actions/:account_name/:created/:limit/:offset', (req, res) => {
+	router.post('/api/v1/get_actions/:account_name', (req, res) => {
+		let account_name = req.params.account_name,
+			upper_bound = req.body.upper ? new Date(req.body.upper) : new Date(),
+			limit = req.body.limit || 20,
+			offset = req.body.offset || 0;
+
+		CACHE_ACTION_TRACES.aggregate([
+			{ 
+				"$match": {
+					"receipt.receiver": account_name, 
+					"createdAt": {
+						"$lt": upper_bound
+					}
+				} 
+			},
+			{ 
+				"$sort": {
+					"createdAt":-1
+				} 
+			},
+			{ "$limit": limit },
+			{ "$skip": offset },
+			// {
+			// 	"$lookup": {
+			// 		"from":"transactions", 
+			// 		"localField":"trx_id", 
+			// 		"foreignField":"trx_id", 
+			// 		"as":"transactions"
+			// 	}
+			// },
+			// {
+			// 	"$lookup": {
+			// 		"from":"transaction_traces", 
+			// 		"localField":"trx_id", 
+			// 		"foreignField":"id", 
+			// 		"as":"transaction_traces"
+			// 	}
+			// }
+		 ]).exec(function(err, results){
+			if(err){
+				log.error(err);
+				res.status(500).json(err);
+			}else{
+				res.json(results);
+			}
+		 });
+		 
 	});
 
 	/*
@@ -479,7 +521,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				log.error(err);
 				res.status(501).end();
 			}else{
-				CACHE_TRANSACTION_TRACES.find({id: req.params.transaction_id_type}, (err,result2) => {
+				CACHE_ACTION_TRACES.find({trx_id: req.params.transaction_id_type}, (err,result2) => {
 					const obj = {
 						transactions: result
 					};

@@ -19,7 +19,7 @@
   <div style="height: 400px; margin-top: 20px; width: 100%;" leaflet [leafletOptions]="options" [leafletLayers]="layers"></div>
 </div>
 
-<div class="pull-left col-sm-8 no-gutter vote-progress-container">
+<!-- <div class="pull-left col-sm-8 no-gutter vote-progress-container">
   <span class="col-xs-2 no-gutter">Vote progress: </span>
   <div class="col-xs-10 no-gutter">
       <mat-progress-bar mode="determinate" textTop="true" value="{{ voteProgression }}" class="progress-bar-usage vote-progression"></mat-progress-bar>
@@ -27,8 +27,8 @@
           {{ voteProgression?voteProgression:0 }} %
       </div>
   </div> 
-</div>
-<div class="col-sm-4">
+</div> -->
+<div class="col-sm-4 col-sm-offset-8">
   <mat-form-field>
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search by producer name or by url">
   </mat-form-field> 
