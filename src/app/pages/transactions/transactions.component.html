@@ -78,34 +78,34 @@
 				  				<div class="actions-list">
 				  					Quantity
 				  				</div>
-				  		</div>
-				        <div *ngFor="let action of mainData?.actions">
-								  <div class="actions-main-container" *ngIf="action?.name === 'transfer'">
+							</div>
+				        <div *ngFor="let action of mainData?.traces;">
+								  <div class="actions-main-container" *ngIf="action?.act?.name === 'transfer'">
 									<div class="actions-list text-center">
-										<div *ngIf="action?.data?.to === mainData?.account_name" class="color-orange">
+										<div *ngIf="action?.act?.data?.to === mainData?.account_name" class="color-orange">
 											<strong>In</strong>
 										</div>
-										<div *ngIf="action?.data?.to !== mainData?.account_name" class="color-red">
+										<div *ngIf="action?.act?.data?.to !== mainData?.account_name" class="color-red">
 											<strong>Out</strong>
 										</div>
 									</div>
 									<div class="actions-list">
-										<a [routerLink]="['/account', action?.data?.from ]" class="color-orange">
-											<strong>{{ action?.data?.from }}</strong>
+										<a [routerLink]="['/account', action?.act?.data?.from ]" class="color-orange">
+											<strong>{{ action?.act?.data?.from }}</strong>
 										</a>
 									</div>
 									<div class="actions-list">
-										<a [routerLink]="['/account', action?.data?.to ]" class="color-orange">
-											<strong>{{ action?.data?.to }}</strong>
+										<a [routerLink]="['/account', action?.act?.data?.to ]" class="color-orange">
+											<strong>{{ action?.act?.data?.to }}</strong>
 										</a>
 									</div>
 									<div class="actions-list">
 										
-										<div class="memo-data">{{ action?.data?.memo }}</div>
-										<i class="far fa-search icon-memo-open" *ngIf="action?.data?.memo?.length > 15" (click)="openDialogMemo($event, action?.data?.memo)"></i>
+										<div class="memo-data">{{ action?.act?.data?.memo }}</div>
+										<i class="far fa-search icon-memo-open" *ngIf="action?.act?.data?.memo?.length > 15" (click)="openDialogMemo($event, action?.act?.data?.memo)"></i>
 									</div>
 									<div class="actions-list">
-										<strong>{{ action?.data?.quantity }}</strong>
+										<strong>{{ action?.act?.data?.quantity }}</strong>
 									</div>
 								  </div>		 
 						</div>
@@ -146,7 +146,7 @@
 					</div>
 				  </mat-tab>
 				  <mat-tab label="Actions (Raw Data)">
-				  		<ngx-json-viewer [json]="mainData?.actions"></ngx-json-viewer>
+				  		<ngx-json-viewer [json]="mainData?.traces"></ngx-json-viewer>
 				  </mat-tab>
 				</mat-tab-group>
 			</div>

@@ -35,7 +35,10 @@ export class MainTableComponent implements OnInit{
   dataSource;
   dataSourceTrx;
   moment = moment;
-  trxObj = {};
+  trxObj = {
+      tx:[],
+      bl:[]
+  };
   spinner = false;
   offsetPageElems = 10;
 
@@ -48,15 +51,17 @@ export class MainTableComponent implements OnInit{
 
   getData() {
       this.spinner = true;
-        this.http.get('/api/v1/get_last_blocks/10')
+        this.http.get('/api/v1/get_last_blocks/6')
                   .subscribe(
                       (res: any) => {
-                          this.mainData = res;
-                          let ELEMENT_DATA: Element[] = this.MainService.sortArray(this.mainData);
-                          this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+                        this.mainData = res.sort((a,b)=>b.block_num-a.block_num);
+                        this.createDisplayArrays(this.mainData);
 
-                          let ELEMENT_DATA_TX: Element[] = this.createTransactionsArray(this.mainData);
-                          this.dataSourceTrx = new MatTableDataSource<Element>(ELEMENT_DATA_TX);
+                        let ELEMENT_DATA: Element[] = this.trxObj.bl; //this.MainService.sortArray(this.mainData);
+                        this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+              
+                        let ELEMENT_DATA_TX: Element[] = this.trxObj.tx;
+                        this.dataSourceTrx = new MatTableDataSource<Element>(ELEMENT_DATA_TX);
 
                           this.spinner = false;
                       },
@@ -65,60 +70,59 @@ export class MainTableComponent implements OnInit{
                           this.spinner = false;
                       });
   }
-  
-  createTransactionsArray(data) {
-      if (!data){
-          return;
-      }
-      let transactions = [];
-      let displayBlocks = [];
 
-      data.forEach(elem => {
-          if (elem.transactions && elem.transactions.length > 0){
-              elem.transactions.forEach(tr => {
-                  if (!this.trxObj[elem.block_num]){
-                      this.trxObj[elem.block_num] = [];
-                  }
-                  let actions = [];
-                  if (tr.trx && tr.trx.transaction && tr.trx.transaction.actions){
-                      actions = tr.trx.transaction.actions.map(act => { 
-                          act.block_num = tr.trx.id;
-                      });
-                      Array.prototype.push.apply(this.trxObj[elem.block_num], tr.trx.transaction.actions);
-                  }
-              });
+  createDisplayArrays(data){
+    if (!data){
+        return;
+    }
+    let transactions = [];
+    let blocks = [];
+    let fullTX = false, fullBL = false;
+    let lastBlockNum = this.trxObj.bl[0] ? this.trxObj.bl[0].block_num : 0;
+
+    for(let i = 0; i < data.length && !fullBL; i++){
+      const elem = data[i];
+      if(elem.block_num <= lastBlockNum) continue;
+
+      for(let j = 0; j < elem.transactions.length && !fullTX; j++){
+          const tr = elem.transactions[j];
+
+          for(let k = 0; k < tr.trx.transaction.actions.length && !fullTX; k++){
+              const act = tr.trx.transaction.actions[k];
+
+              act.block_num = tr.trx.id;
+              act.bn = elem.block_num;
+              transactions.push(act);
+              fullTX = transactions.length >= this.offsetPageElems;
           }
-      });
-
-      Object.keys(this.trxObj).forEach(key => {
-            Array.prototype.push.apply(transactions, this.trxObj[key]);
-      });
-      transactions.reverse();
-
-      if (transactions.length >= this.offsetPageElems){
-          let blocks = Object.keys(this.trxObj);
-          blocks.forEach((key, index) => {
-              if (index < blocks.length - this.offsetPageElems){
-                  delete this.trxObj[key];
-              }
-          });
-          return transactions.slice(0, this.offsetPageElems);
       }
 
-      
-      return transactions;
+      blocks.push(elem);
+      fullBL = blocks.length >= this.offsetPageElems;
+    }
+    
+    if(!fullTX){
+        Array.prototype.push.apply(transactions, this.trxObj.tx.slice(0, this.offsetPageElems - transactions.length));
+    }
+    if(!fullBL){
+        Array.prototype.push.apply(blocks, this.trxObj.bl.slice(0, this.offsetPageElems - blocks.length));
+    }
+
+    this.trxObj.tx = transactions;
+    this.trxObj.bl = blocks;
   }
 
   ngOnInit() {
       this.getData();
       this.socket.on('get_last_blocks', (data) => {
-          this.mainData = data;
-          let ELEMENT_DATA: Element[] = this.MainService.sortArray(this.mainData);
-          this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
-
-          let ELEMENT_DATA_TX: Element[] = this.createTransactionsArray(this.mainData);
-          this.dataSourceTrx = new MatTableDataSource<Element>(ELEMENT_DATA_TX);
-
+            this.mainData = data.sort((a,b)=>b.block_num-a.block_num);
+            this.createDisplayArrays(this.mainData);
+            
+            let ELEMENT_DATA: Element[] = this.trxObj.bl; //this.MainService.sortArray(this.mainData);
+            this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+    
+            let ELEMENT_DATA_TX: Element[] = this.trxObj.tx;
+            this.dataSourceTrx = new MatTableDataSource<Element>(ELEMENT_DATA_TX);
       });
   }
 }
