@@ -137,7 +137,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           this.rotations = rotations.rows[0];
           this.rotations.last_rotation_time = new Date(Date.parse(this.rotations.last_rotation_time + 'Z'));
           this.rotations.next_rotation_time = new Date(Date.parse(this.rotations.next_rotation_time + 'Z'));
-          this.voteProgression = (this.blockChainInfo.total_activated_stake / 10000 / this.supply * 100).toFixed(2);
+          // this.voteProgression = (this.blockChainInfo.total_activated_stake / 10000 / this.supply * 100).toFixed(2);
 
           let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.mainData, this.rotations), this.totalProducerVoteWeight, this.supply);
           this.putProducersOnMap(producers.list);this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
