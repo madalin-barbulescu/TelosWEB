@@ -1,0 +1,20 @@
+:host .mat-header-cell {
+  line-height: 30px;
+}
+
+:host .main-table {
+  margin-top: 30px;
+}
+
+:host .mat-cell > .actions {
+  margin-left: auto;
+  display: none;
+}
+
+:host .mat-row:hover > .mat-cell > .actions {
+  display: initial;
+}
+
+:host .mat-cell > .actions > :nth-last-child(n+2) {
+  margin-right: 10px;
+}

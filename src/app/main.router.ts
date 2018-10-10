@@ -18,6 +18,8 @@ import { WalletPageComponent } from './pages/wallet/wallet.component';
 import { VotePageComponent } from './pages/vote/vote.component';
 import { AdminComponent } from './pages/admin/admin.component';
 import { RegistrationPageComponent } from './pages/registration/registration.component';
+import { P2PageManagementComponent } from './pages/admin/p2p-management/p2p-management.component';
+import { P2PageEditComponent } from './pages/admin/p2p-edit/p2p-edit.component';
 //import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
@@ -96,7 +98,12 @@ export const routes: Routes = [
   },
   { 
     path: 'settings', 
-    component: AdminComponent 
+    children: [
+      { path: '', redirectTo: 'admin', pathMatch: 'full' },
+      { path: 'admin', component: AdminComponent },
+      { path: 'p2p-management', component: P2PageManagementComponent },
+      { path: 'p2p-edit/:name', component: P2PageEditComponent }
+    ]
   },
   { 
     path: 'notfound', 

@@ -44,6 +44,18 @@ module.exports = function(router, config, request, log) {
 	   	res.sendFile(indexPath);
 	});
 	
+	router.get('/settings/admin', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/settings/p2p-edit/:id', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/settings/p2p-management', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
 	router.get('/p2p', (req, res) => {
 	   	res.sendFile(indexPath);
 	});

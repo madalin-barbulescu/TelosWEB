@@ -1,17 +1,43 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminComponent } from './admin.component';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  MatButtonModule,
+  MatCheckboxModule,
+  MatDialogModule,
+  MatFormFieldModule,
+  MatIconModule,
+  MatInputModule,
+  MatProgressSpinnerModule,
+  MatSelectModule,
+  MatTableModule,
+} from '@angular/material';
 
+import { AdminComponent } from './admin.component';
+import { P2PageEditComponent } from './p2p-edit/p2p-edit.component';
+import { P2PageManagementComponent } from './p2p-management/p2p-management.component';
+
+import { appRoutes } from '../../main.router';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    MatInputModule,
+    ReactiveFormsModule,
+    appRoutes,
     MatButtonModule,
-    MatFormFieldModule
+    MatCheckboxModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatTableModule,
   ],
-  declarations: [AdminComponent]
+  declarations: [
+    AdminComponent,
+    P2PageEditComponent,
+    P2PageManagementComponent
+  ]
 })
 export class AdminModule { }
