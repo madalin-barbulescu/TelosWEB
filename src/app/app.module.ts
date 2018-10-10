@@ -21,6 +21,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 
 import { FaucetPageModule } from './pages/faucet/faucet.module';
 import { InfoPageModule } from './pages/info/info.module';
+import { InterrogationModule } from './dialogs/interrogation/interrogation.module';
 import { MainPageModule } from './pages/main_page/main_page.module';
 import { BlockPageModule } from './pages/block/block.module';
 import { TokensPageModule } from './pages/tokens/tokens.module';
@@ -73,6 +74,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     LeafletModule.forRoot(),
     FaucetPageModule,
     InfoPageModule,
+    InterrogationModule,
     MainPageModule,
     BlockPageModule,
     TokensPageModule,

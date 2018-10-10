@@ -786,12 +786,60 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* producer - account
 	*/
 	router.get('/api/v1/p2p', (req, res) => {
-    PRODUCER.find((err, itms) => {
+		const fields = {
+			nodeVersion: 1,
+			latitude: 1,
+			longitude: 1,
+			country: 1,
+			region: 1,
+			city: 1,
+			isp: 1,
+			name: 1,
+			organization: 1,
+			httpServerAddress: 1,
+			httpsServerAddress: 1,
+			p2pServerAddress: 1,
+			url: 1
+		};
+
+    PRODUCER.find({}, fields, (err, itms) => {
         if (err) console.log(err);
         else  res.status(200).json(itms);
     });
 	});
 	//============ END of P2P List
+
+	// peer
+	/*
+	* producer - account
+	*/
+	router.get('/api/v1/p2p/:name', (req, res) => {
+		const fields = {
+			nodeVersion: 1,
+			latitude: 1,
+			longitude: 1,
+			country: 1,
+			region: 1,
+			city: 1,
+			isp: 1,
+			name: 1,
+			organization: 1,
+			httpServerAddress: 1,
+			httpsServerAddress: 1,
+			p2pServerAddress: 1,
+			url: 1
+		};
+
+		PRODUCER.find({name: req.params.name}, fields, (error, result) => {
+			if (error) res.status(400).json(error)
+			else {
+				let peer = result[0];
+				peer
+				res.status(200).send(peer);
+			}
+		});
+	});
+	//============ END of peer
 
 	// Faucet
 	const MAX_TX_PER_ACCOUNT = 400;

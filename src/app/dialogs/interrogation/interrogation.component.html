@@ -1,0 +1,19 @@
+<h1 class="mat-dialog-title">{{ data.title }}</h1>
+<div class="mat-dialog-content">
+	<p>
+		{{ data.question }}
+	</p>
+</div>
+<div class="mat-dialog-actions">
+	<button type="submit"
+		mat-raised-button
+		(click)="closeDialog(false)">
+			{{ data.cancelButton }}
+	</button>
+	<button type="submit"
+		mat-raised-button
+		color="primary"
+		(click)="closeDialog(true)">
+			{{ data.okButton }}
+	</button>
+</div>

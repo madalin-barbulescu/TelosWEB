@@ -1,0 +1,13 @@
+:host {
+	max-width: 500px;
+}
+
+:host .mat-dialog-content > p {
+	word-break: break-word;
+	white-space: pre-line;
+	margin-top: 0;
+}
+
+:host .mat-dialog-actions > :first-child {
+	margin-left: auto;
+}
