@@ -173,7 +173,7 @@ export class RegistrationPageComponent implements OnInit {
     const regex = new RegExp(/^[a-zA-Z0-9_\-]+$/);
 
     if (value.slice(0, 3) != 'EOS' ||
-        length != 54 ||
+        length != 53 ||
         !regex.test(value)) {
       if (!errors)
         errors = {};
