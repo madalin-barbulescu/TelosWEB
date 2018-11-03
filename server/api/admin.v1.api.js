@@ -1,5 +1,5 @@
 const ecc = require("eosjs-ecc");
-ecc.config.address_prefix = "TLOS";
+ecc.config.address_prefix = "EOS";
 
 module.exports 	= function(router, config, mongoMain) {
 
