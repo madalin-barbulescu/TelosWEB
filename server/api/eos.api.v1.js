@@ -705,7 +705,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 					tr.buyrambytes({
 						payer: 'testaccoooo1',
 						receiver: producer.name,
-						bytes: 1024*1024*10
+						bytes: 1024*1024*1
 					});
 				
 					tr.delegatebw({
