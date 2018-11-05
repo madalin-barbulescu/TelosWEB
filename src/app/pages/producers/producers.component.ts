@@ -207,7 +207,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
         totalStandby += 1;
         this._reverseMap[element.owner] = index;
-        this.rotationMark[a] = true;
+        this.rotationMark[a+1] = true;
       } else if (element.owner === rotation.sbp_currently_in) {
       // } else if (index === rotation.sbp_in_index) {
         b = index;
@@ -215,7 +215,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
         element.nextRotationTime = new Date(this.rotations.next_rotation_time).getTime();
         totalActive += 1;
         this._reverseMap[element.owner] = index;
-        this.rotationMark[b] = true;
+        this.rotationMark[b+1] = true;
       }
       if (!element.is_active) {
         element.label = 'Inactive';
