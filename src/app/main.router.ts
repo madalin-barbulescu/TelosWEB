@@ -11,6 +11,7 @@ import { P2PageComponent } from './pages/p2p/p2p.component';
 import { ProducersPageComponent } from './pages/producers/producers.component';
 import { ProducerComponent } from './pages/producer_page/producer_page.component';
 import { AnalyticsPageComponent } from './pages/analytics/analytics.component';
+import { KeyPairGenerationPageComponent } from './pages/key_pair_generation/key_pair_generation.component';
 import { TokensPageComponent } from './pages/tokens/tokens.component';
 import { RamPageComponent } from './pages/ram/ram.component';
 import { SoonComponent } from './pages/soon/soon.component';
@@ -23,81 +24,85 @@ import { P2PageEditComponent } from './pages/admin/p2p-edit/p2p-edit.component';
 //import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
-  { 
-  	path: '', 
-  	component: MainPageComponent, 
-  	pathMatch: 'full' 
+  {
+  	path: '',
+  	component: MainPageComponent,
+  	pathMatch: 'full'
   },
-   { 
-  	path: 'block/:id', 
-  	component: BlockPageComponent 
+   {
+  	path: 'block/:id',
+  	component: BlockPageComponent
   },
-  { 
-    path: 'faucet', 
+  {
+    path: 'faucet',
     component: FaucetPageComponent
   },
-  { 
-    path: 'info', 
-    component: InfoPageComponent 
-  },
-  { 
-    path: 'account/:id', 
-    component: AccountPageComponent 
+  {
+    path: 'info',
+    component: InfoPageComponent
   },
   {
-    path: 'account-creation', 
-    component: AccountCreationPageComponent 
-  },
-  { 
-    path: 'address/:id', 
-    component: AddressPageComponent 
-  },
-  { 
-    path: 'p2p', 
-    component: P2PageComponent 
-  },
-  { 
-    path: 'producers', 
-    component: ProducersPageComponent 
-  },
-  { 
-    path: 'producer/:id', 
-    component: ProducerComponent 
-  },
-  { 
-    path: 'analytics', 
-    component: AnalyticsPageComponent 
-  },
-  { 
-    path: 'accounts', 
-    component: AnalyticsPageComponent 
+    path: 'account/:id',
+    component: AccountPageComponent
   },
   {
-    path: 'ram', 
-    component: RamPageComponent 
+    path: 'account-creation',
+    component: AccountCreationPageComponent
   },
   {
-    path: 'registration', 
-    component: RegistrationPageComponent 
+    path: 'address/:id',
+    component: AddressPageComponent
   },
-  { 
-    path: 'transaction/:id', 
-    component: TransactionPageComponent 
+  {
+    path: 'p2p',
+    component: P2PageComponent
   },
-  { 
-    path: 'wallet', 
-    component: WalletPageComponent 
+  {
+    path: 'producers',
+    component: ProducersPageComponent
   },
-  { 
-    path: 'vote', 
-    component: VotePageComponent 
+  {
+    path: 'producer/:id',
+    component: ProducerComponent
   },
-  { 
-    path: 'tokens', 
-    component: TokensPageComponent 
+  {
+    path: 'analytics',
+    component: AnalyticsPageComponent
   },
-  { 
-    path: 'settings', 
+  {
+    path: 'accounts',
+    component: AnalyticsPageComponent
+  },
+  {
+    path: 'keys',
+    component: KeyPairGenerationPageComponent
+  },
+  {
+    path: 'ram',
+    component: RamPageComponent
+  },
+  {
+    path: 'registration',
+    component: RegistrationPageComponent
+  },
+  {
+    path: 'transaction/:id',
+    component: TransactionPageComponent
+  },
+  {
+    path: 'wallet',
+    component: WalletPageComponent
+  },
+  {
+    path: 'vote',
+    component: VotePageComponent
+  },
+  {
+    path: 'tokens',
+    component: TokensPageComponent
+  },
+  {
+    path: 'settings',
     children: [
       { path: '', redirectTo: 'admin', pathMatch: 'full' },
       { path: 'admin', component: AdminComponent },
@@ -105,9 +110,9 @@ export const routes: Routes = [
       { path: 'p2p-edit/:name', component: P2PageEditComponent }
     ]
   },
-  { 
-    path: 'notfound', 
-    component: SoonComponent 
+  {
+    path: 'notfound',
+    component: SoonComponent
   },
   { path: '**', redirectTo: '' },
 ]
