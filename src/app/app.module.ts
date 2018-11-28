@@ -37,6 +37,7 @@ import { VotePageModule } from './pages/vote/vote.module';
 import { AccountCreationPageModule } from './pages/account-creation/account-creation.module';
 import { AccountPageModule } from './pages/account/account.module';
 import { AddressPageModule } from './pages/address/address.module';
+import { KeyPairGenerationPageModule } from './pages/key_pair_generation/key_pair_generation.module';
 import { SoonModule } from './pages/soon/soon.module';
 import { MainTcustomizeModule } from './components/main_customize_charts/main_tcustomize.module';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
@@ -81,6 +82,7 @@ const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
     AccountCreationPageModule,
     AccountPageModule,
     AddressPageModule,
+    KeyPairGenerationPageModule,
     TransactionPageModule,
     WalletPageModule,
     VotePageModule,

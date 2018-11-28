@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { appRoutes } from '../../main.router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
-import { Clipboard } from './clipboard.service';
+import { Clipboard } from '../../services/clipboard.service';
 
 
 let imports = [
