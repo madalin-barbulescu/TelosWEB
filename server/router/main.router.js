@@ -76,6 +76,10 @@ module.exports = function(router, config, request, log) {
 	   	res.sendFile(indexPath);
 	});
 
+	router.get('/keys', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
 	router.get('/registration', (req, res) => {
 	   	res.sendFile(indexPath);
 	});

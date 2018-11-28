@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import 'rxjs/add/operator/finally';
 import { MatTableDataSource } from '@angular/material';
-import { Clipboard } from './clipboard.service';
+import { Clipboard } from '../../services/clipboard.service';
 import { NotificationsService } from 'angular2-notifications';
 
 @Component({

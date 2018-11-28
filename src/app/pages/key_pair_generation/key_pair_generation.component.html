@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner class="spinner-color"></mat-spinner>
+  </div>
+
+  <h1 class="market-header">Generate Key Pair</h1>
+
+  <p class="announcement">
+    This key generator does NOT save these key pairs within the application. Please ensure you backup these keys in another location if you are planning on using them.
+  </p>
+
+  <p>
+    <button type="submit"
+      mat-raised-button
+      color="primary"
+      class="footer"
+      (click)="generateKeyPair()">
+        Generate Key Pair
+    </button>
+  </p>
+
+  <ng-template [ngIf]="keys">
+    <p>
+      Keys:
+    </p>
+
+    <p *ngFor="let key of keys">
+      <button mat-raised-button (click)="copyKey(key)">
+        {{ key }}
+      </button>
+    </p>
+  </ng-template>
+</div>
