@@ -8,6 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { Clipboard } from '../../services/clipboard.service';
+import { KeyPairService } from '../../services/key-pair.service';
 
 const imports = [
   MatButtonModule,
@@ -16,12 +17,17 @@ const imports = [
   CommonModule
 ];
 
+const services = [
+  Clipboard,
+  KeyPairService
+];
+
 @NgModule({
   declarations: [
     KeyPairGenerationPageComponent
   ],
-  imports:  imports,
-  providers: [Clipboard],
+  imports: [ ...imports ],
+  providers: [ ...services ],
   bootstrap: [ KeyPairGenerationPageComponent ]
 })
 export class KeyPairGenerationPageModule {}

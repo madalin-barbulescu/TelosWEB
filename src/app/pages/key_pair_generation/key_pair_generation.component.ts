@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from 'angular2-notifications';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { PrivateKey } from 'eosjs-ecc';
 import { Clipboard } from '../../services/clipboard.service';
+import { KeyPairService } from '../../services/key-pair.service';
 
 @Component({
   selector: 'app-key-pair-generation-page',
@@ -19,6 +18,7 @@ export class KeyPairGenerationPageComponent implements OnInit {
     protected http: HttpClient,
 
     private clipboard: Clipboard,
+    private keyPairService: KeyPairService,
     private notifications: NotificationsService
   ) { }
 
@@ -27,16 +27,12 @@ export class KeyPairGenerationPageComponent implements OnInit {
   }
 
   generateKeyPair() {
-    const keys = this.keys;
     this.isLoading = true;
 
-    PrivateKey.randomKey().then(privateKey => {
-      const wif = privateKey.toWif();
-      const publicKey = privateKey.toPublic().toString('TLOS');
-      this.keys = [publicKey, wif];
-      this.isLoading = false;
-      return keys;
-    });
+    this.keyPairService.generate$()
+      .finally(() => this.isLoading = false)
+      .do((keys) => this.keys = keys)
+      .subscribe();
   }
 
   copyKey(key) {
