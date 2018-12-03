@@ -1,4 +1,3 @@
-
 :host {
   color: #333;
 }
@@ -10,24 +9,33 @@
 :host .pInfo {
 	text-align: justify;
 	font-size: 18px;
+	line-height: 27px;
 }
 
-:host .pInfo1 {
+:host .pInfo1,
+:host .pInfoLI {
 	text-align: justify;
 	font-size: 16px;
+	line-height: 24px;
 	margin-left: 1em;
 }
 
 :host .pInfo2 {
 	text-align: justify;
 	font-size: 16px;
+	line-height: 24px;
 	margin-left: 2em;
 }
 
 :host .pInfo3 {
 	text-align: justify;
 	font-size: 16px;
+	line-height: 24px;
 	margin-left: 3em;
+}
+
+:host ul {
+  margin-top: 0;
 }
 
 :host pre {
@@ -61,4 +69,8 @@
 
 :host h3 {
   color: #625a51;
+}
+
+:host a {
+  color: #15c;
 }
