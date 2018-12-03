@@ -32,9 +32,19 @@ export class TransactionPageComponent implements OnInit, OnDestroy{
   		this.http.get(`/api/v1/get_transaction/${transactionId}`)
   				 .subscribe(
                       (res: any) => {
-                          this.mainData = res;
-                          this.time = this.moment(this.mainData.block_time).format('MMMM Do YYYY, h:mm:ss a');
-                          let ELEMENT_DATA: Element[] = [this.mainData.trx];
+						  const tmpF = {};
+                          res.traces = res.traces.filter((e)=>{
+							if(e && e.receipt && e.receipt.act_digest){
+								if(tmpF[e.receipt.act_digest]){
+									return false
+								}
+								tmpF[e.receipt.act_digest] = true;
+							}
+							return true;
+						  })
+                          this.mainData = {...res.transactions[0], traces:res.traces};
+                          this.time = this.moment(this.mainData.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+                          let ELEMENT_DATA: Element[] = [this.mainData];
                           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
                           this.spinner = false;
                       },

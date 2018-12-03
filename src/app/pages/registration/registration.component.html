@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="spinner-container" *ngIf="isLoading">
+      <mat-spinner class="spinner-color"></mat-spinner>
+  </div>
+
+  <div *ngIf="dataSent" class="announcement">
+    <p><strong>Please run the command below to register as a producer:</strong></p>
+    <p class="command"><kbd>teclos system regproducer {{ dataSent.name }} {{ dataSent.producerPublicKey }} {{ dataSent.url }}</kbd></p>
+    <p><em>PS: We recommend running this command after your node sync has caught up with the network</em></p>
+  </div>
+
+  <h1 class="market-header">Register</h1>
+  <form [formGroup]="registerFGroup"
+    (submit)="send()"
+    spellcheck="false"
+    autocomplete="off"
+    novalidate
+    class="registration-form">
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput type="text" placeholder="Producer Name" formControlName="name" [required]="true">
+        <mat-hint>length 12, lowercase a-z, 1-5</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="true">
+        <input matInput type="text" placeholder="Organization" formControlName="organization" [required]="false">
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field class="small" [hideRequiredMarker]="false">
+        <mat-select formControlName="protocol" [required]="true">
+          <mat-option *ngFor="let protocol of protocols" [value]="protocol.value">
+            {{protocol.label}}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Protocol</mat-hint>
+      </mat-form-field>
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput type="text" placeholder="Server IP address" formControlName="serverIPAddress" [required]="true">
+        <mat-hint>0.0.0.0:8888</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput type="text" placeholder="P2P Server Address" formControlName="p2pServerAddress" [required]="true">
+        <mat-hint>0.0.0.0:8888</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput type="text" placeholder="Producer Public Key" formControlName="producerPublicKey" [required]="true">
+        <mat-hint>EOS7d9vjuzCT67Jv9hZrBY8R3LhvHMrHepN1ArSeY3e1EKKaEUEc8</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="true">
+        <input matInput type="text" placeholder="Telegram" formControlName="telegramChannel" [required]="false">
+        <mat-hint>@yourTelegramUsername</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput placeholder="Email" formControlName="email" [required]="true">
+        <mat-hint>your@email.com</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="item">
+      <mat-form-field [hideRequiredMarker]="false">
+        <input matInput type="text" placeholder="URL" formControlName="url" [required]="true">
+        <mat-hint>http://telosfoundation.io</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <button type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="!registerFGroup.valid"
+      class="footer">
+        Register
+    </button>
+  </form>
+</div>

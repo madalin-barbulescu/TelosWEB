@@ -75,10 +75,18 @@ export class AccountPageComponent implements OnInit, OnDestroy{
   }
 
   getActions(accountName){
-      this.http.get(`/api/v1/get_actions/${accountName}/-1/-250`)
+      this.http.post(`/api/v1/get_actions/${accountName}`, {upper:new Date(2018,9,5), limit:200, offset:0})
            .subscribe((res: any) => {
-                          res.actions.reverse();
-                          res.actions = this.sortArrayFunctions(res.actions); 
+						  const tmpF = {};
+                          res = res.filter((e)=>{
+							if(e && e.receipt && e.receipt.act_digest){
+								if(tmpF[e.receipt.act_digest]){
+									return false
+								}
+								tmpF[e.receipt.act_digest] = true;
+							}
+							return true;
+						  });
                           this.actions = res;
                           let ELEMENT_DATA: Element[] = [res];
                           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
@@ -102,8 +110,9 @@ export class AccountPageComponent implements OnInit, OnDestroy{
   }
 
   createTables(data, accountName){
+			this.tables = [];
       if (!data.abi || !data.abi.tables){
-          return;
+        return;
       }
       data.abi.tables.forEach(elem => {
           this.http.get(`/api/v1/get_table_rows/${accountName}/${accountName}/${elem.name}/20`)
@@ -115,23 +124,6 @@ export class AccountPageComponent implements OnInit, OnDestroy{
                           });
       });
   }
-
-  sortArrayFunctions(data){
-       if (!data){
-           return [];
-       }
-       let block_nums = [];
-       let result = [];
-       data.forEach(elem => {
-           if (block_nums.indexOf(elem.block_num) === -1){
-               result.push(elem);
-               block_nums.push(elem.block_num);
-           }
-       });
-       block_nums = [];
-       return result;
-  }
-
 
   getControlledAccounts(account){
         this.http.get(`/api/v1/get_controlled_accounts/${account}`)
@@ -171,10 +163,10 @@ export class AccountPageComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.block = this.route.params.subscribe(params => {
-       this.accountId = params['id'];
-       this.getBlockData(this.accountId);
-       this.getControlledAccounts(this.accountId);
-       this.getAllTokens(this.accountId);
+      this.accountId = params['id'];
+      this.getBlockData(this.accountId);
+      this.getControlledAccounts(this.accountId);
+    //    this.getAllTokens(this.accountId);
     });
     //this.subscription = this.MainService.getEosPrice().subscribe(item => { this.eosRate = item; console.log(item); });
   }

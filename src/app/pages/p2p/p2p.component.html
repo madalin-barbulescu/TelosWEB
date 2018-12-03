@@ -1,0 +1,77 @@
+<div class="container">
+
+  <div class="spinner-container" *ngIf="spinner">
+      <mat-spinner class="spinner-color"></mat-spinner>
+  </div>
+  
+  <div class="col-md-12">
+    <h1 class="market-header pull-left col-sm-6">Accounts peers</h1>
+    
+    <div class="col-sm-6 filter-header">
+
+      <button mat-raised-button color="primary" class="status" (click)="copyPeers(dataSource.data)">Copy peers addresses to clipboard</button>
+      <mat-form-field class="filter-header-input">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      </mat-form-field> 
+    </div>
+    
+    <div class="example-container mat-elevation-z8 main-table">
+    
+      <mat-table #table [dataSource]="dataSource" class="big-table">
+    
+        <ng-container matColumnDef="#">
+          <mat-header-cell *matHeaderCellDef class="top-number-analytics cell-number"> # </mat-header-cell>
+          <mat-cell *matCellDef="let element; let i = index" class="top-number-analytics  cell-number">
+              <strong>{{ i+1 }}</strong>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Account">
+          <mat-header-cell *matHeaderCellDef class="cell-account"> Account </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="marketcap-container" class="cell-account">
+            <a [routerLink]="['/producer', element?.name ]" class="color-orange" id="{{element?.owner}}">
+              <strong>{{ element?.name }}</strong>
+            </a>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Organization">
+          <mat-header-cell *matHeaderCellDef > Organization </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="marketcap-container">
+            <strong> {{ element?.organization }} </strong>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Url">
+          <mat-header-cell *matHeaderCellDef class="url-flex"> Url </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="color-light-grey url-flex"> 
+            <a href="{{element?.url}}" target="_blank" [title]="element?.url" class="color-blue">{{element?.url}}</a>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Address">
+          <mat-header-cell *matHeaderCellDef> HTTP/HTTPS server address </mat-header-cell>
+          <mat-cell *matCellDef="let element" class="change-container"> 
+            <strong> {{ element?.httpServerAddress || element?.httpsServerAddress }} </strong>
+          </mat-cell>
+        </ng-container>
+    
+        <ng-container matColumnDef="Peers">
+          <mat-header-cell *matHeaderCellDef> Peer server address</mat-header-cell>
+          <mat-cell *matCellDef="let element" class="change-container"> 
+            <strong> {{ element?.p2pServerAddress }} </strong>
+          </mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    
+      <!--<mat-paginator #paginator
+                    [pageSize]="100"
+                    [pageSizeOptions]="[50, 100]">
+      </mat-paginator>-->
+    </div>
+  </div>
+  
+</div>

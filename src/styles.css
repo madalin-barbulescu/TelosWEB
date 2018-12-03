@@ -49,9 +49,26 @@ a{
 	background: linear-gradient(to right,#D9632C,#EEA15F);
 	background: -webkit-gradient(linear,left top,right top,from(#D9632C),to(#EEA15F));
 }
-.mat-fab.mat-warn, .mat-mini-fab.mat-warn, .mat-raised-button.mat-warn { 
+.mat-fab.mat-warn, .mat-mini-fab.mat-warn, .mat-raised-button.mat-warn {
+	color: black;
+	background: linear-gradient(to right,#F6F1E1,#F6F1F1);
+	background: -webkit-gradient(linear,left top,right top,from(#F6F1E1),to(#F6F1F1)); 
+}
+
+.mat-fab.mat-producing, .mat-mini-fab.mat-producing, .mat-raised-button.mat-producing {
+	color: white; 
+	background: linear-gradient(to right,#7E1C1E,#BC1C1F);
+	background: -webkit-gradient(linear,left top,right top,from(#7E1C1E),to(#BC1C1F)); 
+}
+.mat-fab.mat-inactive, .mat-mini-fab.mat-inactive, .mat-raised-button.mat-inactive {
+	color: white;
 	background: linear-gradient(to right,#A7A083,#BBB7A5);
 	background: -webkit-gradient(linear,left top,right top,from(#A7A083),to(#BBB7A5)); 
+}
+.mat-fab.mat-standby, .mat-mini-fab.mat-standby, .mat-raised-button.mat-standby {
+	color: black;
+	background: linear-gradient(to right,#f7dcc5,#F6F1F1);
+	background: -webkit-gradient(linear,left top,right top,from(#f7dcc5),to(#F6F1F1)); 
 }
 .text-right{
 	text-align: right;
@@ -65,6 +82,25 @@ a{
 }
 .nav-active{
 	color: #D9632C !important;
+}
+.progress-bar-usage.vote-progression{
+	margin-top: 0px;
+	height: 22px !important;
+}
+.vote-progression .mat-progress-bar-fill::after{
+	background: linear-gradient(to right,#D9632C,#EEA15F);
+	background: -webkit-gradient(linear,left top,right top,from(#D9632C),to(#EEA15F));
+	color: white;
+	text-align: center;
+	content: attr(value) '%';
+}
+.vote-progression .mat-progress-bar-fill::before{
+	color: white;
+	text-align: center;
+	content: attr(value) '%';
+}
+.vote-progression .mat-progress-bar-buffer{
+	background: #F6F1E1;
 }
 .account-cpu .mat-progress-bar-fill::after {
 	background-color: #D9632C;
@@ -80,7 +116,7 @@ a{
 }
 .account-ram-usage .mat-progress-bar-fill::after {
   	background-color: #FF9149;
-}	
+}
 .account-ram-usage .mat-progress-bar-buffer {
 	background: #ffdac3;
 }
@@ -282,6 +318,13 @@ a{
 .producer-link{
 	margin-left: 5px;
 	display: table;
+}
+.announcement {
+  text-align: center;
+  padding: 30px;
+  border-radius: 3px;
+  border: solid 1px #f6f1e1;
+  background-color: rgba(246, 241, 225, 0.2);
 }
 /* End Global style for forms signup login reset pass */
 
@@ -535,15 +578,6 @@ action-viewer{
 }
 .filter-header{
 	margin-top: 40px;
-}
-.mat-focused .mat-form-field-label {
-	color: #3568e4 !important;
-}
-
-.mat-form-field-ripple {
-    background: -webkit-gradient(linear,left top, right top,from(#3fa3eb),to(#3568e4));
-    background: linear-gradient(to right,#3fa3eb,#3568e4);
-    background: -webkit-gradient(linear,left top,right top,from(#3fa3eb),to(#3568e4));
 }
 
 @media only screen and (max-width: 1280px) {

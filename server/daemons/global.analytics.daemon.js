@@ -68,6 +68,7 @@ function getStatAggregation (){
 		},
 		(stat, result, elements, cb) => {
 			async.eachLimit(elements, config.limitAsync, (elem, ret) => {
+				console.log("------------------ GET BLOCK : ", elem);
 			   	eos.getBlock({ block_num_or_id: elem })
 			   		.then(block => {			   			
 			   			if (block.transactions && block.transactions.length > 0){
@@ -79,7 +80,15 @@ function getStatAggregation (){
 			   				});
 			   			}
 			   			stat.cursor_block = block.block_num;
-			   			log.info("Saved global stat block ==== ", stat.cursor_block);
+						   // log.info("Saved global stat block ==== ", stat.cursor_block);
+						if(block.block_num % 1000 === 0){
+							stat.save((err) => {
+								// if (err){
+								// 	return cb(err);
+								// }
+								// cb(null, stat);
+							});
+						}
 			   			ret();
 			   		})
 			   		.catch(err => {

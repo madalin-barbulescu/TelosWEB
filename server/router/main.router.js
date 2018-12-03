@@ -39,8 +39,48 @@ module.exports = function(router, config, request, log) {
 	router.get('/accounts', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
+	
+	router.get('/settings', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/settings/admin', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/settings/p2p-edit/:id', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/settings/p2p-management', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/p2p', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/info', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/faucet', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
 
 	router.get('/ram', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/account-creation', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/keys', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/registration', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
 

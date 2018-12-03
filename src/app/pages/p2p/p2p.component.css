@@ -1,0 +1,35 @@
+:host .header-cell-medium {
+  flex: 2;
+}
+
+:host .filter-header {
+  display: flex;
+  align-items: center;
+}
+
+:host .filter-header > :nth-last-child(n+2) {
+  margin-right: 20px;
+}
+
+:host .filter-header > .filter-header-input {
+  flex: 1;
+}
+
+:host .cell-number {
+  flex: initial !important;
+  width: 32px;
+}
+
+:host .cell-account {
+  flex: initial !important;
+  width: 120px;
+}
+
+:host .main-table .mat-cell {
+  overflow: hidden !important;
+}
+
+:host .mat-header-row > .mat-header-cell:nth-last-child(n+2),
+:host .mat-row > .mat-cell:nth-last-child(n+2) {
+  margin-right: 10px;
+}

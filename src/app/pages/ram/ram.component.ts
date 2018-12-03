@@ -33,9 +33,9 @@ export class RamPageComponent implements OnInit{
       gradient : true,
       showLegend : false,
       showXAxisLabel : false,
-      xAxisLabel : 'TLS',
+      xAxisLabel : 'TLOS',
       showYAxisLabel : true,
-      yAxisLabel : 'TLS',
+      yAxisLabel : 'TLOS',
       autoScale : true,
       timeline: true,
       fitContainer : true
@@ -250,7 +250,7 @@ export class RamPageComponent implements OnInit{
             contract.buyram({
                 payer: this.identity.accounts[0].name,
                 receiver: this.identity.accounts[0].name,
-                quant: `${amount} TLS`
+                quant: `${amount} TLOS`
             }).then(trx => {
                  console.log(trx);
                  this.saveOrder({ amount: this.buyRAM.kb * 1024, account: this.identity.accounts[0].name, type: 'buy', tx_id: trx.transaction_id, price: this.ramPrice });
@@ -313,7 +313,7 @@ export class RamPageComponent implements OnInit{
     }
         let amount = Number(`${this.donation}`).toFixed(4);
         let eos = this.WINDOW.scatter.eos(this.eosNetwork, this.WINDOW.Eos, this.eosOptions, "https");
-        eos.transfer(this.identity.accounts[0].name, 'eoswebnetbp1', `${amount} TLS`, 'Donation')
+        eos.transfer(this.identity.accounts[0].name, 'amplifiedtls', `${amount} TLOS`, 'Donation')
            .then(result => {
                 console.log(result);
                 this.getAccount(this.identity.accounts[0].name);

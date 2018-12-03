@@ -103,7 +103,7 @@ function findBalanceAndUpdate(account, callback) {
 	   	 	.then(balance => {
 	   	 		accInfo.balance = Array.isArray(balance) ? balance : [];
 	   	 		accInfo.balance.forEach((elem) => {
-	   	 			if (elem.indexOf('TLS') !== -1){
+	   	 			if (elem.indexOf('TLOS') !== -1){
 	   	 				accInfo.unstaked = !isNaN(Number(elem.split(' ')[0])) ? Number(elem.split(' ')[0]) : 0;
 	   	 			}
 	   	 		});

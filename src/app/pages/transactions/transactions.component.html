@@ -24,7 +24,7 @@
 					<strong class="block-info-header">Hash:</strong>
 				</div>
 				<div class="col-sm-9">
-					<small class="color-grey tx-mobile-hash">{{ mainData?.id}}</small>
+					<small class="color-grey tx-mobile-hash">{{ mainData?.trx_id}}</small>
 				</div>
 			</div>	
 
@@ -42,7 +42,7 @@
 					<strong class="block-info-header">Actions:</strong>
 				</div>
 				<div class="col-sm-9">
-					<small class="color-grey">{{ mainData?.trx?.trx?.actions?.length }}</small>
+					<small class="color-grey">{{ mainData?.actions?.length }}</small>
 				</div>
 			</div>
 
@@ -78,40 +78,40 @@
 				  				<div class="actions-list">
 				  					Quantity
 				  				</div>
-				  		</div>
-				        <div *ngFor="let action of mainData?.trx?.trx?.actions">
-								  <div class="actions-main-container" *ngIf="action?.name === 'transfer'">
+							</div>
+				        <div *ngFor="let action of mainData?.traces;">
+								  <div class="actions-main-container" *ngIf="action?.act?.name === 'transfer'">
 									<div class="actions-list text-center">
-										<div *ngIf="action?.data?.to === mainData?.account_name" class="color-orange">
+										<div *ngIf="action?.act?.data?.to === mainData?.account_name" class="color-orange">
 											<strong>In</strong>
 										</div>
-										<div *ngIf="action?.data?.to !== mainData?.account_name" class="color-red">
+										<div *ngIf="action?.act?.data?.to !== mainData?.account_name" class="color-red">
 											<strong>Out</strong>
 										</div>
 									</div>
 									<div class="actions-list">
-										<a [routerLink]="['/account', action?.data?.from ]" class="color-orange">
-											<strong>{{ action?.data?.from }}</strong>
+										<a [routerLink]="['/account', action?.act?.data?.from ]" class="color-orange">
+											<strong>{{ action?.act?.data?.from }}</strong>
 										</a>
 									</div>
 									<div class="actions-list">
-										<a [routerLink]="['/account', action?.data?.to ]" class="color-orange">
-											<strong>{{ action?.data?.to }}</strong>
+										<a [routerLink]="['/account', action?.act?.data?.to ]" class="color-orange">
+											<strong>{{ action?.act?.data?.to }}</strong>
 										</a>
 									</div>
 									<div class="actions-list">
 										
-										<div class="memo-data">{{ action?.data?.memo }}</div>
-										<i class="far fa-search icon-memo-open" *ngIf="action?.data?.memo?.length > 15" (click)="openDialogMemo($event, action?.data?.memo)"></i>
+										<div class="memo-data">{{ action?.act?.data?.memo }}</div>
+										<i class="far fa-search icon-memo-open" *ngIf="action?.act?.data?.memo?.length > 15" (click)="openDialogMemo($event, action?.act?.data?.memo)"></i>
 									</div>
 									<div class="actions-list">
-										<strong>{{ action?.data?.quantity }}</strong>
+										<strong>{{ action?.act?.data?.quantity }}</strong>
 									</div>
 								  </div>		 
 						</div>
 				  </mat-tab>
 				  <mat-tab label="Actions info">
-				  	<div class="example-container mat-elevation-z8 main-table block-trx-table" *ngIf="mainData?.trx?.trx?.actions">
+				  	<div class="example-container mat-elevation-z8 main-table block-trx-table" *ngIf="mainData?.actions">
 					
 					  <mat-table #table [dataSource]="dataSource" matSort>	
 
@@ -120,7 +120,7 @@
 					      <mat-header-cell *matHeaderCellDef class="actions-list-container"> Actions Info</mat-header-cell>
 					      <mat-cell *matCellDef="let element"> 
 					          	<!--{{element?.actions}}-->
-								<div *ngFor="let action of element?.trx?.actions" class="actions-list-container">
+								<div *ngFor="let action of element?.actions" class="actions-list-container">
 
 								  <div class="actions-main-container">
 									<div class="actions-list">
@@ -146,7 +146,7 @@
 					</div>
 				  </mat-tab>
 				  <mat-tab label="Actions (Raw Data)">
-				  		<ngx-json-viewer [json]="mainData?.trx?.trx?.actions"></ngx-json-viewer>
+				  		<ngx-json-viewer [json]="mainData?.traces"></ngx-json-viewer>
 				  </mat-tab>
 				</mat-tab-group>
 			</div>

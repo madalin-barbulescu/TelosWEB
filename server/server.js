@@ -42,8 +42,16 @@ const mongoMain = mongoose.createConnection(config.MONGO_URI, config.MONGO_OPTIO
       log.error(err);
       process.exit(1);
     }
-    log.info('[Connected to Mongo EOS] : 27017');
+    log.info('[Connected to Mongo TLSweb] : 27017');
 });
+const mongoCache = mongoose.createConnection(config.MONGO_NODE_URI, config.MONGO_OPTIONS,
+  (err) => {
+     if (err){
+       log.error(err);
+       process.exit(1);
+     }
+     log.info('[Connected to Mongo NODE TELOS] : 27017');
+ });
 
 const app  = express();
 
@@ -73,7 +81,7 @@ const io  = require('socket.io').listen(server);
 require(`./api/eos.api.${config.apiV}.socket`)(io, eos, mongoMain);
 
 if (config.CRON){
-    require('./crons/main.cron')();
+    require('./crons/main.cron')(mongoMain, mongoCache);
 }
 if (config.telegram.ON){
     require('./daemons/ram.bot.daemon')(eos, mongoMain);
@@ -93,7 +101,11 @@ app.use(function(req,res,next){
 app.use(express.static(path.join(__dirname, '../dist')));
 
 require('./router/main.router')(app, config, request, log);
-require(`./api/eos.api.${config.apiV}`)(app, config, request, log, eos, mongoMain);
+require(`./api/eos.api.${config.apiV}`)(app, config, request, log, eos, mongoMain, mongoCache);
+
+if (config.ADMIN_ENABLED){
+  require(`./api/admin.${config.apiV}.api`)(app, config, mongoMain);
+}
 
 /*app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../dist/index.html'));
