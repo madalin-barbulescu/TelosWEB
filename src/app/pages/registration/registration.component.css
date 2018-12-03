@@ -35,16 +35,11 @@
   margin-left: auto;
 }
 
-:host > .container > .successful-registration {
+:host > .container > .announcement {
   margin-top: 30px;
-  text-align: center;
-  padding: 30px;
-  border-radius: 3px;
-  border: solid 1px #f6f1e1;
-  background-color: rgba(246, 241, 225, 0.2);
 }
 
-:host > .container > .successful-registration > .command {
+:host > .container > .announcement > .command {
   font-size: 16px;
 }
 

@@ -3,7 +3,7 @@
       <mat-spinner class="spinner-color"></mat-spinner>
   </div>
 
-  <div *ngIf="dataSent" class="successful-registration">
+  <div *ngIf="dataSent" class="announcement">
     <p><strong>Please run the command below to register as a producer:</strong></p>
     <p class="command"><kbd>teclos system regproducer {{ dataSent.name }} {{ dataSent.producerPublicKey }} {{ dataSent.url }}</kbd></p>
     <p><em>PS: We recommend running this command after your node sync has caught up with the network</em></p>
