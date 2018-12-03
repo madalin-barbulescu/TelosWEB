@@ -18,68 +18,68 @@ import { VotePageComponent } from './pages/vote/vote.component';
 
 export const routes: Routes = [
   { 
-  	path: '', 
-  	component: MainPageComponent, 
+  	path: '',
+  	component: InfoPageComponent,
   	pathMatch: 'full' 
   },
    { 
-  	path: 'block/:id', 
+  	path: 'block/:id',
   	component: BlockPageComponent 
   },
   { 
-    path: 'info', 
-    component: InfoPageComponent 
+    path: 'info',
+    component: MainPageComponent
   },
   { 
-    path: 'account/:id', 
+    path: 'account/:id',
     component: AccountPageComponent 
   },
   { 
-    path: 'address/:id', 
+    path: 'address/:id',
     component: AddressPageComponent 
   },
   { 
-    path: 'p2p', 
+    path: 'p2p',
     component: P2PageComponent 
   },
   { 
-    path: 'producers', 
+    path: 'producers',
     component: ProducersPageComponent 
   },
   { 
-    path: 'producer/:id', 
+    path: 'producer/:id',
     component: ProducerComponent 
   },
   { 
-    path: 'analytics', 
+    path: 'analytics',
     component: AnalyticsPageComponent 
   },
   { 
-    path: 'accounts', 
+    path: 'accounts',
     component: AnalyticsPageComponent 
   },
   {
-    path: 'ram', 
+    path: 'ram',
     component: RamPageComponent 
   },
   { 
-    path: 'transaction/:id', 
+    path: 'transaction/:id',
     component: TransactionPageComponent 
   },
   { 
-    path: 'wallet', 
+    path: 'wallet',
     component: WalletPageComponent 
   },
   { 
-    path: 'vote', 
+    path: 'vote',
     component: VotePageComponent 
   },
   { 
-    path: 'tokens', 
+    path: 'tokens',
     component: TokensPageComponent 
   },
   { 
-    path: 'notfound', 
+    path: 'notfound',
     component: SoonComponent 
   },
   { path: '**', redirectTo: '' },
