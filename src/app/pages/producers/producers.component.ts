@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatTableDataSource } from '@angular/material';
@@ -52,6 +52,9 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
     'Producing':"#ff0000"
   };
   _reverseMap:any = {};
+
+  @ViewChild('paginator')
+  paginator: ElementRef;
 
   constructor(private socket: Socket, protected http: HttpClient, private MainService: MainService) { }
 
@@ -141,7 +144,9 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           // this.voteProgression = (this.blockChainInfo.total_activated_stake / 10000 / this.supply * 100).toFixed(2);
 
           let ELEMENT_DATA: Element[] = this.MainService.countRate(this.swapAndLabelProducers(this.mainData, this.rotations), this.totalProducerVoteWeight, this.supply);
-          this.putProducersOnMap(producers.list);this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+          this.putProducersOnMap(producers.list);
+          this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+          this.dataSource.paginator = this.paginator;
 
           this.dataSource.filterPredicate = (data, filter) => data.owner.toLowerCase().indexOf(filter) > -1 || data.votes.toLowerCase().indexOf(filter) > -1;
           this.spinner = false;

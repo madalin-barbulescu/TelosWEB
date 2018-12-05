@@ -4,23 +4,27 @@
     float: left;
 }
 .chart-child-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     color: #fff;
     padding: 16px 10px 10px 13px;
     font-family: 'ClanProNews';
     font-size: 14px;
     border-radius: 3px;
     height: 80px;
+    min-width: 150px;
 }
 .chart-child-container-dollar{
 	color: #fff;
     font-size: 15px;
     display: table;
     width: 100%;
-    margin-top: 13px;
 }
 .customize-containers-not-active{
-    background-color: #33322D; 
-    margin-right: 4px;
+    background-color: #33322D;
+    margin-top: 5px;
+    margin-right: 5px;
 }
 .customize-containers-active{
     padding-top: 0;
@@ -51,8 +55,7 @@
 }
 .main-chart-cust-container{
 	background-color: #F6F1E1;
-	padding-top: 10px;
-	padding-bottom: 2px;
+	padding: 10px 0 10px;
 }
 .currency-page-main-chart{
 	background-color: #23232c;
@@ -108,11 +111,29 @@
 .container-tps{
     margin-top: 13px;
     margin-bottom: 5px;
+    word-break: break-all;
 }
+.container-tps-atom {
+    display: inline-block;
+}
+.container-tps > .container-tps-atom:nth-last-child(n+2) {
+    margin-right: 10px;
+}
+
+.mccc-cells {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mccc-cells > :nth-child(n) {
+    flex: 1;
+}
+
 .tps-text{
     margin-right: 10px;
 }
 
 .no-gutters{
     padding-left: 0;
+    padding-right: 0;
 }
