@@ -44,7 +44,7 @@
 
   :host .registration-form > .item {
     display: flex;
-    width: 75%;
+    width: 100%;
     padding: 5px 0 5px;
   }
 

@@ -22,7 +22,7 @@
 
 html {
     position: relative;
-    width: 100vw;
+    /* width: 100vw; */
     min-height: 100%;
 }
 body{
@@ -534,7 +534,10 @@ action-viewer{
 	display: block;
 }
 
-.block-trx-table{
+.mat-header-row {
+	position: sticky;
+	top: 0;
+	z-index: 1;
 }
 .block-trx-table .mat-header-row{
 	min-height: 40px;
@@ -657,6 +660,9 @@ action-viewer{
     footer ul{
     	padding-left: 0 !important;
     }
+}
+.mat-simple-snackbar > .mat-simple-snackbar-action {
+	max-height: 36px;
 }
 
 
