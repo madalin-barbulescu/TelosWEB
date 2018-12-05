@@ -3,18 +3,20 @@
   <div class="spinner-container" *ngIf="spinner">
       <mat-spinner class="spinner-color"></mat-spinner>
   </div>
-  
-  <div class="col-md-12">
-    <h1 class="market-header pull-left col-sm-6">Accounts peers</h1>
-    
-    <div class="col-sm-6 filter-header">
 
+  <div class="col-md-12 market-header">
+    <div>Accounts peers</div>
+
+    <div class="filter-header">
       <button mat-raised-button color="primary" class="status" (click)="copyPeers(dataSource.data)">Copy peers addresses to clipboard</button>
       <mat-form-field class="filter-header-input">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+        <mat-hint>amplifiedtls</mat-hint>
       </mat-form-field> 
     </div>
-    
+  </div>
+
+  <div class="col-md-12">
     <div class="example-container mat-elevation-z8 main-table">
     
       <mat-table #table [dataSource]="dataSource" class="big-table">
@@ -67,10 +69,11 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
     
-      <!--<mat-paginator #paginator
-                    [pageSize]="100"
-                    [pageSizeOptions]="[50, 100]">
-      </mat-paginator>-->
+      <mat-paginator #paginator
+                    [pageSize]="50"
+                    [pageSizeOptions]="[20, 50, 100]"
+                    showFirstLastButtons>
+      </mat-paginator>
     </div>
   </div>
   
