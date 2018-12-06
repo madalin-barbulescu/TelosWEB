@@ -1,0 +1,778 @@
+[Wed Dec  5 16:20:59 2018] com.ibm.diagnostics.healthcenter.loader INFO: Node Application Metrics 3.1.3.201711070422 (Agent Core 3.2.6)
+[Wed Dec  5 16:20:59 2018] com.ibm.diagnostics.healthcenter.mqtt INFO: Connecting to broker localhost:1883
+appmetrics-dash listening on :::3001
+[91m[2018-12-05T17:00:23.903] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T17:00:34.817] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T17:00:36.745] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T17:26:58.191] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T17:34:55.611] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T17:34:56.324] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[91m[2018-12-05T18:31:38.282] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T18:31:42.408] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T18:57:05.418] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T19:18:00.535] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T19:18:14.944] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T19:18:15.556] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T19:40:23.182] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T19:40:23.688] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T19:40:45.759] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:02:21.836] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T20:03:20.256] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T20:12:22.265] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:18:54.373] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:19:03.631] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:19:04.047] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T20:23:28.118] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:23:44.381] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:23:48.310] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:23:48.719] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T20:24:05.551] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T20:24:12.625] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:24:18.788] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T20:24:18.948] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[91m[2018-12-05T20:54:34.813] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T20:54:34.991] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T20:54:34.991] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[91m[2018-12-05T21:15:15.238] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T21:33:15.410] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T21:33:15.415] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T21:45:39.099] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T21:45:39.853] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T21:50:17.508] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T21:50:18.033] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T22:27:34.398] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T22:28:19.271] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T22:28:19.890] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T22:29:42.035] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T22:29:42.580] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T22:31:11.987] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T22:31:12.578] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T23:24:06.670] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-05T23:35:02.479] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-05T23:35:03.301] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-05T23:35:22.125] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T02:13:37.114] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[33m======= UncaughtException Main Server :  Error: getaddrinfo ENOTFOUND telos.eosdetroit.io telos.eosdetroit.io:443[0m
+[33m======= UncaughtException Main Server :  Error: socket hang up[0m
+[33m======= UncaughtException Main Server :  Error: getaddrinfo ENOTFOUND telos.eosdetroit.io telos.eosdetroit.io:443[0m
+[33m======= UncaughtException Main Server :  Error: socket hang up[0m
+[91m[2018-12-06T05:39:50.200] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T06:15:25.788] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T06:16:05.628] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T06:29:56.584] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T06:29:56.812] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T06:33:53.288] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T06:38:36.873] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T06:38:36.903] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T07:11:09.798] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T07:21:46.426] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[91m[2018-12-06T08:42:29.124] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T09:19:09.036] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T09:19:10.162] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T09:19:17.328] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T09:20:07.205] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T09:20:15.640] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T09:20:49.294] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T09:20:49.759] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T09:21:02.659] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T09:21:03.114] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T09:21:08.367] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T09:22:04.279] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T09:59:00.585] [ERROR] server - [39m=====Page not Found  Error: Invalid URI "www.telosafrique.io/bp.json"
+    at Request.init (/home/ec2-user/TelosWEB/node_modules/request/request.js:273:31)
+    at new Request (/home/ec2-user/TelosWEB/node_modules/request/request.js:127:8)
+    at request (/home/ec2-user/TelosWEB/node_modules/request/index.js:53:10)
+    at Function.get (/home/ec2-user/TelosWEB/node_modules/request/index.js:61:12)
+    at router.post (/home/ec2-user/TelosWEB/server/api/eos.api.v1.js:457:14)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/ec2-user/TelosWEB/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at serveStatic (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:75:16)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+[91m[2018-12-06T11:51:42.399] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T12:53:14.505] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T13:00:19.002] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T13:00:25.884] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T14:31:34.514] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T14:54:05.764] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T15:06:25.740] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T16:26:06.940] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:764:28)
+    at /home/ec2-user/TelosWEB/node_modules/send/index.js:772:23
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T16:46:39.314] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[33m======= UncaughtException Main Server :  Error: Callback was already called.[0m
+[91m[2018-12-06T18:11:13.124] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/send/index.js:736:16)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:725:14)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T18:43:31.901] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T18:43:32.021] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T18:43:32.031] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T18:43:32.036] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T18:55:36.250] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T19:01:37.917] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at serveStatic (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:75:16)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at /home/ec2-user/TelosWEB/server/server.js:96:3
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7 status: 404 }
+[91m[2018-12-06T19:01:38.687] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T19:15:38.834] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T19:21:32.541] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T19:21:33.199] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T19:30:29.717] [ERROR] server - [39m=====Page not Found  { Error: Not Found
+    at app.use (/home/ec2-user/TelosWEB/server/server.js:116:13)
+    at Layer.handle [as handle_request] (/home/ec2-user/TelosWEB/node_modules/express/lib/router/layer.js:95:5)
+    at trim_prefix (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:317:13)
+    at /home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:284:7
+    at Function.process_params (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/ec2-user/TelosWEB/node_modules/express/lib/router/index.js:275:10)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/serve-static/index.js:121:7)
+    at emitOne (events.js:116:13)
+    at SendStream.emit (events.js:211:7)
+    at SendStream.error (/home/ec2-user/TelosWEB/node_modules/send/index.js:270:17)
+    at SendStream.onStatError (/home/ec2-user/TelosWEB/node_modules/send/index.js:421:12)
+    at onstat (/home/ec2-user/TelosWEB/node_modules/send/index.js:727:26)
+    at FSReqWrap.oncomplete (fs.js:152:21) status: 404 }
+[91m[2018-12-06T19:32:44.639] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T19:32:45.330] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }
+[91m[2018-12-06T19:37:38.705] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T19:37:45.534] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T19:53:37.379] [ERROR] server - [39m{ Error: {"code":500,"message":"Internal Service Error","error":{"code":3010008,"name":"block_id_type_exception","what":"Invalid block ID","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 500, statusText: 'Internal Server Error' }
+[91m[2018-12-06T19:53:37.842] [ERROR] server - [39m{ Error: {"code":404,"message":"Not Found","error":{"code":0,"name":"exception","what":"unspecified","details":[]}}
+    at /home/ec2-user/TelosWEB/node_modules/eosjs/node_modules/eosjs-api/lib/apigen.js:112:23
+    at <anonymous>
+    at process._tickDomainCallback (internal/process/next_tick.js:229:7) status: 404, statusText: 'Not Found' }

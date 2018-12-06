@@ -867,18 +867,18 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			(cb) => {
-				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60 * 24)}}, function(error, count) {
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
 					if (count >= FAUCET_TX_PER_USER_PER_HOUR)
-						cb({result: 'error', code: 400, message: `Account has reached ${FAUCET_TX_PER_USER_PER_HOUR} withdrawals per hour`, data: {}});
+						cb({result: 'error', code: 400, message: `Account has reached ${FAUCET_TX_PER_USER_PER_HOUR} withdrawals per day`, data: {}});
 
 					cb(null);
 				});
 			},
 			(cb) => {
-				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+				FAUCET.countDocuments({name}, function(error, count) {
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
