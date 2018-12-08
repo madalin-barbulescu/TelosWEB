@@ -696,20 +696,20 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 				eos.transaction(tr => {
 					tr.newaccount({
-						creator: 'testaccoooo1',
+						creator: 'faucet.tf',
 						name: producer.name,
 						owner: producer.producerPublicKey,
 						active: producer.producerPublicKey
 					});
 				
 					tr.buyrambytes({
-						payer: 'testaccoooo1',
+						payer: 'faucet.tf',
 						receiver: producer.name,
 						bytes: 1024*4
 					});
 				
 					tr.delegatebw({
-						from: 'testaccoooo1',
+						from: 'faucet.tf',
 						receiver: producer.name,
 						stake_net_quantity: '100.0000 TLOS',
 						stake_cpu_quantity: '100.0000 TLOS',
@@ -748,20 +748,20 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 		eos.transaction(tr => {
 			tr.newaccount({
-				creator: 'testaccoooo1',
+				creator: 'faucet.tf',
 				name: data.name,
 				owner: data.publicKey,
 				active: data.publicKey
 			});
 		
 			tr.buyrambytes({
-				payer: 'testaccoooo1',
+				payer: 'faucet.tf',
 				receiver: data.name,
 				bytes: 1024*4
 			});
 		
 			tr.delegatebw({
-				from: 'testaccoooo1',
+				from: 'faucet.tf',
 				receiver: data.name,
 				stake_net_quantity: '10.0000 TLOS',
 				stake_cpu_quantity: '10.0000 TLOS',
@@ -889,7 +889,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			(cb) => {
-				eos.transfer('testaccoooo1', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
+				eos.transfer('faucet.tf', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
 					.then(() => new FAUCET({name, created: Date.now()}).save())
 					.then(data => cb(null, data))
 					.catch(err => {
