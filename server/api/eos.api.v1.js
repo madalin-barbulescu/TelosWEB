@@ -903,7 +903,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		], function (err, result) {
 			// res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
 			if (err)
-				res.status(err.code).send(err);
+				res.status(error.code ? error.code : 500).send(err);
 			res.status(200).json(result);
 		});
 	});
