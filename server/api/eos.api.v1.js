@@ -843,10 +843,10 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			url: 1
 		};
 
-    PRODUCER.find({}, fields, (err, itms) => {
-        if (err) console.log(err);
-        else  res.status(200).json(itms);
-    });
+		PRODUCER.find({}, fields, (err, itms) => {
+			if (err) console.log(err);
+			else  res.status(200).json(itms);
+		});
 	});
 	//============ END of P2P List
 
@@ -931,8 +931,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			},
 			(cb) => {
 				eos.transfer('faucet.tf', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
-					.then(() => new FAUCET({name, created: Date.now()}).save())
-					.then(data => cb(null, data))
+					.then(() => new FAUCET({name, created: Date.now()}).save(), (rejected) => {console.error(rejected);})
+					.then(data => cb(null, data), (rejected) => {console.error(rejected);})
 					.catch(err => {
 						let error = err;
 						try{
