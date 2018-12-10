@@ -4,6 +4,9 @@
 /tmp
 /out-tsc
 
+# temp db stuff
+/mongo
+
 # dependencies
 /node_modules
 
