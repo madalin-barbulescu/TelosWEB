@@ -25,8 +25,8 @@ module.exports = (mongoMain, mongoCache) => {
    const CACHE_ACCOUNTS = require('../models/nodeos.accounts.model')(mongoCache);
    const CACHE_ACTIONS = require('../models/nodeos.action_traces.model')(mongoCache);
 
-   const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoCache);
-   const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoCache);
+   const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoMain);
+   const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoMain);
    // const CACHE_AMEND_SUBMISSIONS = require('../models/api.submission.amend.model')(mongoCache);
 
    function startGlobalStatAnalytics() {
@@ -265,7 +265,10 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
+   let skipFirst = true;
    cron.schedule('*/5 * * * * *', () => {
+      if(skipFirst){ skipFirst = false; return; }
+
       startGlobalStatAnalytics();
       cacheBallotsAndSubmissions();
    });

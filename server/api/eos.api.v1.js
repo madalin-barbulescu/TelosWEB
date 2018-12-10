@@ -22,8 +22,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	const CACHE_ACTION_TRACES = require('../models/nodeos.action_traces.model')(mongoCache);
 	const CACHE_PUB_KEYS = require('../models/nodeos.pub_keys.model')(mongoCache);
 
-	const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoCache);
-	const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoCache);
+	const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoMain);
+	const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoMain);
 
     //============ HISTORY API
 	/*
