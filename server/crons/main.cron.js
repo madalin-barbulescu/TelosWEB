@@ -76,7 +76,7 @@ module.exports = (mongoMain, mongoCache) => {
                if (err) {
                   return cb(err);
                }
-               stat.tps.push(result - stat.actions);
+               stat.tps.push(result - stat.transactions);
                stat.transactions = result;
                if(stat.tps.length > 12)
                   stat.tps.splice(0,1);
@@ -129,9 +129,9 @@ module.exports = (mongoMain, mongoCache) => {
 			      code: "eosio.trail",
 			      scope: "eosio.trail",
 			      table: "ballots",
-			      lower_bound: stat.last_ballot,
+			      lower_bound: stat.last_ballot + 1,
 			      upper_bound: "",
-			      limit: 1000
+			      limit: 200
 			   }).then(
                (result) => {
                   stat.ballots += result.rows.length;
@@ -166,9 +166,9 @@ module.exports = (mongoMain, mongoCache) => {
 			      code: "eosio.saving",
 			      scope: "eosio.saving",
 			      table: "submissions",
-			      lower_bound: stat.last_wps,
+			      lower_bound: stat.last_wps + 1,
 			      upper_bound: "",
-			      limit: 1000
+			      limit: 200
 			   }).then(
                (result) => {
                   stat.wps_submissions += result.rows.length;

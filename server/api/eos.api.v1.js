@@ -895,9 +895,12 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	router.post('/api/v1/gettlos', (req, res) => {
 		const name = req.body.name;
 
+		console.log("GET TELOS for ", name);
 		async.waterfall([
 			(cb) => {
 				FAUCET.countDocuments({created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+					console.log("COUNT 0 ", error, count);
+
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
@@ -909,6 +912,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			},
 			(cb) => {
 				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60 * 24)}}, function(error, count) {
+					console.log("COUNT 1 ", error, count);
+
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
@@ -920,6 +925,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			},
 			(cb) => {
 				FAUCET.countDocuments({name}, function(error, count) {
+					console.log("COUNT 2 ", error, count);
+
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
@@ -930,10 +937,12 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			(cb) => {
+				console.log("TRANSFER ", name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`);
 				eos.transfer('faucet.tf', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
-					.then(() => new FAUCET({name, created: Date.now()}).save())
-					.then(data => cb(null, data))
+					.then(() => new FAUCET({name, created: Date.now()}).save(), (rejected) => {console.error(rejected);})
+					.then(data => cb(null, data), (rejected) => {console.error(rejected);})
 					.catch(err => {
+						console.error(" ERR >> ", err);
 						let error = err;
 						try{
 							error = JSON.parse(err);
