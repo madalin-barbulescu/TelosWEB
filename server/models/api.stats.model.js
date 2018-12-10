@@ -50,7 +50,7 @@ var API = new mongoose.Schema({
   },
   last_ballot: {
     type: Number,
-    default: 0
+    default: -1
   },
   wps_submissions: {
     type: Number,
@@ -58,7 +58,7 @@ var API = new mongoose.Schema({
   },
   last_wps: {
     type: Number,
-    default: 0
+    default: -1
   },
   amend_submissions: {
     type: Number,
@@ -66,7 +66,7 @@ var API = new mongoose.Schema({
   },
   last_amend: {
     type: Number,
-    default: 0
+    default: -1
   },
   tps:{
     type: Array,
