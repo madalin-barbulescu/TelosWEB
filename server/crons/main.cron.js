@@ -102,7 +102,7 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   function startGlobalStatAnalytics() {
+   function cacheBallotsAndSubmissions() {
       async.waterfall([
          (cb) => {
             log.info('===== start cache voting items ');
@@ -201,7 +201,7 @@ module.exports = (mongoMain, mongoCache) => {
             ).catch((err) => {
                return cb(err);
             });
-         },,
+         },
          (stat,cb) => {
             // // get amend submissions
             // eos.getTableRows({
