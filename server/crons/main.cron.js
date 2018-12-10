@@ -102,7 +102,7 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   function startGlobalStatAnalytics() {
+   function cacheBallotsAndSubmissions() {
       async.waterfall([
          (cb) => {
             log.info('===== start cache voting items ');
@@ -137,11 +137,9 @@ module.exports = (mongoMain, mongoCache) => {
                   stat.ballots += result.rows.length;
                   for(var i in result.rows){
                      const ballot = new CACHE_BALLOTS();
-                     ballot = {
-                        ballot_id: result.rows[i].ballot_id,
-                        type: result.rows[i].table_id,
-                        reference_id: result.rows[i].reference_id
-                     }
+                     ballot.ballot_id = result.rows[i].ballot_id;
+                     ballot.type = result.rows[i].table_id;
+                     ballot.reference_id = result.rows[i].reference_id;
 
                      ballot.save((err) => {
                         if (err) {
@@ -176,18 +174,16 @@ module.exports = (mongoMain, mongoCache) => {
                   stat.wps_submissions += result.rows.length;
                   for(var i in result.rows){
                      const sub = new CACHE_WPS_SUBMISSIONS();
-                     sub = {
-                        id: result.rows[i].id,
-                        ballot_id: result.rows[i].ballot_id,
-                        cycles: result.rows[i].cycles,
-                        amount: result.rows[i].amount,
-                        fee: result.rows[i].fee,
-                        title: result.rows[i].title,
-                        ipfs_location: result.rows[i].ipfs_location,
-                        proposer: result.rows[i].proposer,
-                        receiver: result.rows[i].receiver
-                     }
-
+                     sub.id = result.rows[i].id;
+                     sub.ballot_id = result.rows[i].ballot_id;
+                     sub.cycles = result.rows[i].cycles;
+                     sub.amount = result.rows[i].amount;
+                     sub.fee = result.rows[i].fee;
+                     sub.title = result.rows[i].title;
+                     sub.ipfs_location = result.rows[i].ipfs_location;
+                     sub.proposer = result.rows[i].proposer;
+                     sub.receiver = result.rows[i].receiver;
+                     
                      sub.save((err) => {
                         if (err) {
                            return cb(err);
@@ -205,7 +201,7 @@ module.exports = (mongoMain, mongoCache) => {
             ).catch((err) => {
                return cb(err);
             });
-         },,
+         },
          (stat,cb) => {
             // // get amend submissions
             // eos.getTableRows({
