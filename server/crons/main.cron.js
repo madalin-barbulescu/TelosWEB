@@ -10,6 +10,10 @@ const log4js = require('log4js');
 log4js.configure(config.logger);
 const log = log4js.getLogger('global_stat');
 
+const EOS     		= require('eosjs');
+config.eosConfig.httpEndpoint =  (config.CRON) ? config.CRON_API : config.eosConfig.httpEndpoint;
+const eos     		= EOS(config.eosConfig);
+
 let ACCOUNTS_PROCESS = 0;
 let ACCOUNTS_STAT_PROCESS = 0;
 let GLOBAL_STAT_PROCESS = 0;
@@ -20,6 +24,10 @@ module.exports = (mongoMain, mongoCache) => {
    const CACHE_TRANSACTIONS = require('../models/nodeos.transactions.model')(mongoCache);
    const CACHE_ACCOUNTS = require('../models/nodeos.accounts.model')(mongoCache);
    const CACHE_ACTIONS = require('../models/nodeos.action_traces.model')(mongoCache);
+
+   const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoCache);
+   const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoCache);
+   // const CACHE_AMEND_SUBMISSIONS = require('../models/api.submission.amend.model')(mongoCache);
 
    function startGlobalStatAnalytics() {
       async.waterfall([
@@ -55,7 +63,11 @@ module.exports = (mongoMain, mongoCache) => {
                if (err) {
                   return cb(err);
                }
+               stat.aps.push(result - stat.actions);
                stat.actions = result;
+               if(stat.aps.length > 12)
+                  stat.aps.splice(0,1);
+               
                cb(null, stat);
             });
          },
@@ -64,7 +76,11 @@ module.exports = (mongoMain, mongoCache) => {
                if (err) {
                   return cb(err);
                }
+               stat.tps.push(result - stat.actions);
                stat.transactions = result;
+               if(stat.tps.length > 12)
+                  stat.tps.splice(0,1);
+               
                cb(null, stat);
             });
          },
@@ -86,37 +102,175 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
+   function startGlobalStatAnalytics() {
+      async.waterfall([
+         (cb) => {
+            log.info('===== start cache voting items ');
+            SETTINGS.findOne({}, (err, result) => {
+               if (err) {
+                  return cb(err);
+               }
+               if (result) {
+                  return cb(null, result);
+               }
+               let stat = new SETTINGS();
+               stat.save((err) => {
+                  if (err) {
+                     return cb(err);
+                  }
+                  cb(null, stat);
+               });
+            });
+         },
+         (stat, cb) => {
+            // get ballots
+            eos.getTableRows({
+			      json: true,
+			      code: "eosio.trail",
+			      scope: "eosio.trail",
+			      table: "ballots",
+			      lower_bound: stat.last_ballot,
+			      upper_bound: "",
+			      limit: 1000
+			   }).then(
+               (result) => {
+                  stat.ballots += result.rows.length;
+                  for(var i in result.rows){
+                     const ballot = new CACHE_BALLOTS();
+                     ballot = {
+                        ballot_id: result.rows[i].ballot_id,
+                        type: result.rows[i].table_id,
+                        reference_id: result.rows[i].reference_id
+                     }
+
+                     ballot.save((err) => {
+                        if (err) {
+                           return cb(err);
+                        }
+                     });
+
+                     stat.last_ballot = Math.max(stat.last_ballot, ballot.ballot_id);
+                  }
+
+                  cb(null, stat);
+               },
+               (reject) => {
+                  return cb(reject);
+               }
+            ).catch((err) => {
+               return cb(err);
+            });
+         },
+         (stat,cb) => {
+            // get wps submissions
+            eos.getTableRows({
+			      json: true,
+			      code: "eosio.saving",
+			      scope: "eosio.saving",
+			      table: "submissions",
+			      lower_bound: stat.last_wps,
+			      upper_bound: "",
+			      limit: 1000
+			   }).then(
+               (result) => {
+                  stat.wps_submissions += result.rows.length;
+                  for(var i in result.rows){
+                     const sub = new CACHE_WPS_SUBMISSIONS();
+                     sub = {
+                        id: result.rows[i].id,
+                        ballot_id: result.rows[i].ballot_id,
+                        cycles: result.rows[i].cycles,
+                        amount: result.rows[i].amount,
+                        fee: result.rows[i].fee,
+                        title: result.rows[i].title,
+                        ipfs_location: result.rows[i].ipfs_location,
+                        proposer: result.rows[i].proposer,
+                        receiver: result.rows[i].receiver
+                     }
+
+                     sub.save((err) => {
+                        if (err) {
+                           return cb(err);
+                        }
+                     });
+
+                     stat.last_wps = Math.max(stat.last_wps, sub.id);
+                  }
+
+                  cb(null, stat);
+               },
+               (reject) => {
+                  return cb(reject);
+               }
+            ).catch((err) => {
+               return cb(err);
+            });
+         },,
+         (stat,cb) => {
+            // // get amend submissions
+            // eos.getTableRows({
+			   //    json: true,
+			   //    code: "eosio.saving",
+			   //    scope: "eosio.saving",
+			   //    table: "submissions",
+			   //    lower_bound: stat.last_wps,
+			   //    upper_bound: "",
+			   //    limit: 1000
+			   // }).then(
+            //    (result) => {
+            //       stat.wps_submissions += result.rows.length;
+            //       for(var i in result.rows){
+            //          const sub = new CACHE_WPS_SUBMISSIONS();
+            //          sub = {
+            //             id: result.rows[i].id,
+            //             ballot_id: result.rows[i].ballot_id,
+            //             cycles: result.rows[i].cycles,
+            //             amount: result.rows[i].amount,
+            //             fee: result.rows[i].fee,
+            //             title: result.rows[i].title,
+            //             ipfs_location: result.rows[i].ipfs_location,
+            //             proposer: result.rows[i].proposer,
+            //             receiver: result.rows[i].receiver
+            //          }
+
+            //          sub.save((err) => {
+            //             if (err) {
+            //                return cb(err);
+            //             }
+            //          });
+
+            //          stat.last_wps = Math.max(stat.last_wps, sub.id);
+            //       }
+
+                  cb(null, stat);
+            //    },
+            //    (reject) => {
+            //       return cb(reject);
+            //    }
+            // ).catch((err) => {
+            //    return cb(err);
+            // });
+         },
+         (stat,cb) => {
+            stat.save((err) => {
+               if(err){
+                  log.error(err);
+                  return cb(err);
+               }
+               log.info('===== end cache voting items ');
+
+               cb(null,stat);
+            });
+         }],
+         (err) => {
+            if (err) {
+               log.error(err);
+            }
+         });
+   }
+
    cron.schedule('*/5 * * * * *', () => {
       startGlobalStatAnalytics();
+      cacheBallotsAndSubmissions();
    });
 }
-
-// function startTPSdaemon(){
-//         let forkProcess = fork(path.join(__dirname, '../daemons/max.tps.daemon.js'));
-//         forkProcess.on('close', () => {
-//               console.log('\x1b[33m%s\x1b[0m', '====== Process TPS close Error');
-//               startTPSdaemon();
-//         });
-// }
-
-
-// function startAccountsDaemon(){
-//         console.log(" STAAAAAAAAT ",ACCOUNTS_STAT_PROCESS,GLOBAL_STAT_PROCESS,ACCOUNTS_PROCESS);
-//         ACCOUNTS_PROCESS += 1;
-//         let forkProcess = fork(path.join(__dirname, '../daemons/accounts.stat.daemon.js'));
-//         forkProcess.on('close', res => {
-//               console.log('\x1b[36m%s\x1b[0m', '====== Process stat accounts daemon end');
-//               ACCOUNTS_PROCESS -= 1;
-//         });
-// }
-
-// function startAccountsAnalytics(){
-//         console.log(" STAAAAAAAAT ",ACCOUNTS_STAT_PROCESS,GLOBAL_STAT_PROCESS,ACCOUNTS_PROCESS);
-//         ACCOUNTS_STAT_PROCESS += 1;
-//         let forkProcess = fork(path.join(__dirname, '../daemons/accounts.analytics.daemon.js'));
-//         forkProcess.on('close', res => {
-//               console.log('\x1b[36m%s\x1b[0m' ,'====== Process analytics daemon end');
-//               ACCOUNTS_STAT_PROCESS -= 1;
-//         });
-// }
-
