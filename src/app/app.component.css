@@ -1,3 +1,6 @@
+:host() {
+	display: block;
+}
 
 .main-navigation{
 	background-color: #F6F1E1;
@@ -160,7 +163,8 @@
     cursor: pointer;
 }
 .main-nav-middle{
-	margin-right: 0px !important
+	margin-right: 10px !important;
+	padding-left: 0px;
 }
 .sign-up{
 	background-color: #3f48b9;

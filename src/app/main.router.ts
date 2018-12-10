@@ -24,10 +24,10 @@ import { P2PageEditComponent } from './pages/admin/p2p-edit/p2p-edit.component';
 //import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
-  {
+  { 
   	path: '',
-  	component: MainPageComponent,
-  	pathMatch: 'full'
+  	component: InfoPageComponent,
+  	pathMatch: 'full' 
   },
    {
   	path: 'block/:id',
@@ -37,9 +37,9 @@ export const routes: Routes = [
     path: 'faucet',
     component: FaucetPageComponent
   },
-  {
+  { 
     path: 'info',
-    component: InfoPageComponent
+    component: MainPageComponent
   },
   {
     path: 'account/:id',

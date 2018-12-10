@@ -2,9 +2,19 @@
   flex: 2;
 }
 
+:host .market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
 :host .filter-header {
   display: flex;
   align-items: center;
+  margin-top: 0px;
 }
 
 :host .filter-header > :nth-last-child(n+2) {
@@ -12,7 +22,7 @@
 }
 
 :host .filter-header > .filter-header-input {
-  flex: 1;
+  width: 300px;
 }
 
 :host .cell-number {
@@ -32,4 +42,29 @@
 :host .mat-header-row > .mat-header-cell:nth-last-child(n+2),
 :host .mat-row > .mat-cell:nth-last-child(n+2) {
   margin-right: 10px;
+}
+
+@media (max-width: 980px) {
+  :host .market-header {
+    flex-direction: column;
+    align-items: unset;
+  }
+
+  :host .market-header > :nth-last-child(n+2) {
+    margin-bottom: 20px;
+  }
+
+  :host .filter-header {
+    flex-direction: column;
+    align-items: unset;
+  }
+
+  :host .filter-header > :nth-last-child(n+2) {
+    margin-right: 0px;
+    margin-bottom: 20px;
+  }
+
+  :host .filter-header > .filter-header-input {
+    width: 100%;
+  }
 }

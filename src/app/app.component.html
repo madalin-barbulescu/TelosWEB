@@ -15,7 +15,7 @@
     <!-- <li><button mat-button color="basic" routerLink="vote" routerLinkActive="nav-active" class="mobile-no">Vote</button></li> -->
     <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
     <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
-    <button mat-button color="basic" class="pull-right" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/registration'}">More</button>
+    <button mat-button color="basic" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/registration' || activeMenu()  === '/keys'}">More</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
       <button mat-menu-item color="basic" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>

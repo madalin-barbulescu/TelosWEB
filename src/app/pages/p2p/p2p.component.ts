@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { forkJoin } from 'rxjs/observable/forkJoin';
@@ -17,6 +17,9 @@ export class P2PageComponent implements OnInit {
   mainData: any = {};
   spinner = false;
   displayedColumns = ['#', 'Account', 'Organization', 'Url', 'Address', 'Peers'];
+
+  @ViewChild('paginator')
+  paginator: ElementRef;
 
   constructor(
     private http: HttpClient,
@@ -39,6 +42,7 @@ export class P2PageComponent implements OnInit {
           this.mainData = results[0];
           let ELEMENT_DATA = this.mainData;
           this.dataSource = new MatTableDataSource<Element>(ELEMENT_DATA);
+          this.dataSource.paginator = this.paginator;
           this.dataSource.filterPredicate = (data, filter) => data.name.toLowerCase().indexOf(filter) > -1 ||
             data.url.toLowerCase().indexOf(filter) > -1 ||
             data.p2pServerAddress.toLowerCase().indexOf(filter) > -1;

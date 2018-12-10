@@ -1,7 +1,21 @@
-.coming-soon{
+.coming-soon {
     color: #bcc3cd;
     text-transform: uppercase;
     font-size: 86px;
     display: table;
     margin: 200px auto 100px auto;
+}
+
+@media(max-width: 1024px) {
+    .coming-soon {
+        font-size: 52px;
+        margin: 100px auto 50px auto;
+    }
+}
+
+@media(max-width: 787px) {
+    .coming-soon {
+        font-size: 36px;
+        margin: 50px auto 25px auto;
+    }
 }

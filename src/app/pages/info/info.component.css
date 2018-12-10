@@ -1,6 +1,9 @@
-
 :host {
   color: #333;
+}
+
+:host > .container {
+  max-width: 980px;
 }
 
 :host .container .pInfo:first-child {
@@ -10,24 +13,30 @@
 :host .pInfo {
 	text-align: justify;
 	font-size: 18px;
+	line-height: 27px;
 }
 
-:host .pInfo1 {
+:host .pInfo1,
+:host .pInfoLI {
 	text-align: justify;
-	font-size: 16px;
-	margin-left: 1em;
+	font-size: 14px;
+	line-height: 21px;
 }
 
 :host .pInfo2 {
 	text-align: justify;
-	font-size: 16px;
-	margin-left: 2em;
+	font-size: 14px;
+	line-height: 21px;
 }
 
 :host .pInfo3 {
 	text-align: justify;
-	font-size: 16px;
-	margin-left: 3em;
+	font-size: 14px;
+	line-height: 21px;
+}
+
+:host ul {
+  margin-top: 0;
 }
 
 :host pre {
@@ -61,4 +70,9 @@
 
 :host h3 {
   color: #625a51;
+}
+
+:host a {
+  color: #15c;
+  word-break: break-word;
 }
