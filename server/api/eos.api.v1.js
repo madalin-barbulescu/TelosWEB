@@ -22,6 +22,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	const CACHE_ACTION_TRACES = require('../models/nodeos.action_traces.model')(mongoCache);
 	const CACHE_PUB_KEYS = require('../models/nodeos.pub_keys.model')(mongoCache);
 
+	const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoCache);
+	const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoCache);
+
     //============ HISTORY API
 	/*
 	* router - search global aggregation
@@ -462,54 +465,92 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* params - account_name, position, offset
 	*/
 	// router.get('/api/v1/get_actions/:account_name/:created/:limit/:offset', (req, res) => {
-	router.post('/api/v1/get_actions/:account_name', (req, res) => {
-		let account_name = req.params.account_name,
-			upper_bound = req.body.upper ? new Date(req.body.upper) : new Date(),
-			limit = req.body.limit || 20,
-			offset = req.body.offset || 0;
-
-		CACHE_ACTION_TRACES.aggregate([
-			{ 
-				"$match": {
-					"receipt.receiver": account_name, 
-					"createdAt": {
-						"$lt": upper_bound
-					}
-				} 
-			},
-			{ 
-				"$sort": {
-					"createdAt":-1
-				} 
-			},
-			{ "$limit": limit },
-			{ "$skip": offset },
-			// {
-			// 	"$lookup": {
-			// 		"from":"transactions", 
-			// 		"localField":"trx_id", 
-			// 		"foreignField":"trx_id", 
-			// 		"as":"transactions"
-			// 	}
-			// },
-			// {
-			// 	"$lookup": {
-			// 		"from":"transaction_traces", 
-			// 		"localField":"trx_id", 
-			// 		"foreignField":"id", 
-			// 		"as":"transaction_traces"
-			// 	}
-			// }
-		 ]).exec(function(err, results){
-			if(err){
-				log.error(err);
-				res.status(500).json(err);
-			}else{
-				res.json(results);
+		router.post('/api/v1/get_actions/:account_name', (req, res) => {
+			let account_name = req.params.account_name,
+				upper_bound = req.body.upper ? new Date(req.body.upper) : new Date(),
+				limit = req.body.limit || 20,
+				offset = req.body.offset || 0;
+	
+			CACHE_ACTION_TRACES.aggregate([
+				{ 
+					"$match": {
+						"receipt.receiver": account_name, 
+						"createdAt": {
+							"$lt": upper_bound
+						}
+					} 
+				},
+				{ 
+					"$sort": {
+						"createdAt":-1
+					} 
+				},
+				{ "$limit": limit },
+				{ "$skip": offset },
+				// {
+				// 	"$lookup": {
+				// 		"from":"transactions", 
+				// 		"localField":"trx_id", 
+				// 		"foreignField":"trx_id", 
+				// 		"as":"transactions"
+				// 	}
+				// },
+				// {
+				// 	"$lookup": {
+				// 		"from":"transaction_traces", 
+				// 		"localField":"trx_id", 
+				// 		"foreignField":"id", 
+				// 		"as":"transaction_traces"
+				// 	}
+				// }
+			 ]).exec(function(err, results){
+				if(err){
+					log.error(err);
+					res.status(500).json(err);
+				}else{
+					res.json(results);
+				}
+			 });
+			 
+		});
+		
+		router.post('/api/v1/get_wps_submissions', (req, res) => {
+			const account_name = req.params.account_name,
+				lower_bound = req.params.lower_bound,
+				limit = req.body.limit || 20;
+	
+			const $match = {}, $sort = {id : -1}, $limit = limit;
+			if(account_name){
+				$match.$or = [
+					{proposer: account_name},
+					{receiver: account_name}
+				];
 			}
-		 });
-		 
-	});
+			if(lower_bound){
+				$match.id = {$gt: lower_bound};
+			}
+
+			CACHE_WPS_SUBMISSIONS.aggregate([
+				{ $match },
+				{ $sort },
+				{ $limit },
+				{
+					"$lookup": {
+						"from":"Ballots", 
+						"localField":"ballot_id", 
+						"foreignField":"ballot_id", 
+						"as":"ballot"
+					}
+				}
+			 ]).exec(function(err, results){
+				if(err){
+					log.error(err);
+					res.status(500).json(err);
+				}else{
+					res.json(results);
+				}
+			 }); 
+		});
 
 	/*
 	* router - get_transaction
