@@ -45,7 +45,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AdminModule } from './pages/admin/admin.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
-const socketConfig: SocketIoConfig = { url: 'http://localhost:3039', options: {
+const socketConfig: SocketIoConfig = { url: '/', options: {
     autoConnect: true,
     reconnection: true,
     reconnectionDelay: 1000,
