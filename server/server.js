@@ -30,6 +30,7 @@ const logSlack      = customSlack.configure(config.loggerSlack.alerts);
 
 process.on('uncaughtException', (err) => {
     logSlack(`======= UncaughtException Main Server :  ${err}`);
+    console.error(err);
 });
 
 process.setMaxListeners(0);

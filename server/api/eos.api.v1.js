@@ -22,6 +22,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	const CACHE_ACTION_TRACES = require('../models/nodeos.action_traces.model')(mongoCache);
 	const CACHE_PUB_KEYS = require('../models/nodeos.pub_keys.model')(mongoCache);
 
+	const CACHE_BALLOTS = require('../models/api.ballots.model')(mongoCache);
+	const CACHE_WPS_SUBMISSIONS = require('../models/api.submission.wps.model')(mongoCache);
+
     //============ HISTORY API
 	/*
 	* router - search global aggregation
@@ -462,54 +465,92 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* params - account_name, position, offset
 	*/
 	// router.get('/api/v1/get_actions/:account_name/:created/:limit/:offset', (req, res) => {
-	router.post('/api/v1/get_actions/:account_name', (req, res) => {
-		let account_name = req.params.account_name,
-			upper_bound = req.body.upper ? new Date(req.body.upper) : new Date(),
-			limit = req.body.limit || 20,
-			offset = req.body.offset || 0;
-
-		CACHE_ACTION_TRACES.aggregate([
-			{ 
-				"$match": {
-					"receipt.receiver": account_name, 
-					"createdAt": {
-						"$lt": upper_bound
-					}
-				} 
-			},
-			{ 
-				"$sort": {
-					"createdAt":-1
-				} 
-			},
-			{ "$limit": limit },
-			{ "$skip": offset },
-			// {
-			// 	"$lookup": {
-			// 		"from":"transactions", 
-			// 		"localField":"trx_id", 
-			// 		"foreignField":"trx_id", 
-			// 		"as":"transactions"
-			// 	}
-			// },
-			// {
-			// 	"$lookup": {
-			// 		"from":"transaction_traces", 
-			// 		"localField":"trx_id", 
-			// 		"foreignField":"id", 
-			// 		"as":"transaction_traces"
-			// 	}
-			// }
-		 ]).exec(function(err, results){
-			if(err){
-				log.error(err);
-				res.status(500).json(err);
-			}else{
-				res.json(results);
+		router.post('/api/v1/get_actions/:account_name', (req, res) => {
+			let account_name = req.params.account_name,
+				upper_bound = req.body.upper ? new Date(req.body.upper) : new Date(),
+				limit = req.body.limit || 20,
+				offset = req.body.offset || 0;
+	
+			CACHE_ACTION_TRACES.aggregate([
+				{ 
+					"$match": {
+						"receipt.receiver": account_name, 
+						"createdAt": {
+							"$lt": upper_bound
+						}
+					} 
+				},
+				{ 
+					"$sort": {
+						"createdAt":-1
+					} 
+				},
+				{ "$limit": limit },
+				{ "$skip": offset },
+				// {
+				// 	"$lookup": {
+				// 		"from":"transactions", 
+				// 		"localField":"trx_id", 
+				// 		"foreignField":"trx_id", 
+				// 		"as":"transactions"
+				// 	}
+				// },
+				// {
+				// 	"$lookup": {
+				// 		"from":"transaction_traces", 
+				// 		"localField":"trx_id", 
+				// 		"foreignField":"id", 
+				// 		"as":"transaction_traces"
+				// 	}
+				// }
+			 ]).exec(function(err, results){
+				if(err){
+					log.error(err);
+					res.status(500).json(err);
+				}else{
+					res.json(results);
+				}
+			 });
+			 
+		});
+		
+		router.post('/api/v1/get_wps_submissions', (req, res) => {
+			const account_name = req.params.account_name,
+				lower_bound = req.params.lower_bound,
+				limit = req.body.limit || 20;
+	
+			const $match = {}, $sort = {id : -1}, $limit = limit;
+			if(account_name){
+				$match.$or = [
+					{proposer: account_name},
+					{receiver: account_name}
+				];
 			}
-		 });
-		 
-	});
+			if(lower_bound){
+				$match.id = {$gt: lower_bound};
+			}
+
+			CACHE_WPS_SUBMISSIONS.aggregate([
+				{ $match },
+				{ $sort },
+				{ $limit },
+				{
+					"$lookup": {
+						"from":"Ballots", 
+						"localField":"ballot_id", 
+						"foreignField":"ballot_id", 
+						"as":"ballot"
+					}
+				}
+			 ]).exec(function(err, results){
+				if(err){
+					log.error(err);
+					res.status(500).json(err);
+				}else{
+					res.json(results);
+				}
+			 }); 
+		});
 
 	/*
 	* router - get_transaction
@@ -696,20 +737,20 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 				eos.transaction(tr => {
 					tr.newaccount({
-						creator: 'testaccoooo1',
+						creator: 'faucet.tf',
 						name: producer.name,
 						owner: producer.producerPublicKey,
 						active: producer.producerPublicKey
 					});
 				
 					tr.buyrambytes({
-						payer: 'testaccoooo1',
+						payer: 'faucet.tf',
 						receiver: producer.name,
 						bytes: 1024*4
 					});
 				
 					tr.delegatebw({
-						from: 'testaccoooo1',
+						from: 'faucet.tf',
 						receiver: producer.name,
 						stake_net_quantity: '100.0000 TLOS',
 						stake_cpu_quantity: '100.0000 TLOS',
@@ -748,20 +789,20 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 		eos.transaction(tr => {
 			tr.newaccount({
-				creator: 'testaccoooo1',
+				creator: 'faucet.tf',
 				name: data.name,
 				owner: data.publicKey,
 				active: data.publicKey
 			});
 		
 			tr.buyrambytes({
-				payer: 'testaccoooo1',
+				payer: 'faucet.tf',
 				receiver: data.name,
 				bytes: 1024*4
 			});
 		
 			tr.delegatebw({
-				from: 'testaccoooo1',
+				from: 'faucet.tf',
 				receiver: data.name,
 				stake_net_quantity: '10.0000 TLOS',
 				stake_cpu_quantity: '10.0000 TLOS',
@@ -867,18 +908,18 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			(cb) => {
-				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60 * 24)}}, function(error, count) {
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
 					if (count >= FAUCET_TX_PER_USER_PER_HOUR)
-						cb({result: 'error', code: 400, message: `Account has reached ${FAUCET_TX_PER_USER_PER_HOUR} withdrawals per hour`, data: {}});
+						cb({result: 'error', code: 400, message: `Account has reached ${FAUCET_TX_PER_USER_PER_HOUR} withdrawals per day`, data: {}});
 
 					cb(null);
 				});
 			},
 			(cb) => {
-				FAUCET.countDocuments({name, created: {$gte: Date.now() - (60000 * 60)}}, function(error, count) {
+				FAUCET.countDocuments({name}, function(error, count) {
 					if (error)
 						cb({result: 'error', code: 500, message: 'Database error', data: error})
 
@@ -889,7 +930,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			(cb) => {
-				eos.transfer('testaccoooo1', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
+				eos.transfer('faucet.tf', name, `${FAUCET_AMOUNT}.0000 ${SYMBOL}`, '')
 					.then(() => new FAUCET({name, created: Date.now()}).save())
 					.then(data => cb(null, data))
 					.catch(err => {
@@ -901,9 +942,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 					});
 			}
 		], function (err, result) {
-			// res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
 			if (err)
-				res.status(err.code).send(err);
+				res.status(err.code || 500).send(err);
 			res.status(200).json(result);
 		});
 	});

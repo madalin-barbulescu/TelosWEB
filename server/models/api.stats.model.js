@@ -43,6 +43,38 @@ var API = new mongoose.Schema({
   },
   last_update: { 
     type: Date
+  },
+  ballots: {
+    type: Number,
+    default: 0
+  },
+  last_ballot: {
+    type: Number,
+    default: 0
+  },
+  wps_submissions: {
+    type: Number,
+    default: 0
+  },
+  last_wps: {
+    type: Number,
+    default: 0
+  },
+  amend_submissions: {
+    type: Number,
+    default: 0
+  },
+  last_amend: {
+    type: Number,
+    default: 0
+  },
+  tps:{
+    type: Array,
+    default: []
+  },
+  aps:{
+    type: Array,
+    default: []
   }
 });
 
