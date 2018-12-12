@@ -7,7 +7,7 @@ const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
 const axios = require('axios');
 
-module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
+module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, cronFunctions) {
 
 	const PRODUCER 	= require('../models/producer.model')(mongoMain);
 	const FAUCET 	= require('../models/faucet.model')(mongoMain);
@@ -515,41 +515,57 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		});
 		
 		router.post('/api/v1/get_wps_submissions', (req, res) => {
-			const account_name = req.params.account_name,
-				lower_bound = req.params.lower_bound,
-				limit = req.body.limit || 20;
+			const account_name = req.body.account_name,
+				upper_bound = req.body.upper_bound,
+				limit = req.body.limit || 20,
+				update_cache = req.body.update_cache || false;
 	
-			const $match = {}, $sort = {id : -1}, $limit = limit;
-			if(account_name){
-				$match.$or = [
-					{proposer: account_name},
-					{receiver: account_name}
-				];
-			}
-			if(lower_bound){
-				$match.id = {$gt: lower_bound};
-			}
-
-			CACHE_WPS_SUBMISSIONS.aggregate([
-				{ $match },
-				{ $sort },
-				{ $limit },
-				{
-					"$lookup": {
-						"from":"Ballots", 
-						"localField":"ballot_id", 
-						"foreignField":"ballot_id", 
-						"as":"ballot"
-					}
-				}
-			 ]).exec(function(err, results){
+			const sendInfo = (err) => {
 				if(err){
 					log.error(err);
 					res.status(500).json(err);
-				}else{
-					res.json(results);
+					return;
 				}
-			 }); 
+
+				const $match = {}, $sort = {id : -1}, $limit = limit;
+				if(account_name){
+					$match.$or = [
+						{proposer: account_name},
+						{receiver: account_name}
+					];
+				}
+				if(upper_bound){
+					$match.id = {$lte: upper_bound};
+				}
+	
+				CACHE_WPS_SUBMISSIONS.aggregate([
+					{ $match },
+					{ $sort },
+					{ $limit },
+					{
+						"$lookup": {
+							"from":"Ballots", 
+							"localField":"ballot_id", 
+							"foreignField":"ballot_id", 
+							"as":"ballot"
+						}
+					}
+				 ]).exec(function(err, results){
+					if(err){
+						log.error(err);
+						res.status(500).json(err);
+					}else{
+						res.json(results);
+					}
+				 }); 
+			};
+
+			if(update_cache){
+				// update cache first then process stuff
+				cronFunctions.cacheBallotsAndSubmissions(sendInfo);
+			}else{
+				sendInfo();
+			}
 		});
 
 	/*

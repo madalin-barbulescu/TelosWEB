@@ -102,7 +102,7 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   function cacheBallotsAndSubmissions() {
+   function cacheBallotsAndSubmissions(outsideCallback) {
       async.waterfall([
          (cb) => {
             log.info('===== start cache voting items ');
@@ -258,9 +258,12 @@ module.exports = (mongoMain, mongoCache) => {
                cb(null,stat);
             });
          }],
-         (err) => {
+         (err, stat) => {
             if (err) {
                log.error(err);
+            }
+            if(outsideCallback){
+               outsideCallback(err);
             }
          });
    }
@@ -272,4 +275,8 @@ module.exports = (mongoMain, mongoCache) => {
       startGlobalStatAnalytics();
       cacheBallotsAndSubmissions();
    });
+
+   return {
+      cacheBallotsAndSubmissions
+   }
 }
