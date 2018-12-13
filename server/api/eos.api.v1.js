@@ -515,10 +515,13 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		});
 		
 		router.post('/api/v1/get_wps_submissions', (req, res) => {
-			const account_name = req.body.account_name,
-				upper_bound = req.body.upper_bound,
-				limit = req.body.limit || 20,
+			const account_name = typeof req.body.account_name === "string" ? req.body.account_name : "",
+				upper_bound = typeof req.body.upper_bound === "number" ? req.body.upper_bound : 0,
+				lower_bound = typeof req.body.lower_bound === "number" ? req.body.lower_bound : 0,
+				limit = typeof req.body.limit === "number" ? req.body.limit : 20,
 				update_cache = req.body.update_cache || false;
+
+			limit = limit < 0 ? 20 : limit; 
 	
 			const sendInfo = (err) => {
 				if(err){
@@ -535,7 +538,14 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 					];
 				}
 				if(upper_bound){
-					$match.id = {$lte: upper_bound};
+					$match.id = {$lt: upper_bound};
+				}
+				if(lower_bound){
+					if( $match.id ){
+						$match.id["$gt"] = lower_bound;
+					}else{
+						$match = {$gt: lower_bound};
+					}
 				}
 	
 				CACHE_WPS_SUBMISSIONS.aggregate([
@@ -562,7 +572,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 			if(update_cache){
 				// update cache first then process stuff
-				cronFunctions.cacheBallotsAndSubmissions(sendInfo);
+				cronFunctions.cacheBallotsAndSubmissions(sendInfo, 6);
 			}else{
 				sendInfo();
 			}
