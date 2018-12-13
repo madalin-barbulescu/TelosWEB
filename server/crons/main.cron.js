@@ -17,7 +17,7 @@ const eos     		= EOS(config.eosConfig);
 let ACCOUNTS_PROCESS = 0;
 let ACCOUNTS_STAT_PROCESS = 0;
 let GLOBAL_STAT_PROCESS = 0;
-
+let cacheBallotsAndSubmissions_IN_PROGRESS = false;
 module.exports = (mongoMain, mongoCache) => {
 
    const SETTINGS = require('../models/api.stats.model')(mongoMain);
@@ -102,10 +102,13 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   let cacheBallotsAndSubmissions_IN_PROGRESS = false;
    function cacheBallotsAndSubmissions(outsideCallback, counter) {
-      if(cacheBallotsAndSubmissions_IN_PROGRESS) return;
-
+      if(cacheBallotsAndSubmissions_IN_PROGRESS) {
+            if(outsideCallback){
+                  outsideCallback(null);
+            }
+            return;
+      }
       cacheBallotsAndSubmissions_IN_PROGRESS = true;
       const updateCancelled = typeof counter === "number" && counter % 6 === 0;
 

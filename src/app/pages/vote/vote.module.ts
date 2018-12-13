@@ -14,14 +14,17 @@ import { MatAutocompleteModule,
          MatTabsModule,
          MatDialogModule,
          MatChipsModule,
-         MatIconModule } from '@angular/material';
+         MatIconModule, 
+         MatListModule} from '@angular/material';
 import { CommonModule } from '@angular/common';
 import { appRoutes } from '../../main.router';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { MainService } from '../../services/mainapp.service';
 import { ActionsViewerModule } from '../../components/actions_view/action_viewer.module';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import {NgxChartsModule} from '@swimlane/ngx-charts';
+import { ScatterService } from '../../services/scatter.service';
 
 let imports = [
     MatAutocompleteModule,
@@ -41,9 +44,12 @@ let imports = [
     MatExpansionModule,
     NgxJsonViewerModule,
     MatTabsModule,
+    MatListModule,
     MatDialogModule,
     ActionsViewerModule,
-    FormsModule ];
+    NgxChartsModule,
+    FormsModule,
+    ReactiveFormsModule ];
 
 @NgModule({
   declarations: [
@@ -52,7 +58,7 @@ let imports = [
   ],
   entryComponents: [VotePageComponent, DialogDataMemo],
   imports:  imports,
-  providers: [MainService],
+  providers: [MainService, ScatterService],
   bootstrap: [ VotePageComponent ]
 })
 export class VotePageModule {}

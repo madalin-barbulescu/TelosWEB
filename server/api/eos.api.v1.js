@@ -111,7 +111,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
 	router.get('/api/v1/get_wallet_api', (req, res) => {
-		res.json({ host: config.walletAPI.host, port: config.walletAPI.port, protocol: config.walletAPI.protocol });
+		res.json(config.walletAPI);
 	});
 	
 
@@ -303,14 +303,14 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
     /*
 	* router - get_table_rows
 	*/
-	router.get('/api/v1/get_table_rows/:code/:scope/:table/:limit', (req, res) => {
+	router.get('/api/v1/get_table_rows/:code/:scope/:table/:limit/:lower?', (req, res) => {
 	   	 eos.getTableRows({
 			      json: true,
 			      code: req.params.code,
 			      scope: req.params.scope,
 			      table: req.params.table,
 			      table_key: "string",
-			      lower_bound: "0",
+			      lower_bound: req.params.lower ? req.params.lower : "0",
 			      upper_bound: "-1",
 			      limit: req.params.limit
 			})
@@ -515,7 +515,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		});
 		
 		router.post('/api/v1/get_wps_submissions', (req, res) => {
-			const account_name = typeof req.body.account_name === "string" ? req.body.account_name : "",
+			let account_name = typeof req.body.account_name === "string" ? req.body.account_name : "",
 				upper_bound = typeof req.body.upper_bound === "number" ? req.body.upper_bound : 0,
 				lower_bound = typeof req.body.lower_bound === "number" ? req.body.lower_bound : 0,
 				limit = typeof req.body.limit === "number" ? req.body.limit : 20,
@@ -523,14 +523,14 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 			limit = limit < 0 ? 20 : limit; 
 	
-			const sendInfo = (err) => {
+			let sendInfo = (err) => {
 				if(err){
 					log.error(err);
 					res.status(500).json(err);
 					return;
 				}
 
-				const $match = {}, $sort = {id : -1}, $limit = limit;
+				let $match = {}, $sort = {id : -1}, $limit = limit;
 				if(account_name){
 					$match.$or = [
 						{proposer: account_name},
@@ -544,7 +544,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 					if( $match.id ){
 						$match.id["$gt"] = lower_bound;
 					}else{
-						$match = {$gt: lower_bound};
+						$match.id = {$gt: lower_bound};
 					}
 				}
 	

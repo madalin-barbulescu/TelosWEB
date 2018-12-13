@@ -21,7 +21,7 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
 
   mainData;
   spinner = false;
-  displayedColumns = ['#', 'Name', 'Status', 'Url', 'Last block', 'Last time produced', 'Next rotation', 'Votes'];
+  displayedColumns = ['#', 'Name', 'Status', 'Url', 'Last block', 'Missed', 'Last time produced', 'Next rotation', 'Votes'];
   dataSource;
   eosToInt = Math.pow(10, 13);
   totalProducerVoteWeight;
@@ -122,7 +122,10 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           const stat = results[2];
           const rotations = results[3];
 
-          this.mainData = producers.list.filter(p=>p.is_active);
+          // this.mainData = producers.list.filter(p=>p.is_active);
+          // this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != '' && (p.last_time_kicked + p.kick_penalty_hours) > Date() ));
+          // TODO uncomment ^
+          this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != ''));
 
           if (this.producersSavedInfo) {
             this.mainData.forEach((element, index) => {

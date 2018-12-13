@@ -63,7 +63,7 @@
       <mat-cell *matCellDef="let element" class="marketcap-container">
           <button mat-raised-button color="primary" class="status" *ngIf="element?.label === 'Active'">Active <span *ngIf="rotationMark[element?.index]" class="fa fa-sync-alt"></span></button>
           <button mat-raised-button color="standby" class="status" *ngIf="element?.label === 'Standby'">Standby <span *ngIf="rotationMark[element?.index]" class="fa fa-sync-alt"></span></button>
-          <button mat-raised-button color="inactive" class="status" *ngIf="element?.label === 'Inactive'">Inactive</button>
+          <button mat-raised-button color="inactive" class="status" *ngIf="element?.label === 'Inactive'">Kicked</button>
           <button mat-raised-button color="candidate" class="status" *ngIf="element?.label === 'Candidate'">Candidate</button>
           <button mat-raised-button color="producing" class="status" *ngIf="element?.producing">Producing <span *ngIf="rotationMark[element?.index]" class="fa fa-sync-alt"></span></button>
        </mat-cell>
@@ -79,7 +79,8 @@
     <ng-container matColumnDef="Url">
       <mat-header-cell *matHeaderCellDef class="url-flex"> Url </mat-header-cell>
       <mat-cell *matCellDef="let element" class="color-light-grey url-flex"> 
-          <a href="{{element?.url}}" target="_blank" [title]="element?.url" class="color-blue">{{element?.url}}</a>
+          <a *ngIf="element?.is_active === 1" href="{{element?.url}}" target="_blank" [title]="element?.url" class="color-blue">{{element?.url}}</a>
+          <span [title]="element?.kick_reason" *ngIf="element?.is_active === 0">{{ element?.kick_reason }}</span>
       </mat-cell>
     </ng-container>
 
@@ -87,6 +88,14 @@
       <mat-header-cell *matHeaderCellDef> Last block </mat-header-cell>
       <mat-cell *matCellDef="let element" class="change-container"> 
           <strong class="color-orange"><a class="color-orange" [routerLink]="['/block', element?.last_block_produced]">{{ element?.last_block_produced }}</a><span *ngIf="element?.label === 'Active' && blockChainInfo?.head_block_num - (element?.last_block_produced || firstBlockProduced) > 252" class="fa fa-exclamation-triangle"></span></strong>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Missed">
+      <mat-header-cell *matHeaderCellDef>Missed</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="change-container"> 
+          <strong *ngIf="!element?.missed_blocks_per_rotation" class="color-red">-</strong>
+          <strong *ngIf="element?.missed_blocks_per_rotation" class="color-red">{{ element?.missed_blocks_per_rotation }}</strong>
         </mat-cell>
     </ng-container>
 
