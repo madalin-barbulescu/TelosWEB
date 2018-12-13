@@ -128,6 +128,51 @@ module.exports = (mongoMain, mongoCache) => {
                });
             });
          },
+         (stat,cb) => {
+            if(!updateCancelled) {
+               cb(null,stat);
+               return;
+            }
+
+            const whr = {"receipt.receiver":"eosio.trail", "act.name":"unregballot"};
+            if(stat.last_ballot_cancel_check > -1){
+               whr.createdAt = {"$gt": new Date(stat.last_ballot_cancel_check)};
+            }
+            stat.last_ballot_cancel_check = Date.now();
+
+            CACHE_ACTIONS.where(whr).select("act.data.ballot_id").find((err, result) => {
+					if(err || !result || result.length === 0){
+                  if(err)
+                     console.error("error with find unregballot : ", err);
+               }else{
+                  const ids = [];
+                  let found = false;
+
+                  for(let i = 0; i < result.length; i++){
+                     ids.push(result[i].act.data.ballot_id);
+                     if(stat.last_ballot === result[i].act.data.ballot_id) found = true;
+                  }
+
+                  if(found){
+                     ids.sort();
+                     const start = ids.indexOf(stat.last_ballot);
+                     if(start == 0){
+                        stat.last_ballot -= 1;
+                     }else{
+                        start = start - 1;
+                        stat.last_ballot -= 1;
+
+                        while(start >= 0 && stat.last_ballot === ids[start]){ stat.last_ballot--; start--; }
+                     }
+                  }
+                  
+
+                  CACHE_BALLOTS.remove({"ballot_id":{$in:ids}}).execute();
+                  CACHE_WPS_SUBMISSIONS.remove({"ballot_id":{$in:ids}}).execute();
+               }
+               cb(null, stat);
+            });
+         },
          (stat, cb) => {
             // get ballots
             eos.getTableRows({
@@ -163,35 +208,6 @@ module.exports = (mongoMain, mongoCache) => {
                }
             ).catch((err) => {
                return cb(err);
-            });
-         },
-         (stat,cb) => {
-            if(!updateCancelled) {
-               cb(null,stat);
-               return;
-            }
-
-            const whr = {"receipt.receiver":"eosio.trail", "act.name":"unregballot"};
-            if(stat.last_ballot_cancel_check > -1){
-               whr.createdAt = {"$gt": new Date(stat.last_ballot_cancel_check)};
-            }
-            stat.last_ballot_cancel_check = Date.now();
-
-            CACHE_ACTIONS.where(whr).select("act.data.ballot_id").find((err, result) => {
-					if(err || !result || result.length === 0){
-                  if(err)
-                     console.error("error with find unregballot : ", err);
-               }else{
-                  const ids = [];
-
-                  for(let i = 0; i < result.length; i++){
-                     ids.push(result[i].act.data.ballot_id);
-                  }
-
-                  CACHE_BALLOTS.remove({"ballot_id":{$in:ids}}).execute();
-                  CACHE_WPS_SUBMISSIONS.remove({"ballot_id":{$in:ids}}).execute();
-               }
-               cb(null, stat);
             });
          },
          (stat,cb) => {
@@ -300,7 +316,7 @@ module.exports = (mongoMain, mongoCache) => {
             if(outsideCallback){
                outsideCallback(err);
             }
-            
+
             cacheBallotsAndSubmissions_IN_PROGRESS = false;
          });
    }
