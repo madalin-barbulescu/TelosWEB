@@ -102,7 +102,11 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
+   let cacheBallotsAndSubmissions_IN_PROGRESS = false;
    function cacheBallotsAndSubmissions(outsideCallback, counter) {
+      if(cacheBallotsAndSubmissions_IN_PROGRESS) return;
+
+      cacheBallotsAndSubmissions_IN_PROGRESS = true;
       const updateCancelled = typeof counter === "number" && counter % 6 === 0;
 
       async.waterfall([
@@ -296,6 +300,8 @@ module.exports = (mongoMain, mongoCache) => {
             if(outsideCallback){
                outsideCallback(err);
             }
+            
+            cacheBallotsAndSubmissions_IN_PROGRESS = false;
          });
    }
 
