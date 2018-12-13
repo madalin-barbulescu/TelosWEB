@@ -167,7 +167,13 @@ module.exports = (mongoMain, mongoCache) => {
                return;
             }
 
-            CACHE_ACTIONS.where({"receipt.receiver":"eosio.trail", "act.name":"unregballot"}).select("act.data.ballot_id").find((err, result) => {
+            const whr = {"receipt.receiver":"eosio.trail", "act.name":"unregballot"};
+            if(stat.last_ballot_cancel_check > -1){
+               whr.createdAt = {"$gt": new Date(stat.last_ballot_cancel_check)};
+            }
+            stat.last_ballot_cancel_check = Date.now();
+
+            CACHE_ACTIONS.where(whr).select("act.data.ballot_id").find((err, result) => {
 					if(err || !result || result.length === 0){
                   if(err)
                      console.error("error with find unregballot : ", err);

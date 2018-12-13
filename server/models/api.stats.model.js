@@ -52,6 +52,10 @@ var API = new mongoose.Schema({
     type: Number,
     default: -1
   },
+  last_ballot_cancel_check: {
+    type: Number,
+    default: -1
+  },
   wps_submissions: {
     type: Number,
     default: 0
