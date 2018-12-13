@@ -102,7 +102,9 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   function cacheBallotsAndSubmissions(outsideCallback) {
+   function cacheBallotsAndSubmissions(outsideCallback, counter) {
+      const updateCancelled = typeof counter === "number" && counter % 6 === 0;
+
       async.waterfall([
          (cb) => {
             log.info('===== start cache voting items ');
@@ -157,6 +159,29 @@ module.exports = (mongoMain, mongoCache) => {
                }
             ).catch((err) => {
                return cb(err);
+            });
+         },
+         (stat,cb) => {
+            if(!updateCancelled) {
+               cb(null,stat);
+               return;
+            }
+
+            CACHE_ACTIONS.where({"receipt.receiver":"eosio.trail", "act.name":"unregballot"}).select("act.data.ballot_id").find((err, result) => {
+					if(err || !result || result.length === 0){
+                  if(err)
+                     console.error("error with find unregballot : ", err);
+               }else{
+                  const ids = [];
+
+                  for(let i = 0; i < result.length; i++){
+                     ids.push(result[i].act.data.ballot_id);
+                  }
+
+                  CACHE_BALLOTS.remove({"ballot_id":{$in:ids}}).execute();
+                  CACHE_WPS_SUBMISSIONS.remove({"ballot_id":{$in:ids}}).execute();
+               }
+               cb(null, stat);
             });
          },
          (stat,cb) => {
@@ -268,12 +293,14 @@ module.exports = (mongoMain, mongoCache) => {
          });
    }
 
-   let skipFirst = true;
+   let counter = 0;
    cron.schedule('*/5 * * * * *', () => {
-      if(skipFirst){ skipFirst = false; return; }
+      if(counter == 0){ counter++; return; }
 
       startGlobalStatAnalytics();
-      cacheBallotsAndSubmissions();
+      cacheBallotsAndSubmissions(null, counter);
+
+      counter++;
    });
 
    return {
