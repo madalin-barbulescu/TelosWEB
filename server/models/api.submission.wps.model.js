@@ -12,6 +12,7 @@ var API = new mongoose.Schema({
     default: 0 
   },
   ballot_id: { 
+    index: true,
     type: Number,
     default: 0 
   },

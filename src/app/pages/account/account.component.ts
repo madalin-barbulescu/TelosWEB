@@ -135,15 +135,15 @@ export class AccountPageComponent implements OnInit, OnDestroy{
                           });
   }
 
-  getAllTokens(account){
-        this.http.post(`/api/v1/get_account_tokens`, { account: account })
-              .subscribe((res: any) => {
-                              this.tokensArray = res;
-                          },
-                          (error) => {
-                              console.error(error);
-                          });      
-  }
+//   getAllTokens(account){
+//         this.http.post(`/api/v1/get_account_tokens`, { account: account })
+//               .subscribe((res: any) => {
+//                               this.tokensArray = res;
+//                           },
+//                           (error) => {
+//                               console.error(error);
+//                           });      
+//   }
 
   openDialogMemo(event, data){
     let result = data;

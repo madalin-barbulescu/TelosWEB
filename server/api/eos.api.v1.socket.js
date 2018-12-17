@@ -56,12 +56,20 @@ module.exports = function(io, eos, mongoMain){
           });
         },
         stat: cb => {
-          STATS_AGGR.findOne({}, (err, result) => {
+          STATS_AGGR.findOne({name:"globalStats"}, (err, result) => {
               if (err){
                 log.error(err);
                 return cb('No result');
               }
-              cb(null, result);
+              if(result){
+                  const tmp = result.extractStat();
+                  return cb(null, {
+                      transactions: tmp.transactions.count,
+                      actions: tmp.actions.count,
+                      accounts: tmp.accounts.count
+                  });
+              }
+              cb(null, null);
           });
         },
         ram: cb => {
@@ -108,26 +116,35 @@ module.exports = function(io, eos, mongoMain){
                         return cb(null);
             }
             timeToUpdateHistory = +new Date() + config.HISTORY_UPDATE;
-            STATS_AGGR.findOne({}, (err, result) => {
-                  if (err){
-                     log.error(err);
-                     return cb(null);
-                  }
-                  if (!result || isNaN(Number(result.transactions)) || isNaN(Number(result.actions))){
-                      log.error('====== transactions actions history error');
-                      return cb(null);
-                  }
-                  let trxActions = new TRX_ACTIONS({
-                        transactions: result.transactions,
-                        actions: result.actions
-                  });
-                  trxActions.save(err => {
-                     if (err){
-                        log.error(err);
-                     }
-                     log.info(trxActions);
-                     cb(null);
-                  });
+            STATS_AGGR.findOne({name:"globalStats"}, (err, _result) => {
+                if (err){
+                    log.error(err);
+                    return cb(null);
+                }
+
+                if (!_result || isNaN(Number(_result.transactions)) || isNaN(Number(_result.actions))){
+                    log.error('====== transactions actions history error');
+                    return cb(null);
+                }
+
+                const result = _result.extractStat();
+                cb(null, {
+                    transactions: result.transactions.count,
+                    actions: result.actions.count,
+                    accounts: result.accounts.count
+                });
+
+                let trxActions = new TRX_ACTIONS({
+                    transactions: result.transactions,
+                    actions: result.actions
+                });
+                trxActions.save(err => {
+                    if (err){
+                    log.error(err);
+                    }
+                    log.info(trxActions);
+                    cb(null);
+                });
             });
         },
       }, (err, result) => {

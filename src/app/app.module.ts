@@ -44,6 +44,7 @@ import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AdminModule } from './pages/admin/admin.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import { InfoDialogModule } from './dialogs/info-dialog/info-dialog.module';
 
 const socketConfig: SocketIoConfig = { url: '/', options: {
     autoConnect: true,
@@ -76,6 +77,7 @@ const socketConfig: SocketIoConfig = { url: '/', options: {
     FaucetPageModule,
     InfoPageModule,
     InterrogationModule,
+    InfoDialogModule,
     MainPageModule,
     BlockPageModule,
     TokensPageModule,

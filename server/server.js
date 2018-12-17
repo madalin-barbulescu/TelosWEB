@@ -81,15 +81,9 @@ server.on('listening', onListening);
 const io  = require('socket.io').listen(server);
 require(`./api/eos.api.${config.apiV}.socket`)(io, eos, mongoMain);
 
+let cronFunctions = {};
 if (config.CRON){
-    require('./crons/main.cron')(mongoMain, mongoCache);
-}
-if (config.telegram.ON){
-    require('./daemons/ram.bot.daemon')(eos, mongoMain);
-}
-if (config.MARIA_DB_ENABLE){
-    const MARIA = new mariaDB(config.MARIA_DB);
-    require(`./api/eos.api.${config.apiV}.tokens`)(app, log, MARIA);
+    cronFunctions = require('./crons/main.cron')(mongoMain, mongoCache);
 }
 
 app.use(function(req,res,next){
@@ -102,7 +96,7 @@ app.use(function(req,res,next){
 app.use(express.static(path.join(__dirname, '../dist')));
 
 require('./router/main.router')(app, config, request, log);
-require(`./api/eos.api.${config.apiV}`)(app, config, request, log, eos, mongoMain, mongoCache);
+require(`./api/eos.api.${config.apiV}`)(app, config, request, log, eos, mongoMain, mongoCache, cronFunctions);
 
 if (config.ADMIN_ENABLED){
   require(`./api/admin.${config.apiV}.api`)(app, config, mongoMain);

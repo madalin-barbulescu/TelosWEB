@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import {MatSnackBar} from '@angular/material';
+import { MatSnackBar, MatDialogConfig, MatDialog } from '@angular/material';
+import { ScatterService } from './services/scatter.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,7 @@ export class AppComponent {
   };
   search;
 
-  constructor(private http: HttpClient, private router: Router, private notifications:MatSnackBar){
+  constructor(private http: HttpClient, private router: Router, private notifications:MatSnackBar, private dialog: MatDialog, private scatterService: ScatterService){
       http.get("/admin/v1/news").subscribe(
         (response:any) => {
             if(response && response.message ){
@@ -33,6 +34,12 @@ export class AppComponent {
         },
         (error) =>{console.error(error);}
       );
+
+      try {
+        this.scatterService.initScatterService();
+      } catch (error) {
+        console.error(error);  
+      }
   }
 
   searchGlobal(text){

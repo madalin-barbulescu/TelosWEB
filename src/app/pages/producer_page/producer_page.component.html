@@ -18,6 +18,27 @@
         </div>
       </div>
 
+      <div class="col-sm-12 block-info-line" *ngIf="!mainElement?.is_active">
+        <div class="col-sm-3">
+          <strong class="block-info-header">Kick Reason:</strong>
+        </div>
+        <div class="col-sm-9">
+          <strong>{{ mainElement?.kick_reason }}</strong>
+        </div>
+        <div class="col-sm-3">
+          <strong class="block-info-header">Kick time (hours):</strong>
+        </div>
+        <div class="col-sm-9">
+          <span>{{ mainElement?.kick_penalty_hours }}</span>
+        </div>
+        <div class="col-sm-3">
+          <strong class="block-info-header">Missed blocks:</strong>
+        </div>
+        <div class="col-sm-9">
+          <span>{{ mainElement?.missed_blocks_per_rotation }}</span>
+        </div>
+      </div>
+
       <div class="col-sm-12 block-info-line">
         <div class="col-sm-3">
           <strong class="block-info-header">Votes:</strong>

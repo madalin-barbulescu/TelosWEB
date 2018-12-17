@@ -8,76 +8,47 @@ var MODEL_NAME = 'Stats';
 var TABLE_NAME = 'Stats';
 var MODEL;
 
-var API = new mongoose.Schema({
-  transactions: { 
-    type: Number,
-    default: 0 
+var mapSchema = new mongoose.Schema({
+  name: {
+    type: String, 
+    default: 'Unknow'
   },
-  actions: { 
-    type: Number,
-    default: 0 
-  },
-  accounts: { 
-    type: Number,
-    default: 0 
-  },
-  cursor_block: { 
-    type: Number,
-    default: 0 
-  },
-  cursor_accounts: {
-    type: Number,
-    default: 0 
-  },
-  max_tps: {
-    type: Number,
-    default: 3996
-  },
-  cursor_max_tps: {
-    type: Number,
-    default: 15825436
-  },
-  max_tps_block: {
-    type: Number,
-    default: 14487862
-  },
-  last_update: { 
-    type: Date
-  },
-  ballots: {
+  idx: {
     type: Number,
     default: 0
-  },
-  last_ballot: {
-    type: Number,
-    default: 0
-  },
-  wps_submissions: {
-    type: Number,
-    default: 0
-  },
-  last_wps: {
-    type: Number,
-    default: 0
-  },
-  amend_submissions: {
-    type: Number,
-    default: 0
-  },
-  last_amend: {
-    type: Number,
-    default: 0
-  },
-  tps:{
-    type: Array,
-    default: []
-  },
-  aps:{
-    type: Array,
-    default: []
   }
 });
 
+var statSchema = new mongoose.Schema({
+  count: {
+    type: Number
+  },
+  cursor: {
+    type: Number
+  },
+  last_update: { // ms from Date.now()
+    type: Number
+  }
+});
+
+var API = new mongoose.Schema({
+  name: {
+    index: true,
+    type: String,
+    default: 'Unknown'
+  },
+  statmap: [mapSchema],
+  stat: [statSchema]
+});
+
+API.methods.extractStat = function(){
+  const result = {};
+  for( var i in this.statmap ){
+    result[this.statmap[i].name] = this.stat[this.statmap[i].idx];
+  }
+  result.model = this;
+  return result;
+}
 
 module.exports = function (connection) {
   if ( !MODEL ) {

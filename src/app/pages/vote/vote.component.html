@@ -1,108 +1,258 @@
 <div class="container">
 
-<div class="spinner-container" *ngIf="spinner">
-    <mat-spinner class="spinner-color"></mat-spinner>
-</div>
+	<div class="spinner-container" *ngIf="spinner">
+		<mat-spinner class="spinner-color"></mat-spinner>
+	</div>
 
-	<h1 class="market-header">Vote for BPs</h1>
+	<h1 class="market-header">Vote</h1>
 
 	<div class="col-sm-4 block-info-line" *ngIf="!identity">
-		  <button mat-raised-button class="btn-generate" color="primary" (click)="loginScatter()">login with Scatter</button>
+		<button mat-raised-button class="btn-generate" color="primary" (click)="loginScatter()">Login with SQRL</button>
 	</div>
 
 	<div class="block-info" *ngIf="identity">
-			<div class="col-sm-4">
-			 <div class="col-sm-12 no-padding">
-					<div class="avatatar-img">
-				 		<img src="/assets/images/user-astronaut-solid.svg" width="25" >
-				 	</div>
-				 	<a [routerLink]="['/account', identity?.accounts[0]?.name]" class="color-orange acc-name">
-				  		{{ identity?.accounts[0]?.name }}
-				 	</a>
-			 </div>
-				
+		<div class="col-sm-4">
+			<div class="col-sm-12 no-padding">
+				<div class="avatatar-img">
+					<img src="/assets/images/telos_icon_334.png" width="25">
+				</div>
+				<a [routerLink]="['/account', identity?.accounts[0]?.name]" class="color-orange acc-name">
+					{{ identity?.accounts[0]?.name }}
+				</a>
+			</div>
+
 			<div class="col-sm-12 acc-list no-padding">
-				  <div class="balance-acc">
-    			     Total Balance: <strong>{{ balance?.toLocaleString() }} EOS</strong>
-    			  </div>
-    			  <div class="balance-acc">
-    			     Unstaked: <small><strong>{{ unstaked?.toLocaleString() }} EOS</strong></small>
-    			  </div>
-    			  <div class="balance-acc">
-    			     Staked: <small><strong>{{ staked?.toLocaleString() }} EOS</strong></small>
-    			  </div>
-    		</div>
-    
+				<div class="balance-acc">
+					Total Balance:
+					<strong>{{ balance }} TLOS</strong>
+				</div>
+				<div class="balance-acc">
+					Unstaked:
+					<small>
+						<strong>{{ unstaked }} TLOS</strong>
+					</small>
+				</div>
+				<div class="balance-acc">
+					Staked:
+					<small>
+						<strong>{{ staked }} TLOS</strong>
+					</small>
+				</div>
+				<div class="balance-acc">
+					Deposit:
+					<small>
+						<strong>{{ depositValue }} TLOS</strong>
+					</small>
+					<div class="col-sm-12 acc-list no-padding" *ngIf="depositValue > 0">
+						<button mat-raised-button class="btn-generate" color="primary" (click)="getBackDeposit()">Get Deposit Back</button>
+					</div>
+				</div>
+				<div class="balance-acc">
+					Voting Balance:
+					<p *ngFor="let bkey of voterInfo.votingTokens">
+						<button mat-raised-button class="btn-generate" color="primary" *ngIf="(voterInfo.balances[bkey] || -1) < 0" (click)="registerVotingToken(bkey)">
+							Register for {{bkey}}
+						</button>
 
-    		<div class="col-sm-12 acc-list no-padding">
-      				<div class="analytics-header-right top-ten">
-      			  CPU:
-      			</div>
-      			<div class="analytics-text-right">
-        			<mat-progress-bar mode="determinate" value="{{mainData?.cpu_limit?.used / mainData?.cpu_limit?.max * 100}}" class="progress-bar-usage account-cpu"></mat-progress-bar>
-        			<small>{{ (mainData?.cpu_limit?.used / 1000000).toFixed(2) }} sec</small> / <small>{{ (mainData?.cpu_limit?.max / 1000000).toFixed(2) }} sec</small>
-      		    </div>
-    		</div>
-
-    		 <div class="col-sm-12 acc-list no-padding">
-    		  <div class="analytics-header-right top-ten">
-    		    NET:
-    		  </div>
-    		  <div class="analytics-text-right ">
-        			<mat-progress-bar mode="determinate" value="{{mainData?.net_limit?.used / mainData?.net_limit?.max * 100}}" class="progress-bar-usage account-net"></mat-progress-bar>
-        			<small>{{ (mainData?.net_limit?.used / 1024).toFixed(2) }} kb</small> / <small>{{ (mainData?.net_limit?.max / 1024).toFixed(2) }} kb</small>
-      		 	</div>
-    		 </div>
-    		 
-    		 <div class="col-sm-12 acc-list no-padding">
-    			  <div class="analytics-header-right top-ten">
-    			    RAM:
-    			  </div>
-    			  <div class="analytics-text-right">
-    			    <mat-progress-bar mode="determinate" value="{{mainData?.ram_usage / mainData?.ram_quota * 100}}" class="progress-bar-usage account-ram"></mat-progress-bar>
-        			<small>{{ (mainData?.ram_usage / 1024).toFixed(2) }} kb</small> / <small>{{ (mainData?.ram_quota / 1024).toFixed(2) }} kb</small>
-      			  </div>
-   			</div>
-
-        <div class="col-sm-12 acc-list no-padding" *ngIf="identity">
-            <button mat-raised-button class="btn-generate" color="primary" (click)="logoutScatter()">Logout</button>
-        </div>
-        
-
+						<strong *ngIf="(voterInfo.balances[bkey] || -1) >= 0" >
+							{{voterInfo.balances[bkey]}} {{bkey}} 
+							<button mat-raised-button class="btn-generate btn-small" color="primary" (click)="unregisterVotingToken(bkey)">
+								Unregister
+							</button>
+						</strong>
+					</p>
+				</div>
 			</div>
 
-			<div class="col-sm-8">
-				<mat-tab-group>
-				  <mat-tab label="Vote">
-				  		<div class="col-sm-1"></div>
-				  		<div class="col-sm-9">
-  							<mat-form-field>
-  							      <input matInput placeholder="Voter" required="true" [(ngModel)]="vote.voter">
-  							</mat-form-field>
-							
-								<!--<mat-form-field>
-  							  		<input matInput placeholder="Proxy" required="true" [(ngModel)]="vote.proxy">
-  							</mat-form-field>-->
-							
-								<mat-form-field>
-  							  		<mat-chip-list #chipList>
-                        <mat-chip *ngFor="let bp of vote.producers" [selectable]="selectable"
-                                   [removable]="removable" (removed)="remove(bp)">
-                            {{bp}}
-                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                          </mat-chip>
-                          <input placeholder="Add bp ... ↵ or ,"
-                                 [matChipInputFor]="chipList"
-                                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                 [matChipInputAddOnBlur]="addOnBlur"
-                                 (matChipInputTokenEnd)="add($event)">
-                      </mat-chip-list>
-  							</mat-form-field>
 
-  							<button mat-raised-button color="primary" class="btn-generate" (click)="generateTransaction()">Generate Transaction</button>
-				  		</div>
-				  </mat-tab>
-				</mat-tab-group>
+			<div class="col-sm-12 acc-list no-padding">
+				<div class="analytics-header-right top-ten">
+					CPU:
+				</div>
+				<div class="analytics-text-right">
+					<mat-progress-bar mode="determinate" value="{{mainData?.cpu_limit?.used / mainData?.cpu_limit?.max * 100}}" class="progress-bar-usage account-cpu"></mat-progress-bar>
+					<small>{{ (mainData?.cpu_limit?.used / 1000000).toFixed(2) }} sec</small> /
+					<small>{{ (mainData?.cpu_limit?.max / 1000000).toFixed(2) }} sec</small>
+				</div>
 			</div>
+
+			<div class="col-sm-12 acc-list no-padding">
+				<div class="analytics-header-right top-ten">
+					NET:
+				</div>
+				<div class="analytics-text-right ">
+					<mat-progress-bar mode="determinate" value="{{mainData?.net_limit?.used / mainData?.net_limit?.max * 100}}" class="progress-bar-usage account-net"></mat-progress-bar>
+					<small>{{ (mainData?.net_limit?.used / 1024).toFixed(2) }} kb</small> /
+					<small>{{ (mainData?.net_limit?.max / 1024).toFixed(2) }} kb</small>
+				</div>
+			</div>
+
+			<div class="col-sm-12 acc-list no-padding">
+				<div class="analytics-header-right top-ten">
+					RAM:
+				</div>
+				<div class="analytics-text-right">
+					<mat-progress-bar mode="determinate" value="{{mainData?.ram_usage / mainData?.ram_quota * 100}}" class="progress-bar-usage account-ram"></mat-progress-bar>
+					<small>{{ (mainData?.ram_usage / 1024).toFixed(2) }} kb</small> /
+					<small>{{ (mainData?.ram_quota / 1024).toFixed(2) }} kb</small>
+				</div>
+			</div>
+
+			<div class="col-sm-12 acc-list no-padding" *ngIf="identity">
+				<button mat-raised-button class="btn-generate" color="primary" (click)="logoutScatter()">Logout</button>
+			</div>
+
+
+		</div>
+
+		<div class="col-sm-8">
+			<mat-tab-group>
+				<mat-tab label="Vote">
+					<div class="col-sm-1"></div>
+					<div class="col-sm-9">
+
+						<mat-form-field>
+							<input matInput maxlength="12" placeholder="Proxy" required="true" [(ngModel)]="proxy">
+						</mat-form-field>
+
+						<button mat-raised-button color="primary" class="btn-generate" (click)="setProxy()">Set Proxy</button>
+
+						<mat-form-field style="margin-top: 30px;">
+							<mat-chip-list #chipList>
+								<mat-chip *ngFor="let bp of producers" [selectable]="selectable" [removable]="removable" (removed)="remove(bp)">
+									{{bp}}
+									<mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+								</mat-chip>
+								<input maxlength="12" placeholder="Add bp ... ↵ or ," [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+								 [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)">
+							</mat-chip-list>
+						</mat-form-field>
+
+						<button mat-raised-button color="primary" class="btn-generate" (click)="voteProducers()">Vote</button>
+					</div>
+				</mat-tab>
+				<mat-tab label="Proposals">
+					<div *ngIf="activeProposalsTab === 'proposalsList'">
+						<div class="col-sm-12">
+							<div class="col-sm-4 col-sm-offset-8 info-container-proposals">
+								<button mat-raised-button color="primary" class="btn-generate" (click)="activeProposalsTab = 'newProposal'">
+									<i class="fa fa-plus-circle"></i> Submit New Proposal</button>
+							</div>
+						</div>
+						<div class="col-sm-12" style="height: 500px">
+							<mat-list>
+								<!-- <mat-list-item style="height: auto !important;" *ngFor="let proposal of [1,2,3]; let i = index;"> -->
+								<mat-list-item style="height: auto !important;" *ngFor="let proposal of proposalsList; let i = index;">
+									<div class="proposal-container col-sm-12">
+										<div class="proposal-header col-sm-12" (click)="openProposal(proposal.ballot[0].reference_id, i)">
+											<div class="col-sm-9 col-xs-12">
+												<h3 style="margin-bottom: 5px;">
+													<span *ngIf="proposal.status && proposal.status !== 0" style="color: red;">(Closed)</span>{{ proposal?.title }} (#{{ proposal?.id }})</h3>
+												<p style="font-size: 14px; margin-top: 0;">Proposed By
+													<strong>{{ proposal?.proposer }}</strong>
+												</p>
+											</div>
+										</div>
+										<div class="proposal-body col-sm-12" *ngIf="i === openedProposal">
+											<div *ngIf="votersWeight[proposal.ballot_id] && votersWeight[proposal.ballot_id].expiration === proposal.end_time && proposal.status === 0">
+												<div class="col-sm-12 notification voted-yes" *ngIf="votersWeight[proposal.ballot_id].directions[0] === 1">
+													<i class="fa fa-check"></i>
+													<span>You have voted YES on this worker proposal</span>
+												</div>
+												<div class="col-sm-12 notification voted-no" *ngIf="votersWeight[proposal.ballot_id].directions[0] === 0">
+													<i class="fa fa-times"></i>
+													<span>You have voted NO on this worker proposal</span>
+												</div>
+												<div class="col-sm-12 notification voted-abstain" *ngIf="votersWeight[proposal.ballot_id].directions[0] === 2">
+													<span>You have voted ABSTAIN on this worker proposal</span>
+												</div>
+											</div>
+											<div *ngIf="proposal.status === 1">
+												<div class="col-sm-12 notification voted-yes">
+													<span>PASSED</span>
+												</div>
+											</div>
+											<div *ngIf="proposal.status === 2">
+												<div class="col-sm-12 notification voted-no">
+													<span>FAILED</span>
+												</div>
+											</div>
+
+											<p><strong>Expires: </strong> {{proposal?.end_time * 1000 | date:'MMM d, y, h:mm:ss a'}} </p>
+											<p><strong>Amount requested: </strong>{{ proposal.amount/10000 | number : '.4'}} TLOS</p>
+											<p><strong>Requesting Account: </strong>{{ proposal?.receiver }}</p>
+											
+											<p style="word-break: break-word"><strong>For more information on this proposal, please visit this IPFS url:</strong> <a href="{{proposal?.ipfs_location}}">{{proposal?.ipfs_location}}</a></p>
+
+											<div *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count !== 0">
+												<p>Please use the buttons below to specify your vote for this proposal.</p>
+												<button (click)="voteProposal(1, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">
+													<i class="fa fa-check" style="margin-right: 5px;"></i>Yes</button>
+												<button (click)="voteProposal(0, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">
+													<i class="fa fa-times" style="margin-right: 5px;"></i>No</button>
+												<button (click)="voteProposal(2, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">Abstain</button>
+
+												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" *ngIf="this.identity.accounts[0].name === proposal.proposer && proposal.cycle_count > 0"
+												 (click)="claimProposal(proposal.id, proposal.end_time, proposal.status, i)" class="btn-generate">$ Claim Funds</button>
+											</div>
+											<div style="margin-bottom: 5px;" *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count === 0">
+												The proposal is in the building phase.
+											</div>
+											<div *ngIf="proposal.status === 0 && proposal.cycle_count === 0 && this.identity.accounts[0].name === proposal.proposer">
+												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="producing"
+												 (click)="openCancelSubmissionDialog(proposal.id, i)" class="btn-generate">Cancel Proposal</button>
+												<button style="width: 115px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" (click)="openVoting(proposal.id)"
+												 class="btn-generate">Open Voting</button>
+											</div>
+										</div>
+									</div>
+									<mat-divider></mat-divider>
+								</mat-list-item>
+								<button *ngIf="upperBound" style="width: 115px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button
+								 color="primary" (click)="showMoreSubmissions()" class="btn-generate">Show More</button>
+							</mat-list>
+						</div>
+					</div>
+					<div *ngIf="activeProposalsTab === 'newProposal'">
+						<div class="col-sm-12">
+							<div class="col-sm-4 col-sm-offset-8 info-container-proposals">
+								<button mat-raised-button color="primary" class="btn-generate" (click)="activeProposalsTab = 'proposalsList'">Proposals List</button>
+							</div>
+						</div>
+						<div class="col-sm-12">
+							<form [formGroup]="proposalFormGroup" (submit)="submitNewProposal()" spellcheck="false" autocomplete="off" novalidate>
+								<mat-form-field [hideRequiredMarker]="false">
+									<input matInput type="text" placeholder="Title" formControlName="title">
+								</mat-form-field>
+								<mat-form-field [hideRequiredMarker]="false">
+									<input matInput type="text" placeholder="Ipfs Location" formControlName="ipfs_location">
+								</mat-form-field>
+								<mat-form-field [hideRequiredMarker]="false">
+									<input matInput type="number" placeholder="Requested Amount (TLOS)" (input)="onAmountChanged($event.target.value)" formControlName="amount"
+									 [required]="true">
+									<mat-hint>deposit: {{ minValueToDeposit }}</mat-hint>
+									<span matSuffix> TLOS</span>
+								</mat-form-field>
+								<mat-form-field [hideRequiredMarker]="false">
+									<input matInput type="text" placeholder="Recepient" formControlName="receiver" [required]="true">
+									<mat-hint>max-length 12, lowercase a-z, 1-5</mat-hint>
+								</mat-form-field>
+								<mat-form-field [hideRequiredMarker]="false">
+									<input matInput type="number" placeholder="Cycles" formControlName="cycles" [required]="true">
+								</mat-form-field>
+								<button mat-raised-button color="primary" type="submit" class="btn-generate disabled" [class.disabled]="!proposalFormGroup.valid"
+								 [disabled]="!proposalFormGroup.valid">Confirm</button>
+							</form>
+						</div>
+					</div>
+				</mat-tab>
+				<!-- <mat-tab label="Ratify/Amend">
+					Coming soon!
+				</mat-tab> -->
+			</mat-tab-group>
+		</div>
 	</div>
 </div>
