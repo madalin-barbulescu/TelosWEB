@@ -38,26 +38,29 @@ export class MainCustomizeChartsComponent implements OnInit{
   constructor(private http: HttpClient, private socket: Socket, private MainService: MainService){}
 
   getData() {
-        this.http.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=EOS&tsyms=USD')
-                  .subscribe(
-                      (res: any) => {
-                           this.currencyObj = res;
-                           this.MainService.setEosPrice(this.currencyObj);
-                      },
-                      (error) => {
-                          console.error(error);
-                      });
+        // this.http.get('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=EOS&tsyms=USD')
+        //           .subscribe(
+        //               (res: any) => {
+        //                    this.currencyObj = res;
+        //                    this.MainService.setEosPrice(this.currencyObj);
+        //               },
+        //               (error) => {
+        //                   console.error(error);
+        //               });
+    this.currencyObj = {};
+    this.MainService.setEosPrice(this.currencyObj);        
   }
 
   getChart() {
-        this.http.get('https://min-api.cryptocompare.com/data/histohour?fsym=EOS&tsym=USD&limit=24&aggregate=3&e=CCCAGG')
-                  .subscribe(
-                      (res: any) => {
-                           this.mainCurrencyChartDataRes = this.createChartArr(res.Data);
-                      },
-                      (error) => {
-                          console.error(error);
-                      });
+        // this.http.get('https://min-api.cryptocompare.com/data/histohour?fsym=EOS&tsym=USD&limit=24&aggregate=3&e=CCCAGG')
+        //           .subscribe(
+        //               (res: any) => {
+        //                    this.mainCurrencyChartDataRes = this.createChartArr(res.Data);
+        //               },
+        //               (error) => {
+        //                   console.error(error);
+        //               });
+    this.mainCurrencyChartDataRes = this.createChartArr([]);
   }
 
   getBlockchainData(){
