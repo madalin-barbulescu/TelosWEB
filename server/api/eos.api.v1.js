@@ -7,7 +7,7 @@ const path = require('path');
 const customFunctions = require('./eos.api.v1.custom');
 const axios = require('axios');
 
-module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, MARIA) {
+module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCache, cronFunctions) {
 
 	const PRODUCER 	= require('../models/producer.model')(mongoMain);
 	const FAUCET 	= require('../models/faucet.model')(mongoMain);
@@ -111,7 +111,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
 	router.get('/api/v1/get_wallet_api', (req, res) => {
-		res.json({ host: config.walletAPI.host, port: config.walletAPI.port, protocol: config.walletAPI.protocol });
+		res.json(config.walletAPI);
 	});
 	
 
@@ -255,12 +255,21 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* router - get_aggregation_stat
 	*/
 	router.get('/api/v1/get_aggregation_stat', (req, res) => {
-		STATS_AGGR.findOne({}, (err, result) => {
+		STATS_AGGR.findOne({name: "globalStats"}, (err, result) => {
 			if (err){
 				log.error(err);
 				return res.status(501).end();
 			}
-			res.json(result);
+			if(result){
+				const tmp = result.extractStat();
+				return res.json({
+					transactions: tmp.transactions.count,
+					actions: tmp.actions.count,
+					accounts: tmp.accounts.count
+				});
+			}
+			
+			res.json(null);
 		});
 	});
 
@@ -303,14 +312,14 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
     /*
 	* router - get_table_rows
 	*/
-	router.get('/api/v1/get_table_rows/:code/:scope/:table/:limit', (req, res) => {
+	router.get('/api/v1/get_table_rows/:code/:scope/:table/:limit/:lower?', (req, res) => {
 	   	 eos.getTableRows({
 			      json: true,
 			      code: req.params.code,
 			      scope: req.params.scope,
 			      table: req.params.table,
 			      table_key: "string",
-			      lower_bound: "0",
+			      lower_bound: req.params.lower ? req.params.lower : "0",
 			      upper_bound: "-1",
 			      limit: req.params.limit
 			})
@@ -515,41 +524,67 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		});
 		
 		router.post('/api/v1/get_wps_submissions', (req, res) => {
-			const account_name = req.params.account_name,
-				lower_bound = req.params.lower_bound,
-				limit = req.body.limit || 20;
-	
-			const $match = {}, $sort = {id : -1}, $limit = limit;
-			if(account_name){
-				$match.$or = [
-					{proposer: account_name},
-					{receiver: account_name}
-				];
-			}
-			if(lower_bound){
-				$match.id = {$gt: lower_bound};
-			}
+			let account_name = typeof req.body.account_name === "string" ? req.body.account_name : "",
+				upper_bound = typeof req.body.upper_bound === "number" ? req.body.upper_bound : 0,
+				lower_bound = typeof req.body.lower_bound === "number" ? req.body.lower_bound : 0,
+				limit = typeof req.body.limit === "number" ? req.body.limit : 20,
+				update_cache = req.body.update_cache || false;
 
-			CACHE_WPS_SUBMISSIONS.aggregate([
-				{ $match },
-				{ $sort },
-				{ $limit },
-				{
-					"$lookup": {
-						"from":"Ballots", 
-						"localField":"ballot_id", 
-						"foreignField":"ballot_id", 
-						"as":"ballot"
-					}
-				}
-			 ]).exec(function(err, results){
+			limit = limit < 0 ? 20 : limit; 
+	
+			let sendInfo = (err) => {
 				if(err){
 					log.error(err);
 					res.status(500).json(err);
-				}else{
-					res.json(results);
+					return;
 				}
-			 }); 
+
+				let $match = {}, $sort = {id : -1}, $limit = limit;
+				if(account_name){
+					$match.$or = [
+						{proposer: account_name},
+						{receiver: account_name}
+					];
+				}
+				if(upper_bound){
+					$match.id = {$lt: upper_bound};
+				}
+				if(lower_bound){
+					if( $match.id ){
+						$match.id["$gt"] = lower_bound;
+					}else{
+						$match.id = {$gt: lower_bound};
+					}
+				}
+	
+				CACHE_WPS_SUBMISSIONS.aggregate([
+					{ $match },
+					{ $sort },
+					{ $limit },
+					{
+						"$lookup": {
+							"from":"Ballots", 
+							"localField":"ballot_id", 
+							"foreignField":"ballot_id", 
+							"as":"ballot"
+						}
+					}
+				 ]).exec(function(err, results){
+					if(err){
+						log.error(err);
+						res.status(500).json(err);
+					}else{
+						res.json(results);
+					}
+				 }); 
+			};
+
+			if(update_cache){
+				// update cache first then process stuff
+				cronFunctions.cacheBallotsAndSubmissions(sendInfo, 6);
+			}else{
+				sendInfo();
+			}
 		});
 
 	/*
