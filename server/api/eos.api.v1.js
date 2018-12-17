@@ -255,12 +255,21 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	* router - get_aggregation_stat
 	*/
 	router.get('/api/v1/get_aggregation_stat', (req, res) => {
-		STATS_AGGR.findOne({}, (err, result) => {
+		STATS_AGGR.findOne({name: "globalStats"}, (err, result) => {
 			if (err){
 				log.error(err);
 				return res.status(501).end();
 			}
-			res.json(result);
+			if(result){
+				const tmp = result.extractStat();
+				return res.json({
+					transactions: tmp.transactions.count,
+					actions: tmp.actions.count,
+					accounts: tmp.accounts.count
+				});
+			}
+			
+			res.json(null);
 		});
 	});
 

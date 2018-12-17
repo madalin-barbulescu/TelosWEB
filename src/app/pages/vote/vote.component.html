@@ -47,6 +47,21 @@
 						<button mat-raised-button class="btn-generate" color="primary" (click)="getBackDeposit()">Get Deposit Back</button>
 					</div>
 				</div>
+				<div class="balance-acc">
+					Voting Balance:
+					<p *ngFor="let bkey of voterInfo.votingTokens">
+						<button mat-raised-button class="btn-generate" color="primary" *ngIf="(voterInfo.balances[bkey] || -1) < 0" (click)="registerVotingToken(bkey)">
+							Register for {{bkey}}
+						</button>
+
+						<strong *ngIf="(voterInfo.balances[bkey] || -1) >= 0" >
+							{{voterInfo.balances[bkey]}} {{bkey}} 
+							<button mat-raised-button class="btn-generate btn-small" color="primary" (click)="unregisterVotingToken(bkey)">
+								Unregister
+							</button>
+						</strong>
+					</p>
+				</div>
 			</div>
 
 
@@ -152,34 +167,39 @@
 													<span>You have voted ABSTAIN on this worker proposal</span>
 												</div>
 											</div>
+											<div *ngIf="proposal.status === 1">
+												<div class="col-sm-12 notification voted-yes">
+													<span>PASSED</span>
+												</div>
+											</div>
+											<div *ngIf="proposal.status === 2">
+												<div class="col-sm-12 notification voted-no">
+													<span>FAILED</span>
+												</div>
+											</div>
 
-											<p>
-												<strong>Expires: </strong> {{proposal?.end_time * 1000 | date:'MMM d, y, h:mm:ss a'}} </p>
-											<p>
-												<strong>Amount requested: </strong>{{ proposal.amount/10000 | number : '.4'}} TLOS</p>
-											<p>
-												<strong>Requesting Account: </strong>{{ proposal?.receiver }}</p>
-											<!-- <p>Dolore consequat magna duis fugiat sint sunt. Culpa aliqua elit deserunt fugiat. Sint minim sint cupidatat cillum
-												qui commodo adipisicing anim.Ut duis commodo eiusmod ex sunt officia. Mollit anim mollit adipisicing irure elit.
-												Reprehenderit id est ut fugiat aliqua exercitation laboris culpa non proident tempor reprehenderit nisi consequat.
-												Esse eiusmod ullamco ipsum amet elit irure. Sunt laboris sunt consequat irure qui ipsum voluptate aliqua. Exercitation
-												quis cupidatat eiusmod nostrud ut anim mollit ullamco do cillum consequat do duis velit.</p> -->
-											<div *ngIf="this.identity.accounts[0].name !== proposal.proposer || proposal.status === 0 && proposal.cycle_count !== 0">
+											<p><strong>Expires: </strong> {{proposal?.end_time * 1000 | date:'MMM d, y, h:mm:ss a'}} </p>
+											<p><strong>Amount requested: </strong>{{ proposal.amount/10000 | number : '.4'}} TLOS</p>
+											<p><strong>Requesting Account: </strong>{{ proposal?.receiver }}</p>
+											
+											<p style="word-break: break-word"><strong>For more information on this proposal, please visit this IPFS url:</strong> <a href="{{proposal?.ipfs_location}}">{{proposal?.ipfs_location}}</a></p>
+
+											<div *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count !== 0">
 												<p>Please use the buttons below to specify your vote for this proposal.</p>
-												<button [disabled]="votersWeight[proposal.ballot_id] && votersWeight[proposal.ballot_id].weight >= balance && votersWeight[proposal.ballot_id].directions[0] == 1 && votersWeight[proposal.ballot_id].expiration === proposal.end_time"
-												 (click)="voteProposal(1, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												<button (click)="voteProposal(1, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
 												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">
 													<i class="fa fa-check" style="margin-right: 5px;"></i>Yes</button>
-												<button [disabled]="votersWeight[proposal.ballot_id] && votersWeight[proposal.ballot_id].weight >= balance && votersWeight[proposal.ballot_id].directions[0] == 0 && votersWeight[proposal.ballot_id].expiration === proposal.end_time"
-												 (click)="voteProposal(0, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												<button (click)="voteProposal(0, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
 												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">
 													<i class="fa fa-times" style="margin-right: 5px;"></i>No</button>
-												<button [disabled]="votersWeight[proposal.ballot_id] && votersWeight[proposal.ballot_id].weight >= balance && votersWeight[proposal.ballot_id].directions[0] == 2 && votersWeight[proposal.ballot_id].expiration === proposal.end_time"
-												 (click)="voteProposal(2, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
+												<button (click)="voteProposal(2, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
 												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">Abstain</button>
 
 												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" *ngIf="this.identity.accounts[0].name === proposal.proposer && proposal.cycle_count > 0"
 												 (click)="claimProposal(proposal.id, proposal.end_time, proposal.status, i)" class="btn-generate">$ Claim Funds</button>
+											</div>
+											<div style="margin-bottom: 5px;" *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count === 0">
+												The proposal is in the building phase.
 											</div>
 											<div *ngIf="proposal.status === 0 && proposal.cycle_count === 0 && this.identity.accounts[0].name === proposal.proposer">
 												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="producing"
@@ -191,7 +211,7 @@
 									</div>
 									<mat-divider></mat-divider>
 								</mat-list-item>
-								<button *ngIf="lowerBound" style="width: 115px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button
+								<button *ngIf="upperBound" style="width: 115px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button
 								 color="primary" (click)="showMoreSubmissions()" class="btn-generate">Show More</button>
 							</mat-list>
 						</div>

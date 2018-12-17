@@ -123,9 +123,9 @@ export class ProducersPageComponent implements OnInit, OnDestroy {
           const rotations = results[3];
 
           // this.mainData = producers.list.filter(p=>p.is_active);
-          // this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != '' && (p.last_time_kicked + p.kick_penalty_hours) > Date() ));
+          this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != '' && (new Date(p.last_time_kicked).getTime() + p.kick_penalty_hours*3600000) > Date.now() ));
           // TODO uncomment ^
-          this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != ''));
+          // this.mainData = producers.list.filter(p => p.is_active || (!p.is_active && p.kick_reason != ''));
 
           if (this.producersSavedInfo) {
             this.mainData.forEach((element, index) => {

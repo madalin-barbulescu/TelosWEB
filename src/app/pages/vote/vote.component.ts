@@ -51,7 +51,7 @@ export class VotePageComponent implements OnInit {
     proposalTimer: any;
     lowerBound = 0;
     upperBound = 0;
-    limit = 3;
+    limit = 4;
     openedProposal = -1;
     activeProposalsTab = 'proposalsList';
     proposalsList = [];
@@ -59,6 +59,15 @@ export class VotePageComponent implements OnInit {
     depositValue: any = 0;
     minValueToDeposit: any = 0;
     wp_env_struct: any;
+
+    voterInfo = {
+        votingTokens:["VOTE", "TFVT", "TFBOARD"],
+        balances: {
+            VOTE: -1,
+            TFVT: -1,
+            TFBOARD: -1
+        }
+    }
 
     readonly PRODUCER_NAME_REGEX = new RegExp(/^[a-z1-5_\-]+$/);
     proposalFormGroup: FormGroup;
@@ -138,20 +147,27 @@ export class VotePageComponent implements OnInit {
         this.spinner = true;
         let wpenv = this.http.get('/api/v1/get_table_rows/eosio.saving/eosio.saving/wpenv/1')
         let deposits = this.http.get('/api/v1/get_table_rows/eosio.saving/eosio.saving/deposits/10')
+        let balances = this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.identity.accounts[0].name}`)
         let submissions = this.http.post('/api/v1/get_wps_submissions', {limit: this.limit})
 
-        forkJoin([wpenv, deposits, submissions])
+        forkJoin([wpenv, deposits, submissions, balances])
             .subscribe(
                 (results: any) => {
                     this.spinner = false;
                     const wpenv = results[0].rows;
                     const deposits = results[1].rows;
                     const submissions = results[2];
+                    const balances = results[3];
 
                     if(submissions.length){
                         this.proposalsList = this.proposalsList.concat(submissions);
                         this.upperBound = this.proposalsList[this.proposalsList.length - 1].id;
                         this.lowerBound = this.proposalsList[0].id;
+                    }
+
+                    if(balances.rows.length && balances.rows[0].owner === this.identity.accounts[0].name){
+                        const tmp = balances.rows[0].tokens.split(" ");
+                        this.voterInfo.balances.VOTE = parseInt(tmp[0]);
                     }
 
                     // this.proposalsList = submissions.map(submission =>
@@ -450,6 +466,7 @@ export class VotePageComponent implements OnInit {
                             if (!result.length) return;
                             this.proposalsList = result.concat(this.proposalsList);
                             this.lowerBound = this.proposalsList[0].id;
+                            this.openedProposal = -1;
                         }
                     );
                 }, 5000);
@@ -591,6 +608,16 @@ export class VotePageComponent implements OnInit {
         this.minValueToDeposit = fee_amount > this.wp_env_struct.fee_min / 10000 ? fee_amount.toFixed(4) : this.wp_env_struct.fee_min / 10000;
     }
 
+    updateBalace(){
+        this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.identity.accounts[0].name}`).subscribe((result:any)=>{
+            if(result.rows.length && result.rows[0].owner === this.identity.accounts[0].name){
+                this.voterInfo.balances.VOTE = parseInt(result.rows[0].tokens.split(" ")[0]);
+            }else{
+                this.voterInfo.balances.VOTE = -1;
+            }
+        });
+    }
+
     // direction [0 = NO, 1 = YES, 2 = ABSTAIN]
     voteProposal(direction: number, id: number, endTime: number, beginTime: number) {
         if (!this.identity) return this.notifications.error('Identity error!!!', '');
@@ -613,36 +640,48 @@ export class VotePageComponent implements OnInit {
         eos.contract('eosio.trail', {
             accounts: [this.network]
         }).then(contract => {
-            contract.mirrorcast({ voter: this.identity.accounts[0].name, token_symbol: "4,TLOS" }, transactionOptions).then(trx => {
-                contract.castvote(data, transactionOptions).then(trx2 => {
-                    if (this.votersWeight[id]) {
-                        this.votersWeight[id].weight = this.balance;
-                        this.votersWeight[id].directions[0] = direction;
-                        this.votersWeight[id].expiration = endTime;
-                    } else {
-                        this.votersWeight[id] = {
-                            ballot_id: id,
-                            directions: [direction],
-                            weight: this.balance,
-                            expiration: endTime
-                        }
-                    }
-                    this.dialog.closeAll();
-                    this.notifications.success('Transaction Success', '');
-                }).catch(error => {
-                    console.error(error);
-                    this.dialog.closeAll();
-                    this.notifications.error(this.errorHandler(error));
-                });
-            }).catch(error => {
+            const catchErr = (error) =>{
                 console.error(error);
                 this.dialog.closeAll();
                 this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
-            this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            }
+            
+            const wrapup = () => {
+                if (this.votersWeight[id]) {
+                    this.votersWeight[id].weight = this.balance;
+                    this.votersWeight[id].directions[0] = direction;
+                    this.votersWeight[id].expiration = endTime;
+                } else {
+                    this.votersWeight[id] = {
+                        ballot_id: id,
+                        directions: [direction],
+                        weight: this.balance,
+                        expiration: endTime
+                    }
+                }
+                this.updateBalace();
+                this.dialog.closeAll();
+                this.notifications.success('Transaction Success', '');
+            }
+
+            const regvoter = () => {
+                return eos.transaction('eosio.trail', tr => {
+                    tr.regvoter({ voter: this.identity.accounts[0].name, token_symbol: "4,VOTE" }, transactionOptions);
+                });
+            }
+
+            const mirrorAndCast = () => {
+                return eos.transaction('eosio.trail', tr => {
+                    tr.mirrorcast({ voter: this.identity.accounts[0].name, token_symbol: "4,TLOS" }, transactionOptions);
+                    tr.castvote(data, transactionOptions);
+                }).then(wrapup).catch(catchErr);
+            }
+
+            if(this.voterInfo.balances.VOTE < 0){
+                regvoter().then(mirrorAndCast).catch(catchErr);
+            }else{
+                mirrorAndCast();
+            }
         });
     }
 

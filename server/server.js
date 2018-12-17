@@ -85,13 +85,6 @@ let cronFunctions = {};
 if (config.CRON){
     cronFunctions = require('./crons/main.cron')(mongoMain, mongoCache);
 }
-if (config.telegram.ON){
-    require('./daemons/ram.bot.daemon')(eos, mongoMain);
-}
-if (config.MARIA_DB_ENABLE){
-    const MARIA = new mariaDB(config.MARIA_DB);
-    require(`./api/eos.api.${config.apiV}.tokens`)(app, log, MARIA);
-}
 
 app.use(function(req,res,next){
   req.io = io;
