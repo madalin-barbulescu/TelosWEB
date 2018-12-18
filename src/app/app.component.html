@@ -2,6 +2,23 @@
   <a routerLink="" class="logo pull-left">
     <img src="/assets/images/telos_logo.png" height="28" alt="">
   </a>
+  <ul class="pull-left network_toggle">
+    <mat-menu #netToggle="matMenu">
+      <a href="http://testnet.telosfoundation.io" mat-menu-item>TESTNET</a>
+      <a href="http://monitor.telosfoundation.io" mat-menu-item>MAINNET</a>
+    </mat-menu>
+
+    <button mat-icon-button [matMenuTriggerFor]="netToggle">
+      {{getNetworkLocation()}}
+    </button>
+  </ul>
+  <mat-menu #menu="matMenu">
+<!--       <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
+      <button mat-menu-item color="basic" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>
+      <button mat-menu-item color="basic" routerLink="registration" routerLinkActive="nav-active">Register</button> -->
+      <button mat-menu-item color="basic" routerLink="compliance" routerLinkActive="nav-active">Compliance</button>
+      <button mat-menu-item color="basic" routerLink="keys" routerLinkActive="nav-active">Generate Key Pair</button>
+    </mat-menu>
   <div class="main-search">
     <i class="fal fa-search" (click)="searchGlobal(search)"></i>
     <input type="search" placeholder="Search by block, tx, account, address" [(ngModel)]="search" (keyup)="onKey($event)">
@@ -9,17 +26,17 @@
   <ul class="pull-right main-nav-middle">
     <!--<li><button mat-button color="basic" routerLink="tokens" routerLinkActive="nav-active">Tokens</button></li>-->
     <li><button mat-button color="basic" routerLink=""  [ngClass]="{'nav-active': activeMenu()  === '/'}">Home</button></li>
-    <li><button mat-button color="basic" routerLink="info" routerLinkActive="nav-active">Info</button></li>
     <li><button mat-button color="basic" routerLink="producers" routerLinkActive="nav-active">Producers</button></li>
-    <li><button mat-button color="basic" routerLink="p2p" routerLinkActive="nav-active">P2P</button></li>
+    <!-- <li><button mat-button color="basic" routerLink="p2p" routerLinkActive="nav-active">P2P</button></li> -->
     <li><button mat-button color="basic" routerLink="vote" routerLinkActive="nav-active" class="mobile-no">Vote</button></li>
     <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
     <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
     <button mat-button color="basic" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/registration' || activeMenu()  === '/keys'}">More</button>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
+<!--       <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
       <button mat-menu-item color="basic" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>
-      <button mat-menu-item color="basic" routerLink="registration" routerLinkActive="nav-active">Register</button>
+      <button mat-menu-item color="basic" routerLink="registration" routerLinkActive="nav-active">Register</button> -->
+      <button mat-menu-item color="basic" routerLink="compliance" routerLinkActive="nav-active">Compliance</button>
       <button mat-menu-item color="basic" routerLink="keys" routerLinkActive="nav-active">Generate Key Pair</button>
     </mat-menu>
         <!--<li class="mobile-no"><button mat-button color="basic" routerLink="soon">API</button></li>-->

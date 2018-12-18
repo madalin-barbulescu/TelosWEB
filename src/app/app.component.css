@@ -240,13 +240,11 @@ footer i{
 	width: 50px;
 }
 
+.network_toggle {
+	padding-left: 0;
+	padding-right: 20px;
+}
 
-
-
-
-
-
-
-
-
-
+.network_toggle button {
+	width: auto;
+}

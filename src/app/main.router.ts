@@ -26,10 +26,14 @@ import { P2PageEditComponent } from './pages/admin/p2p-edit/p2p-edit.component';
 export const routes: Routes = [
   { 
   	path: '',
-  	component: InfoPageComponent,
+  	component: MainPageComponent,
   	pathMatch: 'full' 
   },
-   {
+  {
+    path: 'compliance',
+    component: InfoPageComponent
+  },
+  {
   	path: 'block/:id',
   	component: BlockPageComponent
   },
