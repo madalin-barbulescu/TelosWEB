@@ -6,6 +6,7 @@ import * as moment from 'moment';
 import { tileLayer, latLng, marker, circle, polygon } from 'leaflet';
 import { MainService } from '../../services/mainapp.service';
 import { forkJoin } from "rxjs/observable/forkJoin";
+import { NotificationsService } from 'angular2-notifications';
 
 @Component({
   selector: 'producer',
@@ -35,7 +36,7 @@ export class ProducerComponent implements OnInit, OnDestroy{
   
   layers = [];
 
-  constructor(private route: ActivatedRoute, protected http: HttpClient, private MainService: MainService){}
+  constructor(private route: ActivatedRoute, protected http: HttpClient, private MainService: MainService, private notifications:NotificationsService){}
 
   getData(){
       this.spinner = true;
@@ -98,6 +99,18 @@ export class ProducerComponent implements OnInit, OnDestroy{
               .subscribe(
               (res: any) => {
                   this.bpData = res;
+                  // try to get the handle only , for those cases that have the full link
+                  if(this.bpData && this.bpData.org && this.bpData.org.social){
+                    const socialMedias = ["facebook","reddit","telegram","twitter","github","steemit","keybase"];
+                    console.log(this.bpData.org.social);
+                    socialMedias.forEach(media => {
+                      if(this.bpData.org.social[media] && this.bpData.org.social[media].indexOf('/') > -1){
+                        const pos = this.bpData.org.social[media].lastIndexOf("/") + 1;
+                        this.bpData.org.social[media] = this.bpData.org.social[media].substring(pos);
+                      }
+                    });
+                  }
+
                   if (res.nodes && res.nodes.length){
                       res.nodes.forEach(e => {
                         if (e.location && e.location.latitude && e.location.longitude){
@@ -122,7 +135,11 @@ export class ProducerComponent implements OnInit, OnDestroy{
                   }
                 }
                 
-                console.error(err);
+                if(err.error && err.error.error){
+                  err.error.error.message = "bp.json : " + err.error.error.message;
+                  this.notifications.error(err.error.error);
+                }
+                console.error(err.error);
               });
   }
 

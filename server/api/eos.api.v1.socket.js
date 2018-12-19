@@ -117,30 +117,24 @@ module.exports = function(io, eos, mongoMain){
             }
             timeToUpdateHistory = +new Date() + config.HISTORY_UPDATE;
             STATS_AGGR.findOne({name:"globalStats"}, (err, _result) => {
-                if (err){
+                if (err || !_result){
                     log.error(err);
                     return cb(null);
                 }
-
-                if (!_result || isNaN(Number(_result.transactions)) || isNaN(Number(_result.actions))){
+                
+                const result = _result.extractStat();
+                if (isNaN(Number(result.transactions.count)) || isNaN(Number(result.actions.count))){
                     log.error('====== transactions actions history error');
                     return cb(null);
                 }
 
-                const result = _result.extractStat();
-                cb(null, {
-                    transactions: result.transactions.count,
-                    actions: result.actions.count,
-                    accounts: result.accounts.count
-                });
-
                 let trxActions = new TRX_ACTIONS({
-                    transactions: result.transactions,
-                    actions: result.actions
+                    transactions: result.transactions.count,
+                    actions: result.actions.count
                 });
                 trxActions.save(err => {
                     if (err){
-                    log.error(err);
+                        log.error(err);
                     }
                     log.info(trxActions);
                     cb(null);

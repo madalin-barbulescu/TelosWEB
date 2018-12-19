@@ -37,6 +37,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 		async.parallel({
 			block: (cb) =>{
+				if(isNaN(parseInt(text)))
+					return cb(null, null);
+
         		eos.getBlock({ block_num_or_id: text })
 	   			 	.then(result => {
 	   			 		cb(null, result);
@@ -47,7 +50,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	   			 	});
 			},
 			transaction: (cb) =>{
-				// db.transactions.find({ trx_id: text }).pretty()
+				if(!text || String(text).length !== 64)
+					return cb(null, null);
+					
 				CACHE_TRANSACTIONS.find({trx_id:text},(err, result) => {
 					if(err || !result || result.length === 0){
 						eos.getTransaction({ id: text })
@@ -63,9 +68,8 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				});
 			},
 			account: (cb) =>{
-				// console.log(CACHE_ACCOUNT.find({ name: text}, function(err,res){
-				// 	console.log("result 1>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", err,res);
-				// }));
+				if(!text || String(text).length > 12)
+					return cb(null, null);
 
 				eos.getAccount({ account_name: text })
 	   			 	.then(result => {
@@ -76,7 +80,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	   			 	});
 			},
 			key: (cb) => {
-				// db.pub_keys.find({ public_key: text }).pretty()
+				if(!text || String(text).length !== 53 || String(text).substring(0,3) !== "EOS")
+					return cb(null, null);
+					
 				CACHE_PUB_KEYS.find({public_key:text},(err, result) => {
 					if(err || !result || result.length === 0){
 						eos.getTransaction({ id: text })
@@ -431,14 +437,191 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 		});
 	});
 
-    /*
-	* router - get_table_rows
-	*/
+	const updateP2p = async function(name, prodFromChain, prodFromDB){
+		if(!prodFromDB){
+			prodFromDB = new PRODUCER();
+		}
+		
+		let chainUrl = prodFromChain.url, bpUrl = chainUrl;
+		if(chainUrl){
+			if(!chainUrl.endsWith("/")){
+				chainUrl += "/";
+				bpUrl += "/";
+			}
+			chainUrl += "chains.json";
+			bpUrl += "bp.json";
+		}
+
+		console.log("urls : ", chainUrl, bpUrl);
+
+		async.parallel({
+			chainsJson : (cb) => { // get chains.json 
+				if(!chainUrl) return cb(null, {error: new Error("File not found")});
+
+				axios.get(chainUrl)
+					.then(_chainFile => {
+						const result = {};
+
+						let chainFile = _chainFile;
+						if(chainFile.data){
+							try{ chainFile = JSON.parse(_chainFile.data.replace(/\r?\n|\r/g, "")); }catch(ignored){
+								result.chainFile = {error: ignored};
+							}
+						}else{
+							chainFile = chainFile.data;
+						}
+
+						if(chainFile && chainFile.chains){
+							result.chainFile = Object.assign({}, chainFile);
+							if(chainFile.chains[config.MAIN_API_CHAIN_ID]){
+								axios.get(`${prodFromChain.url}${chainFile.chains[config.MAIN_API_CHAIN_ID]}`)
+									.then(_bpFile => {
+										let bpFile = _bpFile;
+										if(bpFile.data){
+											try{ bpFile = JSON.parse(_bpFile.data.replace(/\r?\n|\r/g, "")); }catch(ignored){
+												result.bpFile = {error: ignored};
+											}
+										}else{
+											bpFile = bpFile.data;
+										}
+										
+										result.bpFile = bpFile;
+										cb(null, result);
+									})
+									.catch(err => { result.bpFile = new Error(err.response.statusText); return cb(null, result); });
+							}else{
+								cb(null, result);
+							}
+						}else{
+							cb(null, result);
+						}
+					})
+					.catch(err => { return cb(null, new Error(err.response.statusText)); });
+			},
+			bpJson: (cb) => { // get bp.json
+				if(!bpUrl) return cb(null, null);
+
+				axios.get(bpUrl)
+					.then(_bpFile => {
+						console.log(typeof _bpFile);
+						let bpFile = _bpFile;
+						if(bpFile.data && typeof bpFile.data === "string"){
+							try{ bpFile = JSON.parse(_bpFile.data.replace(/\r?\n|\r/g, "")); }catch(ignored){
+								return cb(null, {error: ignored});
+							}
+						}else{
+							bpFile = bpFile.data;
+						}
+
+						console.log("bpjson : ", bpFile);
+						cb(null, bpFile);
+					})
+					.catch(err => { return cb(null, new Error(err.response.statusText)); });
+			}
+		}, (err, result) => {
+			console.log("parallel, ", err, result);
+			if(err){
+				log.error(err);
+				return;
+			}
+
+			prodFromDB.name = name;
+			prodFromDB.last_update = Date.now();
+
+			let bpFile = result.bpJson || (result.chainsJson ? result.chainsJson.bpFile : null);
+			let chainFile = result.chainsJson ? result.chainsJson.chainFile : null;
+			if(!bpFile){
+				prodFromDB.save();
+				return;
+			} 
+
+			if(chainUrl){
+				prodFromDB.url = prodFromChain.url || prodFromDB.url;
+			}
+
+			if(bpFile.org){
+				if(bpFile.org.location){
+					prodFromDB.latitude = bpFile.org.location.latitude || prodFromDB.latitude || 0;
+					prodFromDB.longitude = bpFile.org.location.longitude || prodFromDB.longitude || 0;
+					prodFromDB.country = bpFile.org.location.country || prodFromDB.country || 'N/A';
+					prodFromDB.region = bpFile.org.location.region || prodFromDB.region || 'N/A';
+					prodFromDB.city = bpFile.org.location.city || prodFromDB.city || 'N/A';
+				}
+				if(bpFile.org.candidate_name){
+					prodFromDB.organization = bpFile.org.candidate_name || prodFromDB.organization;
+				}
+				if(bpFile.org.social && bpFile.org.social.telegram){
+					prodFromDB.telegramChannel = bpFile.org.social.telegram || prodFromDB.telegramChannel;
+				}
+				if(bpFile.org.email){
+					prodFromDB.email = bpFile.org.email || prodFromDB.email;
+				}
+			}
+
+			prodFromDB.producerPublicKey = bpFile.producer_public_key || prodFromDB.producerPublicKey || 'N/A';
+			if(bpFile.nodes && bpFile.nodes.length){
+				let addr = {
+					p2p: {
+						main:"", backup:""
+					},
+					api: {
+						main: "", backup: "",
+						ssl: {
+							main: "", backup: ""
+						}
+					},
+				};
+				for(var i in bpFile.nodes){
+					switch(bpFile.nodes[i].node_type){
+						case "full":{
+							addr.api.main = bpFile.nodes[i].api_endpoint || addr.api.main;
+							addr.api.ssl.main = bpFile.nodes[i].ssl_endpoint || addr.api.ssl.main;
+							addr.p2p.backup = bpFile.nodes[i].p2p_endpoint || addr.p2p.backup;
+						}break;
+						case "producer":{
+							addr.api.backup = bpFile.nodes[i].api_endpoint || addr.api.backup;
+							addr.api.ssl.backup = bpFile.nodes[i].ssl_endpoint || addr.api.ssl.backup;
+							addr.p2p.main = bpFile.nodes[i].p2p_endpoint || addr.p2p.main;
+						}break;
+						case "seed":{
+							addr.api.backup = bpFile.nodes[i].api_endpoint || addr.api.backup;
+							addr.api.ssl.backup = bpFile.nodes[i].ssl_endpoint || addr.api.ssl.backup;
+							addr.p2p.main = bpFile.nodes[i].p2p_endpoint || addr.p2p.main;
+						}break;
+						case "query":{
+							addr.api.main = bpFile.nodes[i].api_endpoint || addr.api.main;
+							addr.api.ssl.main = bpFile.nodes[i].ssl_endpoint || addr.api.ssl.main;
+							addr.p2p.backup = bpFile.nodes[i].p2p_endpoint || addr.p2p.backup;
+						}break;
+					}
+					prodFromDB.httpServerAddress = addr.api.main || addr.api.backup || prodFromDB.httpServerAddress;
+					prodFromDB.httpsServerAddress = addr.api.ssl.main || addr.api.ssl.backup || prodFromDB.httpsServerAddress;
+					prodFromDB.p2pServerAddress = addr.p2p.main || addr.p2p.backup || prodFromDB.p2pServerAddress;
+
+					if(bpFile.nodes[i].p2p_endpoint && ["seed", "producer", "full"].indexOf() > -1 ){
+						prodFromDB.p2pServerAddress = bpFile.nodes[i].p2p_endpoint || prodFromDB.p2pServerAddress;
+					}
+					if(bpFile.nodes[i].api_endpoint || bpFile.nodes[i].ssl_endpoint && ["full", "query"].indexOf(bpFile.nodes[i].node_type) > -1){
+						prodFromDB.httpServerAddress = bpFile.nodes[i].api_endpoint || prodFromDB.httpServerAddress;
+						prodFromDB.httpsServerAddress = bpFile.nodes[i].ssl_endpoint || prodFromDB.httpsServerAddress;
+					}
+				}
+			}
+
+			
+			PRODUCER.where({"name": name}).findOne((err, prods)=>{
+				if(err || !prods)
+					prodFromDB.save();
+			});
+		});
+	}
+
 	router.get('/api/v1/get_producer/:name', (req, res) => {
 		let producers = {};
+
 		eos.getProducers(true, req.params.name, 1)
 		.then(result => {
-			if(!result){
+			if(!result || req.params.name !== result.rows[0].owner){
 				res.status(400).send("Could not get the Producer!");
 				return;
 			}
@@ -452,6 +635,12 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				if(err){log.error(err);}
 				if(prods && producers.list.length){
 					producers.list[0].details = prods;
+				}
+
+				if(!prods || !prods.last_update || Date.now() - prods.last_update > 10*60000){
+					if(prods)
+						console.log("expired : ", Date.now() - prods.last_update > 10*60000);
+					updateP2p(req.params.name, result.rows[0], prods);
 				}
 				
 				res.json(producers);
