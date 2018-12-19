@@ -21,6 +21,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 import { RegistrationPageComponent } from './pages/registration/registration.component';
 import { P2PageManagementComponent } from './pages/admin/p2p-management/p2p-management.component';
 import { P2PageEditComponent } from './pages/admin/p2p-edit/p2p-edit.component';
+import { ContractsPageComponent } from './pages/contracts/contracts.component';
 //import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
@@ -92,6 +93,9 @@ export const routes: Routes = [
   {
     path: 'wallet',
     component: WalletPageComponent
+  }, {
+    path: 'contracts',
+    component: ContractsPageComponent
   },
   {
     path: 'vote',

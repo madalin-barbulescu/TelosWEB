@@ -17,8 +17,8 @@ import { CommonModule } from '@angular/common';
 import { appRoutes } from '../../main.router';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FormsModule } from '@angular/forms';
-import { Clipboard } from '../../services/clipboard.service';
 
+import { ClipboardService } from '../../services/clipboard.service';
 
 let imports = [
     MatAutocompleteModule,
@@ -44,7 +44,7 @@ let imports = [
     P2PageComponent
   ],
   imports:  imports,
-  providers: [Clipboard],
+  providers: [ClipboardService],
   bootstrap: [ P2PageComponent ]
 })
 export class P2PageModule {}

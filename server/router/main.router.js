@@ -23,6 +23,11 @@ module.exports = function(router, config, request, log) {
 	router.get('/address/:id', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
+
+	router.get('/contracts', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
 	
 	router.get('/producers', (req, res) => {
 	   	res.sendFile(indexPath);
@@ -89,6 +94,10 @@ module.exports = function(router, config, request, log) {
 	});
 
 	router.get('/wallet', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+
+	router.get('/wallet-aux', (req, res) => {
 	   	res.sendFile(indexPath);
 	});
 

@@ -1,0 +1,36 @@
+<h3 class="col-md-6"><span matTooltip="The dropdown contains all of the available tables within this Smart Contract. Select a table to view the contents" matTooltipPosition="right">Contract Tables</span></h3>
+
+<div class="col-md-3">
+  <mat-form-field>
+    <input type="text" matInput placeholder="Select Contract Table" [formControl]="selectionFC" [value]="(ctStore$ | async).table" [matAutocomplete]="autoGroup">
+    <mat-autocomplete #autoGroup="matAutocomplete">
+      <mat-option *ngFor="let table of (filteredTables$ | async)" [value]="table.name" (click)="select(table)">
+        {{ table.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+
+<div class="col-md-3">
+  <mat-form-field>
+    <input type="text" matInput placeholder="Scope" [formControl]="scopeFC" [value]="(ctStore$ | async).scope">
+    <mat-hint>{{ (ctStore$ | async).code }}</mat-hint>
+  </mat-form-field>
+</div>
+
+<div class="col-md-12">
+  <div class="main-table example-container">
+    <mat-table class="big-table" [dataSource]="dataSource">
+
+      <ng-container *ngFor="let c of table.columns" [matColumnDef]="c">
+        <mat-header-cell *matHeaderCellDef>{{ c }}</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{ element[c] }} </mat-cell>
+      </ng-container>
+  
+      <mat-header-row mat-header-row *matHeaderRowDef="table.columns"></mat-header-row>
+      <mat-row mat-row *matRowDef="let row; columns: table.columns;"></mat-row>
+    </mat-table>
+
+  </div>
+  <button class="float-right" mat-raised-button color="primary" (click)="loadTableRows()" [disabled]="!table.more">Load More</button>
+</div>
