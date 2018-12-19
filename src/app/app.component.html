@@ -4,12 +4,12 @@
   </a>
   <ul class="pull-left network_toggle">
     <mat-menu #netToggle="matMenu">
-      <a href="http://testnet.telosfoundation.io" mat-menu-item>TESTNET</a>
-      <a href="http://monitor.telosfoundation.io" mat-menu-item>MAINNET</a>
+      <a href="https://mon-test.telosfoundation.io" mat-menu-item>TESTNET</a>
+      <a href="https://monitor.telosfoundation.io" mat-menu-item>MAINNET</a>
     </mat-menu>
 
     <button mat-icon-button [matMenuTriggerFor]="netToggle">
-      {{getNetworkLocation()}}
+      <i class="fa fa-caret-down"></i>
     </button>
   </ul>
   <mat-menu #menu="matMenu">
@@ -28,7 +28,8 @@
     <li><button mat-button color="basic" routerLink=""  [ngClass]="{'nav-active': activeMenu()  === '/'}">Home</button></li>
     <li><button mat-button color="basic" routerLink="producers" routerLinkActive="nav-active">Producers</button></li>
     <!-- <li><button mat-button color="basic" routerLink="p2p" routerLinkActive="nav-active">P2P</button></li> -->
-    <li><button mat-button color="basic" routerLink="vote" routerLinkActive="nav-active" class="mobile-no">Vote</button></li>
+<!--     <li><button mat-button color="basic" routerLink="vote" routerLinkActive="nav-active" class="mobile-no">Vote</button></li> -->
+    <li><button mat-button color="basic" routerLink="compliance" routerLinkActive="nav-active" class="mobile-no">BP Compliance</button></li>
     <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
     <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
     <button mat-button color="basic" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/registration' || activeMenu()  === '/keys'}">More</button>
@@ -36,7 +37,7 @@
 <!--       <button mat-menu-item color="basic" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
       <button mat-menu-item color="basic" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>
       <button mat-menu-item color="basic" routerLink="registration" routerLinkActive="nav-active">Register</button> -->
-      <button mat-menu-item color="basic" routerLink="compliance" routerLinkActive="nav-active">Compliance</button>
+      <button mat-menu-item color="basic" routerLink="vote" routerLinkActive="nav-active">Vote</button>
       <button mat-menu-item color="basic" routerLink="keys" routerLinkActive="nav-active">Generate Key Pair</button>
     </mat-menu>
         <!--<li class="mobile-no"><button mat-button color="basic" routerLink="soon">API</button></li>-->

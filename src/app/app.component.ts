@@ -71,11 +71,6 @@ export class AppComponent {
     return this.router.url;
   }
 
-  getNetworkLocation(){
-    if(window.location.href.indexOf('testnet.telosfoundation.io') > -1) return 'TESTNET';
-    return 'MAINNET';
-  }
-
   onKey(event: any){
      if (event.keyCode === 13) {
          this.searchGlobal(event.target.value);
