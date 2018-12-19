@@ -1,6 +1,7 @@
 <nav class="main-navigation">
   <a routerLink="" class="logo pull-left">
-    <img src="/assets/images/telos_logo_mainnet.png" height="18" alt="">
+    <img *ngIf="config.networkType === 'test'" src="/assets/images/telos_logo.png" height="18" alt="Telos Testnet">
+    <img *ngIf="config.networkType === 'main'" src="/assets/images/telos_logo_mainnet.png" height="18" alt="Telos Mainnet">
   </a>
   <ul class="pull-left network_toggle">
     <mat-menu #netToggle="matMenu">

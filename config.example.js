@@ -166,7 +166,8 @@ config.walletAPI = {
 };
 
 config.client = {
-  faucet: process.env.FAUCET_ENABLED || false
+  faucet: process.env.FAUCET_ENABLED || false,
+  networkType: process.env.NETWORK_TYPE || 'main'
 }
 
 module.exports = config;
