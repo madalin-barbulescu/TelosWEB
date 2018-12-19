@@ -66,6 +66,10 @@ var API = new mongoose.Schema({
   },
   url: {
     type: String
+  },
+  last_update: {
+    type: Number,
+    default: 0
   }
 });
 
