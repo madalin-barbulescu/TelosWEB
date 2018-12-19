@@ -33,7 +33,7 @@ export class ContractsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
 
-    private scatterService: ScatterService,
+    public scatterService: ScatterService,
   ) { }
 
   ngOnInit(): void {
