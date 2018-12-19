@@ -19,7 +19,10 @@ export class Contract {
       float: 'float ( number )',
       double: 'double ( number )',
       uint32: 'uint32 ( number )',
-      uint64: 'uint64 ( number )'
+      uint64: 'uint64 ( number )',
+      int32: 'int32 ( number )',
+      int64: 'int64 ( number )',
+      symbol: 'symbol ( requires decimal precision - e.g. 4,TLOS or 0,VOTE)'
     };
   }
 

@@ -47,7 +47,7 @@ import { AdminModule } from './pages/admin/admin.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { InfoDialogModule } from './dialogs/info-dialog/info-dialog.module';
 import { EOSService } from './services/eos.service';
-import { ScatterService as ScatterServiceAux } from './services/scatter-aux.service';
+import { ScatterService as ScatterServiceAux } from './services/scatter.service';
 
 const socketConfig: SocketIoConfig = { url: '/', options: {
     autoConnect: true,

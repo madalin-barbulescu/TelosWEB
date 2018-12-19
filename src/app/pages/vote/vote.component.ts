@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from "rxjs/observable/forkJoin";
 import * as Eos from 'eosjs';
 import { InfoDialog } from '../../dialogs/info-dialog/info-dialog.component';
+// import { ScatterService } from '../../services/scatter.service';
 import { ScatterService } from '../../services/scatter.service';
 import { IInterrogationDialog } from '../../dialogs/interrogation/interrogation.model';
 import { InterrogationDialog } from '../../dialogs/interrogation/interrogation.component';
@@ -61,7 +62,7 @@ export class VotePageComponent implements OnInit {
     wp_env_struct: any;
 
     voterInfo = {
-        votingTokens:["VOTE", "TFVT", "TFBOARD"],
+        votingTokens:["VOTE"], //, "TFVT", "TFBOARD"],
         balances: {
             VOTE: -1,
             TFVT: -1,
@@ -78,15 +79,14 @@ export class VotePageComponent implements OnInit {
         protected http: HttpClient,
         public dialog: MatDialog,
         private notifications: NotificationsService,
-        private scatterService: ScatterService) { }
+        public scatterService: ScatterService) { }
 
 
     ngOnInit() {
         this.proposalFormGroup = this.newProposalForm();
-        ScatterJS = this.scatterService.ScatterJS;
-        ScatterEOS = this.scatterService.ScatterEOS;
-        this.setScatter();
         this.getWalletAPI();
+        if(this.scatterService.identity)
+            this.initEnv();
     }
 
     private newProposalForm() {
@@ -109,19 +109,6 @@ export class VotePageComponent implements OnInit {
                 Validators.required,
             ]),
         });
-    }
-
-    setScatter() {
-        if (ScatterJS) {
-            this.scatter = ScatterJS.scatter;
-            if (this.scatter.identity) {
-                this.identity = this.scatter.identity;
-                if (this.identity && this.identity.accounts[0] && this.identity.accounts[0].name) {
-                    this.getAccount(this.identity.accounts[0].name);
-                    this.initEnv();
-                }
-            }
-        }
     }
 
     getAccount(name) {
@@ -147,10 +134,13 @@ export class VotePageComponent implements OnInit {
         this.spinner = true;
         let wpenv = this.http.get('/api/v1/get_table_rows/eosio.saving/eosio.saving/wpenv/1')
         let deposits = this.http.get('/api/v1/get_table_rows/eosio.saving/eosio.saving/deposits/10')
-        let balances = this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.identity.accounts[0].name}`)
+        let balances = this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.scatterService.identity.accounts[0].name}`)
+        // let balances1 = this.http.get(`/api/v1/get_table_rows/eosio.trail/TFVT/balances/1/${this.scatterService.identity.accounts[0].name}`)
+        // let balances2 = this.http.get(`/api/v1/get_table_rows/eosio.trail/TFBOARD/balances/1/${this.scatterService.identity.accounts[0].name}`)
         let submissions = this.http.post('/api/v1/get_wps_submissions', {limit: this.limit})
+        this.getAccount(this.scatterService.identity.accounts[0].name);
 
-        forkJoin([wpenv, deposits, submissions, balances])
+        forkJoin([wpenv, deposits, submissions, balances]) //, balances1, balances2
             .subscribe(
                 (results: any) => {
                     this.spinner = false;
@@ -158,6 +148,8 @@ export class VotePageComponent implements OnInit {
                     const deposits = results[1].rows;
                     const submissions = results[2];
                     const balances = results[3];
+                    // const balances1 = results[4];
+                    // const balances2 = results[5];
 
                     if(submissions.length){
                         this.proposalsList = this.proposalsList.concat(submissions);
@@ -165,10 +157,18 @@ export class VotePageComponent implements OnInit {
                         this.lowerBound = this.proposalsList[0].id;
                     }
 
-                    if(balances.rows.length && balances.rows[0].owner === this.identity.accounts[0].name){
+                    if(balances.rows.length && balances.rows[0].owner === this.scatterService.identity.accounts[0].name){
                         const tmp = balances.rows[0].tokens.split(" ");
                         this.voterInfo.balances.VOTE = parseInt(tmp[0]);
                     }
+                    // if(balances1.rows.length && balances1.rows[0].owner === this.scatterService.identity.accounts[0].name){
+                    //     const tmp = balances1.rows[0].tokens.split(" ");
+                    //     this.voterInfo.balances.TFVT = parseInt(tmp[0]);
+                    // }
+                    // if(balances2.rows.length && balances2.rows[0].owner === this.scatterService.identity.accounts[0].name){
+                    //     const tmp = balances2.rows[0].tokens.split(" ");
+                    //     this.voterInfo.balances.TFBOARD = parseInt(tmp[0]);
+                    // }
 
                     // this.proposalsList = submissions.map(submission =>
                     //     ({
@@ -178,7 +178,7 @@ export class VotePageComponent implements OnInit {
                     //     }));
 
                     deposits.map((deposit) => {
-                        if (deposit.owner === this.identity.accounts[0].name) {
+                        if (deposit.owner === this.scatterService.identity.accounts[0].name) {
                             this.depositValue = Number.parseFloat(deposit.escrow.split(' ')[0]);
                         }
                     })
@@ -215,7 +215,7 @@ export class VotePageComponent implements OnInit {
             .subscribe(
                 (res: any) => {
                     Object.assign(this.proposalsList[i], res.rows[0])
-                    this.http.get(`/api/v1/get_table_rows/eosio.trail/${this.identity.accounts[0].name}/votereceipts/1/${this.proposalsList[i].ballot_id}`)
+                    this.http.get(`/api/v1/get_table_rows/eosio.trail/${this.scatterService.identity.accounts[0].name}/votereceipts/1/${this.proposalsList[i].ballot_id}`)
                         .subscribe(
                             (res: any) => {
                                 if(res.rows.length){
@@ -271,57 +271,44 @@ export class VotePageComponent implements OnInit {
     }
 
     errorHandler(error) {
-        if (error.message) {
-            return error.message;
-        } else {
-            let parsedError = JSON.parse(error);
-            return parsedError.error.details[0].message;
+        try {
+          error = JSON.parse(error);
+        } catch(e) { }
+    
+        switch (typeof error) {
+          case 'string':
+            return error;
+          case 'object':
+            if(error.error && error.error.details && error.error.details.length){
+              return error.error.details[0].message || error.error.what;
+            }
+            return error.message || 'Error... Check the console';
+          default:
+            return 'Error transactions ...';
         }
     }
 
-    loginScatter() {
-        ScatterJS.plugins(new ScatterEOS());
-        this.spinner = true;
-        ScatterJS.scatter.connect("TELOS_MONITOR", this.connectionOptions).then(connected => {
-            if (!connected) {
-                this.spinner = false;
-                this.notifications.error('Please make sure SQRL wallet is Open', '');
-                return false;
-            }
-            this.spinner = false;
-            this.openDialog('Please choose an identity from SQRL wallet');
+    _catchHandler = (err) => {
+        this.dialog.closeAll();
+        this.notifications.error(this.errorHandler(err));
+    }
 
-            const requiredFields = { accounts: [this.network] };
-            if (!this.scatter.identity) {
-                this.scatter.getIdentity(requiredFields).then(
-                    () => {
-                        this.identity = this.scatter.identity;
-                        if (this.identity && this.identity.accounts[0] && this.identity.accounts[0].name) {
-                            this.getAccount(this.identity.accounts[0].name);
-                            this.initEnv();
-                        }
-                        this.notifications.success('Logged in!', '');
-                        this.dialog.closeAll();
-                    }
-                ).catch((error) => {
-                    this.dialog.closeAll();
-                    this.notifications.error(this.errorHandler(error));
-                })
-            } else {
-                this.identity = this.scatter.identity;
-                if (this.identity && this.identity.accounts[0] && this.identity.accounts[0].name) {
-                    this.getAccount(this.identity.accounts[0].name);
-                    this.initEnv();
-                }
-                this.dialog.closeAll();
-                this.notifications.success('Logged in!', '');
-            }
-        });
+    loginScatter() {
+        this.scatterService
+            .login$()
+            .do(()=>{
+                this.initEnv();
+            })
+            .subscribe();
     }
 
     logoutScatter() {
-        this.scatter.forgetIdentity()
-        location.reload();
+        this.scatterService
+            .logout$()
+            .do(() => {
+                location.reload();
+            })
+            .subscribe();
     }
 
     // BPS VOTING
@@ -345,141 +332,118 @@ export class VotePageComponent implements OnInit {
         }
     }
 
-    setProxy() {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-        this.openDialog('Please check SQRL for the transaction details');
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
+    _startTransaction():any{
+        if (!this.scatterService.identity){
+            return this.notifications.error('Identity error!!!', '');
+        }
 
-        eos.contract('eosio', {
-            accounts: [this.network]
-        }).then(contract => {
-            const data = {
-                voter: this.identity.accounts[0].name,
-                proxy: this.proxy,
-                producers: []
-            };
-            contract.voteproducer(data, transactionOptions).then(trx => {
-                this.getAccount(this.identity.accounts[0].name);
-                this.dialog.closeAll();
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
+        this.openDialog('Please check SQRL for the transaction details');
+    }
+
+    _getContract(name){
+        const promise = this.scatterService.eos.contract(name, { accounts: [this.network] });
+        promise.catch(this._catchHandler);
+        return promise;
+    }
+
+    _callContract(contractName, actions, callback){
+        this._startTransaction();
+        this._getContract(contractName)
+            .then( () => {
+                this.scatterService.eos.transaction(contractName, (tr)=>{
+                    for(let idx in actions){
+                        (tr[actions[idx][0]])(actions[idx][1], this.scatterService.transactionOptions);
+                    }
+                }).then(callback).catch(this._catchHandler);
             });
-        }).catch(error => {
-            console.error(error);
+    }
+
+    _voteProducerCall(_data){
+        const data = Object.assign({voter: this.scatterService.identity.accounts[0].name}, _data);
+        this._callContract('eosio', [['voteproducer', data]], () => {
+            this.getAccount(this.scatterService.identity.accounts[0].name);
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            this.notifications.success('Transaction Success', '');
+        });
+    }
+
+    setProxy() {
+        this._voteProducerCall({
+            proxy: this.proxy,
+            producers: []
         });
     }
 
     voteProducers() {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
-        this.openDialog('Please check SQRL for the transaction details');
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
-        eos.contract('eosio', {
-            accounts: [this.network]
-        }).then(contract => {
-            const data = {
-                voter: this.identity.accounts[0].name,
-                proxy: '',
-                producers: this.producers
-            };
-            contract.voteproducer(data, transactionOptions).then(trx => {
-                this.getAccount(this.identity.accounts[0].name);
-                this.dialog.closeAll();
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
-            this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+        this._voteProducerCall({
+            proxy: '',
+            producers: this.producers.sort()
         });
+    }
 
+    registerVotingToken(token) {
+        this._callContract('eosio.trail', [['regvoter', {voter: this.scatterService.identity.accounts[0].name, token_symbol: "0,"+token}]], () => {
+            this.initEnv();
+            this.dialog.closeAll();
+        });
+    }
+    
+    unregisterVotingToken(token) {
+        this._callContract('eosio.trail', [['unregvoter', {voter: this.scatterService.identity.accounts[0].name, token_symbol: "0,"+token}]], () => {
+            this.initEnv();
+            this.voterInfo.balances[token] = -1;
+            this.dialog.closeAll();
+        });
     }
 
     // PROPOSALS VOTING
     submitNewProposal() {
         if (!this.proposalFormGroup.valid) return;
+        this._startTransaction();
 
         const data = Object.assign({}, this.proposalFormGroup.value);
-        data['proposer'] = this.identity.accounts[0].name;
+        data['proposer'] = this.scatterService.identity.accounts[0].name;
         data['amount'] = data['amount'].toFixed(4);
         data['amount'] += ' TLOS'
 
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
-        this.openDialog('Please check SQRL for the transaction details');
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
         let feeToTransfer = this.minValueToDeposit - this.depositValue;
-
         if (feeToTransfer) {
             const transferData = {
-                from: this.identity.accounts[0].name,
+                from: this.scatterService.identity.accounts[0].name,
                 to: "eosio.saving",
                 quantity: feeToTransfer.toFixed(4) + ' TLOS',
                 memo: "''",
             }
-            eos.transfer(transferData, transactionOptions).then(trx => {
-                this.getBalance(this.identity.accounts[0].name);
+            this.scatterService.eos.transfer(transferData, this.scatterService.transactionOptions).then(trx => {
+                this.getBalance(this.scatterService.identity.accounts[0].name);
                 this.depositValue += feeToTransfer;
                 this.submitProposal(data, feeToTransfer);
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
+            }).catch(this._catchHandler);
         } else {
             this.submitProposal(data, feeToTransfer);
         }
     }
 
     private submitProposal(data: any, fee: number) {
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
-        eos.contract('eosio.saving', {
-            accounts: [this.network]
-        }).then(contract => {
-            contract.submit(data, transactionOptions).then(trx => {
-                this.depositValue -= fee;
-                this.proposalFormGroup.reset();
-                this.activeProposalsTab = 'proposalsList';
-                this.dialog.closeAll();
-                clearTimeout(this.proposalTimer)
-                this.spinner = true;
-                this.proposalTimer = setTimeout(() => { 
-                    this.getSubmissionsList({ lower_bound: this.lowerBound, limit: 1000 }).subscribe(
-                        (result: any) => {
-                            this.spinner = false;
-                            if (!result.length) return;
-                            this.proposalsList = result.concat(this.proposalsList);
-                            this.lowerBound = this.proposalsList[0].id;
-                            this.openedProposal = -1;
-                        }
-                    );
-                }, 5000);
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
+        this._callContract('eosio.saving', [['submit', data]], () => {
+            this.depositValue -= fee;
+            this.proposalFormGroup.reset();
+            this.activeProposalsTab = 'proposalsList';
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            clearTimeout(this.proposalTimer)
+            this.spinner = true;
+            this.proposalTimer = setTimeout(() => { 
+                this.getSubmissionsList({ lower_bound: this.lowerBound, limit: 1000 }).subscribe(
+                    (result: any) => {
+                        this.spinner = false;
+                        if (!result.length) return;
+                        this.proposalsList = result.concat(this.proposalsList);
+                        this.lowerBound = this.proposalsList[0].id;
+                        this.openedProposal = -1;
+                    }
+                );
+            }, 5000);
+            this.notifications.success('Transaction Success', '');
         });
     }
 
@@ -500,106 +464,39 @@ export class VotePageComponent implements OnInit {
     }
 
     private cancelSubmission(sub_id: number, index: number) {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
-        this.openDialog('Please check SQRL for the transaction details');
-
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
-        eos.contract('eosio.saving', {
-            accounts: [this.network]
-        }).then(contract => {
-            const data = {
-                sub_id: sub_id
-            };
-            contract.cancelsub(data, transactionOptions).then(trx => {
-                this.dialog.closeAll();
-                this.proposalsList.splice(index, 1);
-                clearTimeout(this.proposalTimer)
-                this.spinner = true;
-                this.proposalTimer = setTimeout(() => { 
-                    this.getSubmissionsList({ lower_bound: this.lowerBound, limit: 1000 }).subscribe(
-                        (result: any) => {
-                            this.spinner = false;
-                            if (!result.length) return;
-                            this.proposalsList = result.concat(this.proposalsList);
-                            this.lowerBound = this.proposalsList[0].id;
-                        }
-                    );
-                }, 5000);
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
+        this._callContract('eosio.saving', [['cancelsub', {sub_id}]], ()=>{
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            this.proposalsList.splice(index, 1);
+            clearTimeout(this.proposalTimer)
+            this.spinner = true;
+            this.proposalTimer = setTimeout(() => { 
+                this.getSubmissionsList({ lower_bound: this.lowerBound, limit: 1000 }).subscribe(
+                    (result: any) => {
+                        this.spinner = false;
+                        if (!result.length) return;
+                        this.proposalsList = result.concat(this.proposalsList);
+                        this.lowerBound = this.proposalsList[0].id;
+                    }
+                );
+            }, 5000);
+            this.notifications.success('Transaction Success', '');
         });
     }
 
     openVoting(sub_id: number) {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
-        this.openDialog('Please check SQRL for the transaction details');
-
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
-        eos.contract('eosio.saving', {
-            accounts: [this.network]
-        }).then(contract => {
-            const data = {
-                sub_id: sub_id
-            };
-            contract.openvoting(data, transactionOptions).then(trx => {
-                this.dialog.closeAll();
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
+        this._callContract('eosio.saving', [['openvoting', {sub_id}]], ()=>{
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            this.notifications.success('Transaction Success', '');
+            this.initEnv();
         });
     }
 
     getBackDeposit() {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
-        if (this.depositValue === 0) return;
-
-        this.openDialog('Please check SQRL for the transaction details');
-
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-
-        eos.contract('eosio.saving', {
-            accounts: [this.network]
-        }).then(contract => {
-            const data = {
-                owner: this.identity.accounts[0].name,
-            };
-            contract.getdeposit(data, transactionOptions).then(trx => {
-                this.getBalance(this.identity.accounts[0].name);
-                this.depositValue = 0;
-                this.dialog.closeAll();
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
+        this._callContract('eosio.saving', [['getdeposit', {owner: this.scatterService.identity.accounts[0].name}]], () => {
+            this.getBalance(this.scatterService.identity.accounts[0].name);
+            this.depositValue = 0;
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            this.notifications.success('Transaction Success', '');
         });
     }
 
@@ -609,8 +506,8 @@ export class VotePageComponent implements OnInit {
     }
 
     updateBalace(){
-        this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.identity.accounts[0].name}`).subscribe((result:any)=>{
-            if(result.rows.length && result.rows[0].owner === this.identity.accounts[0].name){
+        this.http.get(`/api/v1/get_table_rows/eosio.trail/VOTE/balances/1/${this.scatterService.identity.accounts[0].name}`).subscribe((result:any)=>{
+            if(result.rows.length && result.rows[0].owner === this.scatterService.identity.accounts[0].name){
                 this.voterInfo.balances.VOTE = parseInt(result.rows[0].tokens.split(" ")[0]);
             }else{
                 this.voterInfo.balances.VOTE = -1;
@@ -620,32 +517,21 @@ export class VotePageComponent implements OnInit {
 
     // direction [0 = NO, 1 = YES, 2 = ABSTAIN]
     voteProposal(direction: number, id: number, endTime: number, beginTime: number) {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
+        if (!this.scatterService.identity) return this.notifications.error('Identity error!!!', '');
         if (this.votersWeight[id] && this.votersWeight[id].weight >= this.balance && this.votersWeight[id].directions[0] == direction) return;
-
         if (beginTime * 1000 >= Date.now() || endTime * 1000 <= Date.now()) return this.notifications.error("Voting window not open");
-
+    
         this.openDialog('Please check SQRL for the transaction details');
-
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
 
         const data = {
             ballot_id: id,
             direction: direction,
-            voter: this.identity.accounts[0].name
+            voter: this.scatterService.identity.accounts[0].name
         }
 
-        eos.contract('eosio.trail', {
+        this.scatterService.eos.contract('eosio.trail', {
             accounts: [this.network]
-        }).then(contract => {
-            const catchErr = (error) =>{
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            }
-            
+        }).then( () => {            
             const wrapup = () => {
                 if (this.votersWeight[id]) {
                     this.votersWeight[id].weight = this.balance;
@@ -665,20 +551,20 @@ export class VotePageComponent implements OnInit {
             }
 
             const regvoter = () => {
-                return eos.transaction('eosio.trail', tr => {
-                    tr.regvoter({ voter: this.identity.accounts[0].name, token_symbol: "4,VOTE" }, transactionOptions);
+                return this.scatterService.eos.transaction('eosio.trail', tr => {
+                    tr.regvoter({ voter: this.scatterService.identity.accounts[0].name, token_symbol: "4,VOTE" }, this.scatterService.transactionOptions);
                 });
             }
 
             const mirrorAndCast = () => {
-                return eos.transaction('eosio.trail', tr => {
-                    tr.mirrorcast({ voter: this.identity.accounts[0].name, token_symbol: "4,TLOS" }, transactionOptions);
-                    tr.castvote(data, transactionOptions);
-                }).then(wrapup).catch(catchErr);
+                return this.scatterService.eos.transaction('eosio.trail', tr => {
+                    tr.mirrorcast({ voter: this.scatterService.identity.accounts[0].name, token_symbol: "4,TLOS" }, this.scatterService.transactionOptions);
+                    tr.castvote(data, this.scatterService.transactionOptions);
+                }).then(wrapup).catch(this._catchHandler);;
             }
 
             if(this.voterInfo.balances.VOTE < 0){
-                regvoter().then(mirrorAndCast).catch(catchErr);
+                regvoter().then(mirrorAndCast).catch(this._catchHandler);;
             }else{
                 mirrorAndCast();
             }
@@ -686,37 +572,15 @@ export class VotePageComponent implements OnInit {
     }
 
     claimProposal(id: number, endTime: number, status: number, i: number) {
-        if (!this.identity) return this.notifications.error('Identity error!!!', '');
-
+        if (!this.scatterService.identity) return this.notifications.error('Identity error!!!', '');
         if (endTime * 1000 >= Date.now()) return this.notifications.error("Cycle is still open");
-
         if (status !== 0) return this.notifications.error("Proposal is closed");
 
-        this.openDialog('Please check SQRL for the transaction details');
-
-        const transactionOptions = { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
-        const eos = this.scatter.eos(this.network, Eos, this.eosOptions);
-        const data = {
-            sub_id: id
-        }
-
-        eos.contract('eosio.saving', {
-            accounts: [this.network]
-        }).then(contract => {
-            contract.claim(data, transactionOptions).then(trx => {
-                this.getBalance(this.identity.accounts[0].name);
-                this.getProposalForSubmission(id, i);
-                this.dialog.closeAll();
-                this.notifications.success('Transaction Success', '');
-            }).catch(error => {
-                console.error(error);
-                this.dialog.closeAll();
-                this.notifications.error(this.errorHandler(error));
-            });
-        }).catch(error => {
-            console.error(error);
+        this._callContract('eosio.saving', [['claim', {sub_id: id}]], ()=>{
+            this.getBalance(this.scatterService.identity.accounts[0].name);
+            this.getProposalForSubmission(id, i);
             this.dialog.closeAll();
-            this.notifications.error(this.errorHandler(error));
+            this.notifications.success('Transaction Success', '');
         });
     }
 

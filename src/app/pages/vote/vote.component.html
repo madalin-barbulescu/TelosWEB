@@ -6,18 +6,18 @@
 
 	<h1 class="market-header">Vote</h1>
 
-	<div class="col-sm-4 block-info-line" *ngIf="!identity">
+	<div class="col-sm-4 block-info-line" *ngIf="!scatterService.identity">
 		<button mat-raised-button class="btn-generate" color="primary" (click)="loginScatter()">Login with SQRL</button>
 	</div>
 
-	<div class="block-info" *ngIf="identity">
+	<div class="block-info" *ngIf="scatterService.identity">
 		<div class="col-sm-4">
 			<div class="col-sm-12 no-padding">
 				<div class="avatatar-img">
 					<img src="/assets/images/telos_icon_334.png" width="25">
 				</div>
-				<a [routerLink]="['/account', identity?.accounts[0]?.name]" class="color-orange acc-name">
-					{{ identity?.accounts[0]?.name }}
+				<a [routerLink]="['/account', scatterService.identity?.accounts[0]?.name]" class="color-orange acc-name">
+					{{ scatterService.identity?.accounts[0]?.name }}
 				</a>
 			</div>
 
@@ -50,13 +50,13 @@
 				<div class="balance-acc">
 					Voting Balance:
 					<p *ngFor="let bkey of voterInfo.votingTokens">
-						<button mat-raised-button class="btn-generate" color="primary" *ngIf="(voterInfo.balances[bkey] || -1) < 0" (click)="registerVotingToken(bkey)">
+						<button mat-button class="" color="primary" *ngIf="voterInfo.balances[bkey] < 0 && bkey != 'TFBOARD'" (click)="registerVotingToken(bkey)">
 							Register for {{bkey}}
 						</button>
 
-						<strong *ngIf="(voterInfo.balances[bkey] || -1) >= 0" >
+						<strong *ngIf="voterInfo.balances[bkey] >= 0" >
 							{{voterInfo.balances[bkey]}} {{bkey}} 
-							<button mat-raised-button class="btn-generate btn-small" color="primary" (click)="unregisterVotingToken(bkey)">
+							<button mat-button class="" color="primary" (click)="unregisterVotingToken(bkey)" *ngIf="bkey != 'TFBOARD'">
 								Unregister
 							</button>
 						</strong>
@@ -98,7 +98,7 @@
 				</div>
 			</div>
 
-			<div class="col-sm-12 acc-list no-padding" *ngIf="identity">
+			<div class="col-sm-12 acc-list no-padding" *ngIf="scatterService.identity">
 				<button mat-raised-button class="btn-generate" color="primary" (click)="logoutScatter()">Logout</button>
 			</div>
 
@@ -184,7 +184,7 @@
 											
 											<p style="word-break: break-word"><strong>For more information on this proposal, please visit this IPFS url:</strong> <a href="{{proposal?.ipfs_location}}">{{proposal?.ipfs_location}}</a></p>
 
-											<div *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count !== 0">
+											<div *ngIf="proposal.status === 0 && proposal.cycle_count !== 0">
 												<p>Please use the buttons below to specify your vote for this proposal.</p>
 												<button (click)="voteProposal(1, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
 												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">
@@ -195,13 +195,13 @@
 												<button (click)="voteProposal(2, proposal.ballot_id, proposal.end_time, proposal.begin_time)" mat-raised-button color="warn"
 												 class="btn-generate" style="width: 30px; margin-right: 10px; margin-bottom: 15px;">Abstain</button>
 
-												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" *ngIf="this.identity.accounts[0].name === proposal.proposer && proposal.cycle_count > 0"
+												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" *ngIf="scatterService.identity.accounts[0].name === proposal.proposer && proposal.cycle_count > 0"
 												 (click)="claimProposal(proposal.id, proposal.end_time, proposal.status, i)" class="btn-generate">$ Claim Funds</button>
 											</div>
-											<div style="margin-bottom: 5px;" *ngIf="this.identity.accounts[0].name !== proposal.proposer && proposal.status === 0 && proposal.cycle_count === 0">
+											<div style="margin-bottom: 5px;" *ngIf="proposal.status === 0 && proposal.cycle_count === 0">
 												The proposal is in the building phase.
 											</div>
-											<div *ngIf="proposal.status === 0 && proposal.cycle_count === 0 && this.identity.accounts[0].name === proposal.proposer">
+											<div *ngIf="proposal.status === 0 && proposal.cycle_count === 0 && scatterService.identity.accounts[0].name === proposal.proposer">
 												<button style="width: 150px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="producing"
 												 (click)="openCancelSubmissionDialog(proposal.id, i)" class="btn-generate">Cancel Proposal</button>
 												<button style="width: 115px; margin-right: 10px; margin-bottom: 15px; float: right;" mat-raised-button color="primary" (click)="openVoting(proposal.id)"

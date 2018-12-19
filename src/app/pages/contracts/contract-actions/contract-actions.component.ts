@@ -17,7 +17,7 @@ import 'rxjs/add/operator/takeUntil';
 import { Contract, IContractField, IContractAction } from '../models/contract';
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { NotificationsService } from 'angular2-notifications';
-import { ScatterService } from '../../../services/scatter-aux.service';
+import { ScatterService } from '../../../services/scatter.service';
 import { InfoDialog } from '../../../dialogs/info-dialog/info-dialog.component';
 import { MatDialog } from '@angular/material';
 
@@ -78,7 +78,11 @@ export class ContractActionsComponent implements OnInit, OnDestroy, OnChanges {
 
         this._openDialog('Please check SQRL for the transaction details');
 
-        return Observable.fromPromise(contract[this.action.name](data, this._scatterService.transactionOptions))
+        return Observable.fromPromise(
+            this._scatterService.eos.transaction(this.contract.account_name, tr => {
+              tr[this.action.name](data, this._scatterService.transactionOptions);
+            })
+          )
           .finally(() => this.dialog.closeAll())
       })
       .do((data: any = {}) => {
@@ -142,7 +146,10 @@ export class ContractActionsComponent implements OnInit, OnDestroy, OnChanges {
       case 'string':
         return error;
       case 'object':
-        return error.message;
+        if(error.error && error.error.details && error.error.details.length){
+          return error.error.details[0].message || error.error.what;
+        }
+        return error.message || 'Error... Check the console';
       default:
         return 'Transaction Failed  ...';
     }

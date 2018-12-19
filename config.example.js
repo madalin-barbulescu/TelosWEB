@@ -1,14 +1,14 @@
-/*
-  App configuration example created by eoswebnetbp1 (31.08.18)
-*/
 const path = require('path');
 let config = {};
 
-config.ADMIN_ENABLED = true;
-config.ADMIN_PKEY = "EOS5WJtphnj2KfsPL3mxNqgsGcdGqwSBPpVjgPGYrJTiKsQGKrsQj";
+// production mode
+config.PROD = true;
 
-// production mod
-config.PROD = false;
+// enable or disable admin api
+config.ADMIN_ENABLED = true;
+
+// the key used to verify admin stuff
+config.ADMIN_PKEY = process.env.MONITOR_ADMIN_KEY || "EOS5WJtphnj2KfsPL3mxNqgsGcdGqwSBPpVjgPGYrJTiKsQGKrsQj";
 
 // mongo uri and options
 config.MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/TLSweb';
@@ -21,70 +21,53 @@ config.MONGO_OPTIONS = {
     useNewUrlParser: true
 };
 
-// connection to Mariadb (Tokens list for account)
-config.MARIA_DB_ENABLE = false;
-config.MARIA_DB = {
-    host: '',
-    user: '',
-    password: '',
-    db: '' 
-};
+// default api endpoint
+config.MAIN_API_ENDPOINT = process.env.API_NODE_ENDPOINT || 'https://testnet.eos.miami' ;
+config.MAIN_API_CHAIN_ID = process.env.API_NODE_CHAINID || 'e17615decaecd202a365f4c029f206eee98511979de8a5756317e2469f2289e3' ;
+config.FAUCET_KEY_PROVIDER = process.env.FAUCET_KEY_PROVIDER || '';
 
 // cron processes (aggregation of main stat - actions, transactions, accounts, analytics)
 config.CRON = true;
-config.CRON_API = 'http://18.223.130.112:8889';
+config.CRON_API = process.env.CRON_API_NODE_ENDPOINT || config.MAIN_API_ENDPOINT;
 
-config.TPS_ENABLE = true;
+config.TPS_ENABLE = false;
 config.MAX_TPS_TIME_UPDATE = 5000;
-
+ 
 config.eosInfoConfigs = {
       mainNet: {
-        chainId: "ca03ab4a886a9b793da573a33cd21441ac6e8275d71c4a736f6989e5181168b0",
-        httpEndpoint: "http://18.223.130.112:8889",
+        chainId: config.MAIN_API_CHAIN_ID,
+        httpEndpoint: config.MAIN_API_ENDPOINT,
         name: "Main Net",
         key: "mainNet"
       },
 };
 
-// telegram alert bot
-config.telegram = {
-  ON: false,
-  TOKEN: '',
-  TIME_UPDATE: 5000
-};
-
 // eosjs
 config.eosConfig = {
-  chainId: "ca03ab4a886a9b793da573a33cd21441ac6e8275d71c4a736f6989e5181168b0",
-  keyProvider: "",
-  httpEndpoint: "http://18.223.130.112:8889",
+  chainId: config.MAIN_API_CHAIN_ID,
+  keyProvider: config.FAUCET_KEY_PROVIDER,
+  httpEndpoint: config.MAIN_API_ENDPOINT,
   expireInSeconds: 60,
+  keyPrefix: "EOS",
   broadcast: true,
+  sign: true,
   debug: false,
-  // sign: true,
   // logger: {
   //   log: console.log,
   //   error: console.error
   // }
 };
 
-// scatter wallet
-config.walletAPI = {
-        host: 'nodes.get-scatter.com',
-        port: '',
-        protocol: 'https'
-};
-
 // api url for producers list
-config.customChain = 'https://nodes.get-scatter.com';
+config.customChain = process.env.PRODUCERS_QUERY_ENDPOINT || config.MAIN_API_ENDPOINT;
 
 config.apiV = 'v1'; // api version
 config.RAM_UPDATE = 5 * 60 * 1000; // time for ram update - /api/api.*.socket
 config.HISTORY_UPDATE = 5 * 60 * 1000; // time for stats update - /api/api.*.socket 
 config.MAX_BUFFER = 500000; // max buffer size for child processes (kb) - /crons
-config.blockUpdateTime = 900; // mainpage upades frequency  - /api/api.*.socket in ml sec
-config.offsetElementsOnMainpage = 10; // blocks on mainpage
-config.limitAsync = 30; // max threads for async.js module  
+config.blockUpdateTime = 1900; // mainpage upades frequency  - /api/api.*.socket in ml sec
+config.offsetElementsOnMainpage = 6; // blocks on mainpage
+config.limitAsync = 15; // max threads for async.js module  
 
 // log4js
 config.logger = {
@@ -120,34 +103,36 @@ config.logger = {
     categories: {
         default:       {
           appenders: ['out'],
-          level:     'trace'
+          level:     'error'
         },
         server:  {
           appenders: ['out', 'server'],
-          level:     'trace'
+          level:     'error'
         },
         socket_io:  {
           appenders: ['out', 'socket_io'],
-          level:     'trace'
+          level:     'error'
         },
         accounts_daemon:  {
           appenders: ['out', 'accounts_daemon'],
-          level:     'trace'
+          level:     'error'
         },
         accounts_analytics:  {
           appenders: ['out', 'accounts_analytics'],
-          level:     'trace'
+          level:     'error'
         },
         global_stat:  {
           appenders: ['out', 'global_stat'],
-          level:     'trace'
+          level:     'error'
         },
         ram_bot:  {
           appenders: ['out', 'ram_bot'],
-          level:     'trace'
+          level:     'error'
         }
     }
 };
+
+// note : we haven't looked into the stuff below
 
 // slack notifications
 config.loggerSlack = {
@@ -159,5 +144,29 @@ config.loggerSlack = {
       }
 };
 
-module.exports = config;
+// telegram alert bot 
+config.telegram = {
+  ON: false,
+  TOKEN: '',
+  TIME_UPDATE: 5000
+};
 
+let endpoint = config.MAIN_API_ENDPOINT.split(":");
+endpoint[1] = endpoint[1].substring(2);
+endpoint[2] = (typeof endpoint[2] === "string" ? parseInt(endpoint[2]) : 0) || (endpoint[0] === 'https' ? 443 : 80);
+
+// wallet api config
+config.walletAPI = {
+  blockchain: 'TELOS',
+  host: endpoint[1],
+  port: endpoint[2],
+  chainId: config.MAIN_API_CHAIN_ID,
+  keyPrefix: "EOS",
+  protocol: endpoint[0],
+};
+
+config.client = {
+  faucet: process.env.FAUCET_ENABLED || false
+}
+
+module.exports = config;

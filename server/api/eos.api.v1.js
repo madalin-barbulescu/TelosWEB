@@ -119,6 +119,10 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	router.get('/api/v1/get_wallet_api', (req, res) => {
 		res.json(config.walletAPI);
 	});
+
+	router.get('/api/v1/get_client_config', (req, res) => {
+		res.json(config.client);
+	});
 	
 
 	/*

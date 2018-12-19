@@ -13,7 +13,7 @@ import 'rxjs/add/operator/catch';
 import { ClipboardService } from '../../services/clipboard.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Contract } from './models/contract';
-import { ScatterService } from '../../services/scatter-aux.service';
+import { ScatterService } from '../../services/scatter.service';
 
 @Component({
   selector: 'contract-page',

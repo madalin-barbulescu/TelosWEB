@@ -34,7 +34,7 @@
 }
 .logo{
 	font-size: 12px;
-	padding: 9px 40px;
+	padding: 19px 10px 19px 40px;
 	color: #5e5e5f !important;
 	font-weight: 300;
 }
@@ -240,13 +240,11 @@ footer i{
 	width: 50px;
 }
 
+.network_toggle {
+	padding-left: 0;
+	padding-right: 20px;
+}
 
-
-
-
-
-
-
-
-
-
+.network_toggle button {
+	width: auto;
+}

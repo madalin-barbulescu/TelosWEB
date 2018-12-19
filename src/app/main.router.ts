@@ -27,10 +27,14 @@ import { ContractsPageComponent } from './pages/contracts/contracts.component';
 export const routes: Routes = [
   { 
   	path: '',
-  	component: InfoPageComponent,
+  	component: MainPageComponent,
   	pathMatch: 'full' 
   },
-   {
+  {
+    path: 'compliance',
+    component: InfoPageComponent
+  },
+  {
   	path: 'block/:id',
   	component: BlockPageComponent
   },

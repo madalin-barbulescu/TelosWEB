@@ -22,6 +22,7 @@ export class AppComponent {
       animate: 'scale'
   };
   search;
+  config:any = {};
 
   constructor(private http: HttpClient, private router: Router, private notifications:MatSnackBar, private dialog: MatDialog, private scatterService: ScatterService){
       http.get("/admin/v1/news").subscribe(
@@ -40,6 +41,14 @@ export class AppComponent {
       } catch (error) {
         console.error(error);  
       }
+
+      http.get("/api/v1/get_client_config").subscribe(
+          (response:any) => {
+              if(response)
+                this.config = response;
+          },
+          (error) => {console.error(error);}
+      )
   }
 
   searchGlobal(text) {
