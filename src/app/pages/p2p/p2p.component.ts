@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import 'rxjs/add/operator/finally';
 import { MatTableDataSource } from '@angular/material';
-import { Clipboard } from '../../services/clipboard.service';
+import { ClipboardService } from '../../services/clipboard.service';
 import { NotificationsService } from 'angular2-notifications';
 
 @Component({
@@ -23,7 +23,7 @@ export class P2PageComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private clipboard: Clipboard, 
+    private clipboard: ClipboardService, 
     private notifications: NotificationsService
   ) {}
 

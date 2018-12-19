@@ -12,14 +12,14 @@ import { ScatterService } from './services/scatter.service';
 })
 export class AppComponent {
   public options = {
-      position: ["top", "right"],
+      position: ['top', 'right'],
       timeOut: 5000,
       lastOnBottom: true,
       showProgressBar: false,
       pauseOnHover: true,
       clickToClose: false,
       clickIconToClose: true,
-      animate: "scale"
+      animate: 'scale'
   };
   search;
 
@@ -32,7 +32,7 @@ export class AppComponent {
                 });
             }
         },
-        (error) =>{console.error(error);}
+        (error) => { console.error(error); }
       );
 
       try {
@@ -42,36 +42,36 @@ export class AppComponent {
       }
   }
 
-  searchGlobal(text){
+  searchGlobal(text) {
     if (!text) {
         return console.log('Input is empty!');
     }
-    text = text.replace(/ /g, '')
+    text = text.replace(/ /g, '');
       this.http.post('/api/v1/search', { text: text })
-               .subscribe((res :any) =>{
-                   if (res.block && !isNaN(+this.search)){
+               .subscribe((res: any) => {
+                   if (res.block && !isNaN(+this.search)) {
                       this.router.navigate(['/block', res.block.block_num]);
-                   } else if (res.transaction){
+                   } else if (res.transaction) {
                       this.router.navigate(['/transaction', res.transaction.id]);
-                   } else if (res.account){
+                   } else if (res.account) {
                       this.router.navigate(['/account', res.account.account_name]);
-                   } else if (res.key){
+                   } else if (res.key) {
                       this.router.navigate(['/address', text ]);
                    } else {
                       this.router.navigate(['/notfound']);
                    }
                    this.search = '';
                },
-               (err) =>{
+               (err) => {
                    console.error(err);
                });
   }
 
-  activeMenu(){
+  activeMenu() {
     return this.router.url;
   }
 
-  onKey(event: any){
+  onKey(event: any) {
      if (event.keyCode === 13) {
          this.searchGlobal(event.target.value);
      }

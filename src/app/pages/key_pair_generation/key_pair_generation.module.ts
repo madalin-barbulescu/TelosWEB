@@ -7,7 +7,7 @@ import {
 } from '@angular/material';
 import { CommonModule } from '@angular/common';
 
-import { Clipboard } from '../../services/clipboard.service';
+import { ClipboardService } from '../../services/clipboard.service';
 import { KeyPairService } from '../../services/key-pair.service';
 
 const imports = [
@@ -18,7 +18,7 @@ const imports = [
 ];
 
 const services = [
-  Clipboard,
+  ClipboardService,
   KeyPairService
 ];
 

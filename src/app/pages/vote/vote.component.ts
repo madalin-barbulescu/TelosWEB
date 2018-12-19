@@ -289,7 +289,7 @@ export class VotePageComponent implements OnInit {
                 return false;
             }
             this.spinner = false;
-            this.openDialog('Please choose and identity from SQRL wallet');
+            this.openDialog('Please choose an identity from SQRL wallet');
 
             const requiredFields = { accounts: [this.network] };
             if (!this.scatter.identity) {

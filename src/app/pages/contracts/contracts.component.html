@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="spinner-container" *ngIf="isLoading">
+      <mat-spinner class="spinner-color"></mat-spinner>
+  </div>
+
+  <div class="market-header col-md-12">
+    <h1>
+      Smart Contracts
+      <div class="col-sm-4" class="pull-right">
+        <button *ngIf="!scatterService.identity" class="pull-right" mat-raised-button color="primary" (click)="login()">Login with SQRL</button>
+        <mat-form-field *ngIf="scatterService.identity" class="filter-header-input">
+          <input type="text" matInput placeholder="Contract Account Name" autocomplete="off" spellcheck="false" [formControl]="searchFC">
+        </mat-form-field>
+      </div>
+    </h1>
+  </div>
+
+  <ng-template [ngIf]="contract && scatterService.identity">
+    <div class="col-md-12">
+      <h3>Loaded contract :: {{ contract.account_name }}</h3>
+    </div>
+
+    <div class="col-md-12">
+      <mat-tab-group>
+        <mat-tab label="Actions">
+          <contract-actions [contract]="contract"></contract-actions>
+        </mat-tab>
+
+        <mat-tab label="Tables">
+          <contract-table [contract]="contract"></contract-table>
+        </mat-tab>
+
+        <mat-tab label="ABI">
+          <div class="col-md-6">
+            <h4><span matTooltip="The entire Smart Contract code itself is displayed below" matTooltipPosition="right">Contract ABI</span></h4>
+          </div>
+          <div class="col-md-6">
+            <button mat-raised-button color="primary" class="float-right" (click)="copy(contract.abi)">Copy ABI JSON to clipboard</button>
+          </div>
+          <mat-card class="col-md-12">
+            <ngx-json-viewer [json]="contract.abi" [expanded]="false"></ngx-json-viewer>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </ng-template>
+
+  <div class="col-md-12" *ngIf="!contract || (contract && !scatterService.identity)">
+    <div class="announcement">
+      <p><strong>To be able to see the Contract page you have to be logged in</strong></p>
+      <p><strong>Search the contrat account name and you will be able to see its actions, table's content and abi</strong></p>
+      <p>To send a transaction you have to search and select the desired action, fill in the inputs and press the "Create Transaction" button</p>
+      <p>To see the table content you have to search and select one from the list</p>
+    </div>
+  </div>
+</div>

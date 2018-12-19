@@ -37,6 +37,7 @@ import { VotePageModule } from './pages/vote/vote.module';
 import { AccountCreationPageModule } from './pages/account-creation/account-creation.module';
 import { AccountPageModule } from './pages/account/account.module';
 import { AddressPageModule } from './pages/address/address.module';
+import { ContractsModule } from './pages/contracts/contracts.module';
 import { KeyPairGenerationPageModule } from './pages/key_pair_generation/key_pair_generation.module';
 import { SoonModule } from './pages/soon/soon.module';
 import { MainTcustomizeModule } from './components/main_customize_charts/main_tcustomize.module';
@@ -45,6 +46,8 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { AdminModule } from './pages/admin/admin.module';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { InfoDialogModule } from './dialogs/info-dialog/info-dialog.module';
+import { EOSService } from './services/eos.service';
+import { ScatterService as ScatterServiceAux } from './services/scatter-aux.service';
 
 const socketConfig: SocketIoConfig = { url: '/', options: {
     autoConnect: true,
@@ -53,6 +56,12 @@ const socketConfig: SocketIoConfig = { url: '/', options: {
     reconnectionDelayMax : 5000,
     reconnectionAttempts: 5
 }};
+
+const providers = [
+  appRoutingProviders,
+  EOSService,
+  ScatterServiceAux
+];
 
 @NgModule({
   declarations: [
@@ -92,13 +101,14 @@ const socketConfig: SocketIoConfig = { url: '/', options: {
     ProducersPageModule,
     ProducerModule,
     AnalyticsPageModule,
+    ContractsModule,
     RamPageModule,
     SoonModule,
     AdminModule,
     MatSnackBarModule,
-    RegistrationPageModule
+    RegistrationPageModule,
   ],
-  providers: [appRoutingProviders],
+  providers: [ ...providers ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

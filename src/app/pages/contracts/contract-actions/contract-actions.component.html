@@ -1,0 +1,39 @@
+<h3 class="col-md-8"><span matTooltip="Smart Contracts on the network can contain executable actions" matTooltipPosition="right">Contract Actions</span></h3>
+
+<div class="col-md-4">
+  <mat-form-field>
+    <input type="text" matInput placeholder="Select Contract Action" [formControl]="selectionFC" [matAutocomplete]="autoGroup">
+    <mat-autocomplete #autoGroup="matAutocomplete">
+      <mat-option *ngFor="let action of (filteredActions$ | async)" [value]="action.name" (click)="select(action)">
+        {{ action.name }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+
+<form [formGroup]="actionFG"
+  (submit)="send()"
+  spellcheck="false"
+  autocomplete="off"
+  novalidate
+  *ngIf="fields.length">
+
+  <h4 class="col-md-12"><span matTooltip="If you would like to submit a transaction to this Smart Contract for this action, please fill in the fields below." matTooltipPosition="right">Action Parameters</span></h4>
+
+  <div class="col-md-6 ca-input-field" *ngFor="let field of fields">
+    <mat-form-field [hideRequiredMarker]="false">
+      <input matInput type="text" [placeholder]="field.name" [formControlName]="field.name" [required]="true">
+      <mat-hint>{{ contract.types[field.type] || field.type }}</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="col-md-12">
+    <button type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="!actionFG.valid"
+      class="float-right">
+        Create Transaction
+    </button>
+  </div>
+</form>

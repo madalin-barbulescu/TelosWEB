@@ -401,6 +401,14 @@ small{
 .main-table .mat-cell, .main-table .mat-header-cell{
 	overflow: inherit !important;
 }
+.main-table.-centered .mat-cell, .main-table.-centered .mat-header-cell{
+	/* overflow: inherit !important; */
+	overflow: hidden !important;
+	text-align: center;
+}
+.main-table .mat-cell, .main-table .mat-header-cell{
+	margin-right: 5px;
+}
 .mat-cell {
 	color: #3D3D3D;
 }
@@ -409,6 +417,7 @@ small{
     border-bottom: 1px solid #F6F1E1;
     margin-bottom: 5px;
 }
+
 .marketcap-container{
 	color: #9f9fa1;
 	font-size: 15px;
@@ -514,7 +523,7 @@ small{
     width: 120px !important;
     display: block !important;
     cursor: pointer;
-    float: left
+    float: left;
 }
 .memo-data-action{
 	overflow: hidden;
@@ -523,7 +532,7 @@ small{
     width: 360px !important;
     display: block !important;
     cursor: pointer;
-    float: left
+    float: left;
 }
 action-viewer{
 	display: flex;
@@ -581,6 +590,9 @@ action-viewer{
 }
 .filter-header{
 	margin-top: 40px;
+}
+.float-right {
+	float: right;
 }
 
 @media only screen and (max-width: 1280px) {

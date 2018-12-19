@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class Clipboard {
+export class ClipboardService {
 
   constructor() {}
 

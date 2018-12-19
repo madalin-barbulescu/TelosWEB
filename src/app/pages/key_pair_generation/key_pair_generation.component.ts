@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NotificationsService } from 'angular2-notifications';
 
-import { Clipboard } from '../../services/clipboard.service';
+import { ClipboardService } from '../../services/clipboard.service';
 import { KeyPairService } from '../../services/key-pair.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class KeyPairGenerationPageComponent implements OnInit {
   constructor(
     protected http: HttpClient,
 
-    private clipboard: Clipboard,
+    private clipboard: ClipboardService,
     private keyPairService: KeyPairService,
     private notifications: NotificationsService
   ) { }

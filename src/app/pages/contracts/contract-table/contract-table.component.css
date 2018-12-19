@@ -1,0 +1,14 @@
+:host .big-table {
+  overflow-x: auto;
+}
+
+:host .main-table .mat-header-row,
+:host .main-table .mat-row {
+  display: inline-flex;
+  min-width: 100%;
+}
+
+:host .main-table .mat-cell,
+:host .main-table .mat-header-cell{
+	width: 100px;
+}

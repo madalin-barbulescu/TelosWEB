@@ -291,6 +291,19 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	   	 	});
 	});
 
+  //   /*
+	// * router - get source code
+	// * params - account name
+	// */
+	// router.get(`/api/v1/get_source_code/:account`, (req, res) => {
+	// 	eos.getCode({ account_name: req.params.account, code_as_wasm: false })
+	// 	.then(result => res.status(200).json(result))
+	// 	.catch(err => {
+	// 		log.error(err);
+	// 		res.status(501).end();
+	// 	});
+	// });
+
     /*
 	* router - get currency balance
 	*/
@@ -330,6 +343,30 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	   	 		log.error(err);
 	   	 		res.status(501).end();
 	   	 	});
+	});
+
+    /*
+	* router - get_table_rows
+	*/
+	router.get('/api/v1/get_table_rows_1/:code/:scope/:table/:limit/:lowerb/:upperb/:table_key', (req, res) => {
+	   	 eos.getTableRows({
+				json: true,
+				code: req.params.code,
+				scope: req.params.scope,
+				table: req.params.table,
+				table_key: "string",
+				lower_bound: req.params.lowerb,
+				upper_bound: req.params.upperb,
+				// index_position: req.params.lowerb,
+				limit: req.params.limit
+			})
+			.then(result => {
+				res.json(result);
+			})
+			.catch(err => {
+				log.error(err);
+				res.status(501).end();
+			});
 	});
 
     /*
