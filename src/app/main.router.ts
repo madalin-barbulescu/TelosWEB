@@ -27,7 +27,7 @@ import { ContractsPageComponent } from './pages/contracts/contracts.component';
 export const routes: Routes = [
   { 
   	path: '',
-  	component: MainPageComponent,
+  	component: ProducersPageComponent,
   	pathMatch: 'full' 
   },
   {

@@ -534,8 +534,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 			let bpFile = result.bpJson || (result.chainsJson ? result.chainsJson.bpFile : null);
 			let chainFile = result.chainsJson ? result.chainsJson.chainFile : null;
-			if(!bpFile){
-				prodFromDB.save();
+			if(!bpFile || bpFile.error ){
 				return;
 			} 
 

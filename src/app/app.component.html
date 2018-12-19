@@ -17,10 +17,10 @@
     <input type="search" placeholder="Search by block, tx, account, address" [(ngModel)]="search" (keyup)="onKey($event)">
   </div>
   <ul class="pull-right main-nav-middle">
-    <li><button mat-button color="basic" routerLink=""  [ngClass]="{'nav-active': activeMenu()  === '/'}">Home</button></li>
-    <li><button mat-button color="basic" routerLink="producers" routerLinkActive="nav-active">Producers</button></li>
+    <li><button mat-button color="basic" routerLink=""  [ngClass]="{'nav-active': activeMenu()  === '/'}">Producers</button></li>
     <li><button mat-button color="basic" routerLink="p2p" routerLinkActive="nav-active">P2P</button></li>
     <li><button mat-button color="basic" routerLink="compliance" routerLinkActive="nav-active" class="mobile-no">BP Compliance</button></li>
+    <li><button mat-button color="basic" routerLink="info" routerLinkActive="nav-active">Info</button></li>
     <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
     <!--<li><button mat-button color="basic" routerLink="tokens" routerLinkActive="nav-active">Tokens</button></li>-->
     <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
