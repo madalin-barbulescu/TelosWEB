@@ -1,0 +1,39 @@
+:host {
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+:host > :nth-last-child(n+2) {
+  padding-bottom: 20px;
+}
+
+:host .cell-number {
+  flex: initial !important;
+  width: 40px;
+}
+
+:host a {
+  color: #15c;
+  word-break: break-word;
+}
+
+:host .cell-account {
+  flex: initial !important;
+  width: 120px;
+}
+
+:host .cell-votes {
+  flex: initial !important;
+  width: 100px;
+}
+
+:host .cell-action {
+  flex: initial !important;
+  width: 140px;
+}
+
+:host .election-url {
+  font-size: 14px;
+  line-height: 21px;
+}

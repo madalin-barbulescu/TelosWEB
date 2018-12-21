@@ -1,0 +1,84 @@
+<div class="col-md-12">
+  <div>
+    <span class="color-orange">{{ electionState.count_down_message }}</span>
+    <last-updated *ngIf="electionState.timeframe > 0" [timestamp]="electionState.count_down" direction="down"></last-updated>
+    <button mat-raised-button color="primary" (click)="endElection()" *ngIf="election.status === 0 && electionState.timeframe === 0">End election</button>
+    <button class="pull-right" mat-raised-button color="primary" (click)="nominate()" *ngIf="(store$ | async).balance > 0">Nominate</button>
+  </div>
+</div>
+
+<div class="col-md-12 election-url" *ngIf="election.info_url && election.status === 0">
+  Election information: <a [href]="election.info_url" target="_blank" rel="noopener noreferrer">{{ election.info_url }}</a>
+</div>
+
+<div class="col-md-12">
+  <div class="col-md-8">
+    <mat-chip-list *ngIf="election.status === 0">
+      <mat-chip><div>Voting symbol: <strong>{{ election.voting_symbol }}</strong></div></mat-chip>
+      <mat-chip><div>Unique voters: <strong>{{ election.unique_voters }}</strong></div></mat-chip>
+      <mat-chip><div>Available seats: <strong> {{ election.available_seats }}</strong></div></mat-chip>
+    </mat-chip-list>
+  </div>
+  <div class="col-md-4 pull-right">
+    <mat-form-field>
+      <input autocomplete="off" matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      <mat-hint>exp: name</mat-hint>
+    </mat-form-field> 
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="main-table example-container">
+    <mat-table #table class="big-table" [dataSource]="dataSource">
+
+      <ng-container matColumnDef="#">
+        <mat-header-cell *matHeaderCellDef class="cell-number"> # </mat-header-cell>
+        <mat-cell *matCellDef="let element; let i = index" class="cell-number">
+          <strong>{{ i }}</strong>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="nominated_account">
+        <mat-header-cell class="cell-account" *matHeaderCellDef> {{ electionState.account_type }}</mat-header-cell>
+        <mat-cell class="cell-account" *matCellDef="let element">
+          <strong> {{ element.member }} </strong>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="votes">
+        <mat-header-cell class="cell-votes" *matHeaderCellDef> Votes </mat-header-cell>
+        <mat-cell class="cell-votes" *matCellDef="let element">
+          <strong> {{ element.votes }} </strong>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="info_link">
+        <mat-header-cell *matHeaderCellDef> Info Link </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <a [href]="element.info_link" target="_blank" rel="noopener noreferrer">
+            <strong>{{ element.info_link }}</strong>
+          </a>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell class="cell-action" *matHeaderCellDef> Action / State </mat-header-cell>
+        <mat-cell class="cell-action" *matCellDef="let element">
+          <ng-template [ngIf]="election.status === 0">
+            <button mat-raised-button color="primary" (click)="vote(element)" *ngIf="element.type === 'candidate' && (store$ | async).balance > 0 && electionState.timeframe === 2">Vote</button>
+            <ng-template [ngIf]="element.member === scatterService.account.name && electionState.timeframe === 1">
+              <button mat-raised-button color="primary" *ngIf="element.type === 'nominee'" (click)="addCand(element)">Join Election</button>
+              <button mat-raised-button color="primary" *ngIf="element.type === 'candidate'" (click)="removeCand(element)">Drop from Election</button>
+            </ng-template>
+          </ng-template>
+          <ng-template [ngIf]="electionState.timeframe === 1 && element.member !== scatterService.account.name">
+            {{ element.type }}
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></mat-row>
+    </mat-table>
+  </div>
+</div>

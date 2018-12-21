@@ -58,7 +58,6 @@ export class ScatterService {
   }
 
   get eos() {
-    console.log(this.eosNetwork, Eos, this._eosService.eosOptions);
     return this.scatter.eos(this.eosNetwork, Eos, this._eosService.eosOptions);
   }
 
@@ -67,7 +66,22 @@ export class ScatterService {
   }
 
   get transactionOptions() {
-    return { authorization: [`${this.identity.accounts[0].name}@${this.identity.accounts[0].authority}`] };
+    return { authorization: [`${this.account.name}@${this.account.authority}`] };
+  }
+
+  get account() {
+    return this.identity.accounts[0];
+  }
+
+  getContract$(name) {
+    return Observable.fromPromise(this.eos.contract(name, { accounts: this.eosNetwork }));
+  }
+
+  makeTransaction$(contractName: string, callback: Function, message: string = 'Please check SQRL for the transaction details') {
+    this._openDialog(message);
+
+    return Observable.fromPromise(this.eos.transaction(contractName, callback))
+      .finally(() => this.dialog.closeAll());
   }
 
   login$() {

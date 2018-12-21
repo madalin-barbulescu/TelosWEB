@@ -62,6 +62,14 @@ export class ContractsPageComponent implements OnInit {
       .subscribe();
   }
 
+  logout() {
+    this.isLoading = true;
+
+    this.scatterService.logout$()
+      .do(() => location.reload())
+      .subscribe();
+  }
+
   sourceCode$(accountName: string) {
     return this.http.get(`/api/v1/get_source_code/${accountName}`)
       .do((sourceCode: any) => {

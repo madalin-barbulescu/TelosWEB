@@ -25,7 +25,7 @@
     <li><button mat-button color="basic" routerLink="ram" routerLinkActive="nav-active">Ram</button></li>
     <!--<li><button mat-button color="basic" routerLink="tokens" routerLinkActive="nav-active">Tokens</button></li>-->
     <!-- <li><button mat-button color="basic" routerLink="analytics" routerLinkActive="nav-active">Analytics</button></li> -->
-    <button mat-button color="basic" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/contracts' || activeMenu()  === '/registration' || activeMenu()  === '/keys'}">More</button>
+    <button mat-button color="basic" [matMenuTriggerFor]="menu" [ngClass]="{'nav-active': activeMenu()  === '/faucet' || activeMenu()  === '/account-creation' || activeMenu()  === '/contracts' || activeMenu()  === '/registration' || activeMenu()  === '/keys' || activeMenu()  === '/foundation'}">More</button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item color="basic" *ngIf="config.faucet" routerLink="faucet" routerLinkActive="nav-active">Faucet</button>
       <button mat-menu-item color="basic" *ngIf="config.faucet" routerLink="account-creation" routerLinkActive="nav-active">Create Account</button>
@@ -34,6 +34,7 @@
       <button mat-menu-item color="basic" routerLink="contracts" routerLinkActive="nav-active" class="mobile-no">Contracts</button>
       <button mat-menu-item color="basic" routerLink="vote" routerLinkActive="nav-active">Vote</button>
       <button mat-menu-item color="basic" routerLink="keys" routerLinkActive="nav-active">Generate Key Pair</button>
+      <button mat-menu-item color="basic" routerLink="foundation" routerLinkActive="nav-active">Foundation</button>
     </mat-menu>
         <!--<li class="mobile-no"><button mat-button color="basic" routerLink="soon">API</button></li>-->
   </ul>

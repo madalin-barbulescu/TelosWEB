@@ -1,0 +1,29 @@
+<div class="col-md-12">
+  <button class="pull-right" mat-raised-button color="primary" (click)="issueCreation()">Create Issue</button>
+</div>
+
+<div class="col-md-12">
+  <div class="main-table example-container">
+    <mat-accordion>
+
+      <mat-expansion-panel *ngFor="let issue of (store$ | async).issues">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ issue.name }}
+          </mat-panel-title>
+          <mat-panel-description class="color-orange">
+            {{ issue.deadline | date }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p>
+          Detailed info: <a [href]="issue.url" target="_blank" rel="noopener noreferrer">{{ issue.url }}</a>
+        </p>
+        <p>
+          Action:
+        </p>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </div>
+</div>

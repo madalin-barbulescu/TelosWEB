@@ -1,0 +1,14 @@
+:host {
+  padding: 20px 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+:host > :nth-last-child(n+2) {
+  padding-bottom: 20px;
+}
+
+:host .cell-number {
+  flex: initial !important;
+  width: 40px;
+}

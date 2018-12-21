@@ -1,0 +1,41 @@
+<div class="col-md-12">
+  <div *ngIf="count_down > 0; else elseCountDown">
+    Term ends in: 
+    <last-updated [timestamp]="count_down" direction="down"></last-updated>
+  </div>
+  <ng-template #elseCountDown>
+    <div >
+      Term ended
+    </div>
+  </ng-template>
+  <div class="col-md-4 pull-right">
+    <mat-form-field>
+      <input matInput autocomplete="off" (keyup)="applyFilter($event.target.value)" placeholder="Search">
+      <mat-hint>exp: name</mat-hint>
+    </mat-form-field> 
+  </div>
+</div>
+
+<div class="col-md-12">
+  <div class="main-table example-container">
+    <mat-table #table class="big-table" [dataSource]="dataSource">
+
+      <ng-container matColumnDef="#">
+        <mat-header-cell *matHeaderCellDef class="cell-number"> # </mat-header-cell>
+        <mat-cell *matCellDef="let element; let i = index" class="cell-number">
+          <strong>{{ i }}</strong>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="account">
+        <mat-header-cell *matHeaderCellDef> Account </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <strong> {{ element.member }} </strong>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns; let i = index"></mat-row>
+    </mat-table>
+  </div>
+</div>

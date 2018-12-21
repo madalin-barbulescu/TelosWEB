@@ -1,0 +1,61 @@
+:host .faucet-form {
+  display: flex;
+  flex-wrap: wrap;
+  width: 50%;
+}
+
+:host .faucet-form > .item {
+  display: flex;
+  width: 100%;
+  padding: 5px 0 5px;
+}
+
+:host .faucet-form > .item > mat-form-field {
+  width: auto;
+  flex: 1;
+}
+
+:host .faucet-form > .item > mat-form-field:nth-last-child(n+2) {
+  margin-right: 10px;
+}
+
+:host .faucet-form > .item:nth-child(even) {
+  padding-left: 10px;
+}
+
+:host .faucet-form > .item:nth-child(odd) {
+  padding-right: 10px;
+}
+
+:host .faucet-form > .footer {
+  margin-top: 20px;
+  margin-left: auto;
+}
+
+
+@media (max-width: 1024px) {
+  :host .faucet-form {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  :host .faucet-form > .item {
+    display: flex;
+    width: 100%;
+    padding: 5px 0 5px;
+  }
+
+  :host .faucet-form > .item:nth-child(even) {
+    padding-left: 0px;
+  }
+  
+  :host .faucet-form > .item:nth-child(odd) {
+    padding-right: 0px;
+  }
+
+  :host .faucet-form > .footer {
+    /* width: initial; */
+    margin-right: auto;
+  }
+}

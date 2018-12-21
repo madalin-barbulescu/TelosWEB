@@ -1222,6 +1222,88 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	}
 	//============ END of Faucet
 
+	//============ Telos
+	/*
+	* producer - register
+	*/
+	// router.get('/api/v1/tf/make-election/:name', (req, res) => {
+	// 	const data = req.params;
+	// 	console.log(data);
+
+	// 	eos.contract('tf')
+	// 		.then(tf => {
+	// 			tf.makeelection(data.name, '')
+	// 		})
+	// 		.then(result =>{
+	// 			res.status(200).send(result);
+	// 		})
+	// 		.catch(err => {
+	// 			let error = err;
+	// 			try{
+	// 				error = JSON.parse(err);
+	// 			}catch(ignored){}
+	// 			res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
+	// 		})
+
+		// eos.transaction(tr => {
+		// 	tr.newaccount({
+		// 		creator: 'faucet.tf',
+		// 		name: data.name,
+		// 		owner: data.publicKey,
+		// 		active: data.publicKey
+		// 	});
+		
+		// 	tr.buyrambytes({
+		// 		payer: 'faucet.tf',
+		// 		receiver: data.name,
+		// 		bytes: 1024*4
+		// 	});
+		
+		// 	tr.delegatebw({
+		// 		from: 'faucet.tf',
+		// 		receiver: data.name,
+		// 		stake_net_quantity: '10.0000 TLOS',
+		// 		stake_cpu_quantity: '10.0000 TLOS',
+		// 		transfer: 0
+		// 	});
+		// })
+	// });
+	//============ END of Register
+
+	router.get('/api/v1/foundation/get-config', (req, res) => {
+		eos.getTableRows({
+			json: true,
+			code: 'tf',
+			scope: 'tf',
+			table: 'config',
+			limit: 1
+		})
+		.then(result => {
+			if (!result || !result.rows || !result.rows.length)
+				return res.status(400).send({result: 'error', message: 'Not Found', data: {}});
+
+			let dataToReturn = result.rows[0];
+
+			CACHE_BALLOTS.findOne({ballot_id: dataToReturn.open_election_id}, (err, res1) => {
+				if (err || res1.type !== 2 ) {	 // 2 -> leaderboard ballot
+					dataToReturn.leaderboard_id = -1;
+					return res.status(200).send(dataToReturn);
+				}
+
+				dataToReturn.leaderboard_id = res1.reference_id;
+				return res.status(200).send(dataToReturn);
+			});
+		})
+		.catch((err) => {
+			let error = err;
+			try{
+				error = JSON.parse(err);
+			}catch(ignored){}
+			res.status(error.code ? error.code : 500).send({result: 'error', message: error.message ? error.message : "ERROR! check console", data: error.error ? error.error : error});
+		});
+	});
+
+
 // ============== end of exports 
 };
 

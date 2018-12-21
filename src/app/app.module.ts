@@ -38,6 +38,7 @@ import { AccountCreationPageModule } from './pages/account-creation/account-crea
 import { AccountPageModule } from './pages/account/account.module';
 import { AddressPageModule } from './pages/address/address.module';
 import { ContractsModule } from './pages/contracts/contracts.module';
+import { FoundationPageModule } from './pages/foundation/foundation.module';
 import { KeyPairGenerationPageModule } from './pages/key_pair_generation/key_pair_generation.module';
 import { SoonModule } from './pages/soon/soon.module';
 import { MainTcustomizeModule } from './components/main_customize_charts/main_tcustomize.module';
@@ -93,6 +94,8 @@ const providers = [
     AccountCreationPageModule,
     AccountPageModule,
     AddressPageModule,
+    ContractsModule,
+    FoundationPageModule,
     KeyPairGenerationPageModule,
     TransactionPageModule,
     WalletPageModule,
@@ -101,7 +104,6 @@ const providers = [
     ProducersPageModule,
     ProducerModule,
     AnalyticsPageModule,
-    ContractsModule,
     RamPageModule,
     SoonModule,
     AdminModule,

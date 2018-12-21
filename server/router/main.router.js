@@ -45,6 +45,22 @@ module.exports = function(router, config, request, log) {
 	   	res.sendFile(indexPath);
 	});
 	
+	router.get('/foundation', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/foundation/members', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/foundation/election', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
+	router.get('/foundation/issues', (req, res) => {
+	   	res.sendFile(indexPath);
+	});
+	
 	router.get('/settings', (req, res) => {
 	   	res.sendFile(indexPath);
 	});

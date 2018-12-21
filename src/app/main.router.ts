@@ -11,6 +11,10 @@ import { P2PageComponent } from './pages/p2p/p2p.component';
 import { ProducersPageComponent } from './pages/producers/producers.component';
 import { ProducerComponent } from './pages/producer_page/producer_page.component';
 import { AnalyticsPageComponent } from './pages/analytics/analytics.component';
+import { FoundationPageComponent } from './pages/foundation/foundation.component';
+import { FoundationBoardMembersPageComponent } from './pages/foundation/foundation-board-members/foundation-board-members.component';
+import { FoundationElectionPageComponent } from './pages/foundation/foundation-election/foundation-election.component';
+import { FoundationIssuesPageComponent } from './pages/foundation/foundation-issues/foundation-issues.component';
 import { KeyPairGenerationPageComponent } from './pages/key_pair_generation/key_pair_generation.component';
 import { TokensPageComponent } from './pages/tokens/tokens.component';
 import { RamPageComponent } from './pages/ram/ram.component';
@@ -77,6 +81,16 @@ export const routes: Routes = [
   {
     path: 'accounts',
     component: AnalyticsPageComponent
+  },
+  {
+    path: 'foundation',
+    component: FoundationPageComponent,
+    children: [
+      { path: '', redirectTo: 'members', pathMatch: 'full' },
+      { path: 'members' , component: FoundationBoardMembersPageComponent },
+      { path: 'election' , component: FoundationElectionPageComponent },
+      { path: 'issues' , component: FoundationIssuesPageComponent }
+    ]
   },
   {
     path: 'keys',

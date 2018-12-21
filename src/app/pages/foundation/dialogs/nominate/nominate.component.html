@@ -1,0 +1,20 @@
+<div mat-dialog-title>Nominate</div>
+<div mat-dialog-content [formGroup]="formGroup">
+	<mat-form-field [hideRequiredMarker]="false">
+		<input matInput type="text" placeholder="Nominee" autocomplete="off" formControlName="nominee" [required]="true">
+		<mat-hint>length 12, lowercase a-z, 1-5</mat-hint>
+	</mat-form-field>
+</div>
+<div mat-dialog-actions align="end">
+	<button type="submit"
+		mat-button
+		(click)="cancel()">
+			Cancel
+	</button>
+	<button type="submit"
+		mat-raised-button
+		color="primary"
+		(click)="ok()">
+			Nominate
+	</button>
+</div>

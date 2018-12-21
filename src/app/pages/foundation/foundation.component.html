@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner class="spinner-color"></mat-spinner>
+  </div>
+
+  <h1 class="market-header col-md-12">
+    Telos Foundation
+
+    <button *ngIf="scatterService.identity" class="pull-right" mat-raised-button color="primary" (click)="logout()">Logout {{ scatterService.account?.name }}</button>
+    <button mat-raised-button color="primary" class="pull-right" (click)="login()" *ngIf="!scatterService.identity">
+      Login with SQRL
+    </button>
+  </h1>
+
+  <div class="col-md-12" *ngIf="scatterService.identity">
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link *ngFor="let routeLink of routeLinks; let i = index"
+        [routerLink]="[routeLink.link]"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive"
+        (click)="activeLinkIndex = i">
+          {{ routeLink.label }}
+      </a>
+      <a mat-tab-link disabled>
+        Issues
+      </a>
+    </nav>
+    <router-outlet></router-outlet>
+  </div>
+</div>
