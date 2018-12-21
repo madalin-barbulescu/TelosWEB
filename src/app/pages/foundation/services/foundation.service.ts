@@ -90,10 +90,17 @@ export class FoundationService {
 
     if (election.status === 0)
       candidates.forEach((candidate, index) => {
-        listMap[candidate.member] = Object.assign({type: 'candidate', index}, candidate);
+        let url = candidate.info_link;
+        if(url.startsWith("/ipfs/")){
+          url = "https://ipfs.io"+url;
+        }
+        listMap[candidate.member] = Object.assign({type: 'candidate', index, url}, candidate);
       });
 
     let electionList = Object.keys(listMap).map((key) => listMap[key]);
+    
+    // if(now > election.begin_time && election.status === 0)
+    //   electionList.sort((a,b) => parseFloat(b.votes) - parseFloat(a.votes));
 
     this._updateStore({ electionList });
   }

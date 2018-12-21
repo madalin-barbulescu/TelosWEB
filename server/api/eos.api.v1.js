@@ -1285,7 +1285,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			let dataToReturn = result.rows[0];
 
 			CACHE_BALLOTS.findOne({ballot_id: dataToReturn.open_election_id}, (err, res1) => {
-				if (err || res1.type !== 2 ) {	 // 2 -> leaderboard ballot
+				if (err || (res1 && res1.type !== 2) ) {	 // 2 -> leaderboard ballot
 					dataToReturn.leaderboard_id = -1;
 					return res.status(200).send(dataToReturn);
 				}

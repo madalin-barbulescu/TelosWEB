@@ -55,7 +55,7 @@
       <ng-container matColumnDef="info_link">
         <mat-header-cell *matHeaderCellDef> Info Link </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a [href]="element.info_link" target="_blank" rel="noopener noreferrer">
+          <a [href]="element.url" target="_blank" rel="noopener noreferrer">
             <strong>{{ element.info_link }}</strong>
           </a>
         </mat-cell>
