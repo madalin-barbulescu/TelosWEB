@@ -442,7 +442,9 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 	});
 
 	const updateP2p = async function(name, prodFromChain, prodFromDB){
+		var createdProd = false;
 		if(!prodFromDB){
+			createdProd = true;
 			prodFromDB = new PRODUCER();
 		}
 		
@@ -455,8 +457,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			chainUrl += "chains.json";
 			bpUrl += "bp.json";
 		}
-
-		console.log("urls : ", chainUrl, bpUrl);
 
 		async.parallel({
 			chainsJson : (cb) => { // get chains.json 
@@ -507,7 +507,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 
 				axios.get(bpUrl)
 					.then(_bpFile => {
-						console.log(typeof _bpFile);
 						let bpFile = _bpFile;
 						if(bpFile.data && typeof bpFile.data === "string"){
 							try{ bpFile = JSON.parse(_bpFile.data.replace(/\r?\n|\r/g, "")); }catch(ignored){
@@ -517,13 +516,11 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 							bpFile = bpFile.data;
 						}
 
-						console.log("bpjson : ", bpFile);
 						cb(null, bpFile);
 					})
 					.catch(err => { return cb(null, new Error(err.response.statusText)); });
 			}
 		}, (err, result) => {
-			console.log("parallel, ", err, result);
 			if(err){
 				log.error(err);
 				return;
@@ -537,7 +534,7 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 			if(!bpFile || bpFile.error ){
 				return;
 			} 
-
+			
 			if(chainUrl){
 				prodFromDB.url = prodFromChain.url || prodFromDB.url;
 			}
@@ -611,11 +608,13 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				}
 			}
 
-			
-			PRODUCER.where({"name": name}).findOne((err, prods)=>{
-				if(err || !prods)
-					prodFromDB.save();
-			});
+			if(createdProd)		
+				PRODUCER.where({"name": name}).findOne((err, prods)=>{
+					if(!prods)
+						prodFromDB.save();
+				});
+			else 
+				prodFromDB.save();				
 		});
 	}
 
@@ -641,8 +640,6 @@ module.exports 	= function(router, config, request, log, eos, mongoMain, mongoCa
 				}
 
 				if(!prods || !prods.last_update || Date.now() - prods.last_update > 10*60000){
-					if(prods)
-						console.log("expired : ", Date.now() - prods.last_update > 10*60000);
 					updateP2p(req.params.name, result.rows[0], prods);
 				}
 				
