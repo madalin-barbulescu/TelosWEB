@@ -75,7 +75,7 @@ export class AccountPageComponent implements OnInit, OnDestroy{
   }
 
   getActions(accountName){
-      this.http.post(`/api/v1/get_actions/${accountName}`, {upper:new Date(2018,9,5), limit:200, offset:0})
+      this.http.post(`/api/v1/get_actions/${accountName}`, {upper:new Date(), limit:200, offset:0})
            .subscribe((res: any) => {
 						  const tmpF = {};
                           res = res.filter((e)=>{
