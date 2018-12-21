@@ -6,6 +6,8 @@
   <div class="market-header col-md-12">
     <h1>
       Smart Contracts
+      <button *ngIf="scatterService.identity" mat-raised-button color="primary" (click)="logout()">Logout {{ scatterService.account?.name }}</button>
+
       <div class="col-sm-4" class="pull-right">
         <button *ngIf="!scatterService.identity" class="pull-right" mat-raised-button color="primary" (click)="login()">Login with SQRL</button>
         <mat-form-field *ngIf="scatterService.identity" class="filter-header-input">

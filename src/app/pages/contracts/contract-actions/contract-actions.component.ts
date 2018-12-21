@@ -71,7 +71,7 @@ export class ContractActionsComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
 
-    this._getContract$(this.contract.account_name)
+    this._scatterService.getContract$(this.contract.account_name)
       .concatMap(contract => {
         const data = this.actionFG.value;
         Object.keys(this.actionFG.value).forEach((key) => data[key] = isNaN(Number(data[key])) ? data[key] : Number(data[key]));
@@ -112,10 +112,6 @@ export class ContractActionsComponent implements OnInit, OnDestroy, OnChanges {
     newFields.forEach(control => form.addControl(control.name, new FormControl('', [Validators.required])));
 
     this.fields = newFields;
-  }
-
-  private _getContract$(contractName) {
-    return Observable.fromPromise(this._scatterService.eos.contract(contractName, { accounts: this._scatterService.eosNetwork }));
   }
 
   private _search$(query: string): Observable<IContractAction[]> {

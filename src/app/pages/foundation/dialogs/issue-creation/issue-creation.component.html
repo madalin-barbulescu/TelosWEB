@@ -1,0 +1,35 @@
+<div mat-dialog-title>Create Issue</div>
+<div mat-dialog-content [formGroup]="formGroup">
+	<div class="item">
+		<mat-form-field [hideRequiredMarker]="false">
+			<input matInput type="text" autocomplete="off" placeholder="Issue Name" formControlName="name" [required]="true">
+			<mat-hint>exp: issue</mat-hint>
+		</mat-form-field>
+	</div>
+
+	<div class="item">
+		<mat-form-field [hideRequiredMarker]="false">
+			<input matInput type="text" autocomplete="off" placeholder="Url" formControlName="url" [required]="true">
+			<mat-hint>http://telosfoundation.io</mat-hint>
+		</mat-form-field>
+	</div>
+
+	<div class="item">
+		<mat-form-field [hideRequiredMarker]="false">
+			<input matInput type="text" autocomplete="off" placeholder="Transaction string" formControlName="transaction" [required]="true">
+		</mat-form-field>
+	</div>
+</div>
+<div mat-dialog-actions align="end">
+	<button type="submit"
+		mat-button
+		(click)="cancel()">
+			Cancel
+	</button>
+	<button type="submit"
+		mat-raised-button
+		color="primary"
+		(click)="ok()">
+			Create
+	</button>
+</div>

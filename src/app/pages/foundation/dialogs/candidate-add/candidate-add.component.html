@@ -1,0 +1,24 @@
+<div mat-dialog-title>Join Election</div>
+
+<div mat-dialog-content [formGroup]="formGroup">
+	<div class="item">
+		<mat-form-field [hideRequiredMarker]="false">
+			<input matInput type="text" autocomplete="off" placeholder="IPFS Url" formControlName="info_link" [required]="true">
+			<mat-hint>http://telosfoundation.io</mat-hint>
+		</mat-form-field>
+	</div>
+</div>
+
+<div mat-dialog-actions align="end">
+	<button type="submit"
+		mat-button
+		(click)="cancel()">
+			Cancel
+	</button>
+	<button type="submit"
+		mat-raised-button
+		color="primary"
+		(click)="ok()">
+			Join
+	</button>
+</div>

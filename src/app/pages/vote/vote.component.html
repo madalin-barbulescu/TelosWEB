@@ -99,7 +99,7 @@
 			</div>
 
 			<div class="col-sm-12 acc-list no-padding" *ngIf="scatterService.identity">
-				<button mat-raised-button class="btn-generate" color="primary" (click)="logoutScatter()">Logout</button>
+				<button mat-raised-button class="btn-generate" color="primary" (click)="logoutScatter()">Logout {{ scatterService.account?.name }}</button>
 			</div>
 
 
